@@ -6,6 +6,6 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		Window window = new Window(640, 480, 2, "Test");
+		Window window = new Window(640, 480, "Test");
 	}
 }

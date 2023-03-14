@@ -6,15 +6,16 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 public class Window
 {
-	private JFrame frame;
-	private Canvas canvas;
-	private BufferedImage image;
-	private BufferStrategy strategy;
-	private Graphics graphics;
+	private final JFrame frame;
+	private final Canvas canvas;
+	private final BufferedImage image;
+	private final BufferStrategy strategy;
+	private final Graphics graphics;
 
 	public Window(int width, int height, String title)
 	{
@@ -27,7 +28,7 @@ public class Window
 		canvas.setPreferredSize(size);
 		canvas.setMaximumSize(size);
 
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		frame.add(canvas, BorderLayout.CENTER);
 		frame.pack();
@@ -42,9 +43,29 @@ public class Window
 		graphics = strategy.getDrawGraphics();
 	}
 
-	public void update()
+	public int[] getFrameBuffer()
+	{
+		return ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+	}
+
+	public void updateFrame()
 	{
 		graphics.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
 		strategy.show();
+	}
+
+	public void disposeFromEngine()
+	{
+		if (Engine.instance == null)
+		{
+			System.err.println("Valid Engine instance required to link!");
+			System.exit(-1);
+		}
+		if (frame.getDefaultCloseOperation() == JFrame.HIDE_ON_CLOSE)
+		{
+			System.err.println("Engine instance already linked! (DO NOT CALL THE 'disposeFromEngine()' FUNCTION MANUALLY)");
+			System.exit(-1);
+		}
+		Engine.instance.setFrameCloseOperation(frame);
 	}
 }

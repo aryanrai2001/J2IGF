@@ -28,7 +28,7 @@ public class Window
 		canvas.setPreferredSize(size);
 		canvas.setMaximumSize(size);
 
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		frame.add(canvas, BorderLayout.CENTER);
 		frame.pack();

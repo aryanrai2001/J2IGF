@@ -8,25 +8,30 @@ import javax.swing.JFrame;
 public class Engine implements Runnable
 {
 	private final Stack<Context> contexts;
-	private final Window window;
 	private final Thread thread;
+	private final int desiredUPS;
 	private final boolean unlockFrameRate;
-	private final int desiredFPS;
+	private final boolean debugMode;
 	private boolean running;
 
-	public Engine(Window window)
+	public Engine(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
 	{
 		this.contexts = new Stack<>();
-		this.window = window;
 		this.thread = new Thread(this);
 		this.running = false;
-		unlockFrameRate = false;
-		desiredFPS = 60;
-		window.getJFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		window.getJFrame().addWindowListener(new WindowAdapter()
+		this.desiredUPS = desiredUPS;
+		this.unlockFrameRate = unlockFrameRate;
+		this.debugMode = debugMode;
+		J2IGF.window.getJFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		J2IGF.window.getJFrame().addWindowListener(new WindowAdapter()
 		{
 			public void windowClosing(WindowEvent e)
 			{
+				if (!running)
+				{
+					J2IGF.window.getJFrame().dispose();
+					System.exit(0);
+				}
 				stop(false);
 			}
 		});
@@ -59,7 +64,7 @@ public class Engine implements Runnable
 		int ups = 0;
 		long lastTime = System.nanoTime();
 		long timer1 = System.currentTimeMillis(), timer2;
-		double timeSlice = 1000000000.0 / desiredFPS;
+		double timeSlice = 1000000000.0 / desiredUPS;
 		double timeAccumulated = 0;
 		boolean shouldRender;
 
@@ -72,14 +77,14 @@ public class Engine implements Runnable
 			shouldRender = unlockFrameRate;
 			while (timeAccumulated >= timeSlice)
 			{
-				contexts.peek().update();
+				if (!contexts.isEmpty()) contexts.peek().update();
 				ups++;
 				timeAccumulated -= timeSlice;
 				shouldRender = true;
 			}
 			if (shouldRender)
 			{
-				contexts.peek().render();
+				if (!contexts.isEmpty()) contexts.peek().render();
 				fps++;
 			}
 			else
@@ -94,18 +99,19 @@ public class Engine implements Runnable
 				}
 			}
 
-			window.updateFrame();
+			J2IGF.window.updateFrame();
 
 			timer2 = System.currentTimeMillis();
 			if (timer2 - timer1 > 1000)
 			{
 				timer1 = timer2;
-				System.out.println(ups + " UPS | " + fps + " FPS");
+				if (debugMode)
+					System.out.println(ups + " UPS | " + fps + " FPS");
 				fps = 0;
 				ups = 0;
 			}
 		}
-		window.getJFrame().dispose();
+		J2IGF.window.getJFrame().dispose();
 		System.exit(0);
 	}
 

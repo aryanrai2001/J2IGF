@@ -9,6 +9,7 @@ public class Main
 	{
 		Window window = new Window(640, 480, "Test");
 		Engine engine = new Engine(window);
+		engine.addContext(new TestContext());
 		engine.start();
 	}
 }

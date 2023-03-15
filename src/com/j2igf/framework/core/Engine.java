@@ -2,54 +2,53 @@ package com.j2igf.framework.core;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Stack;
 import javax.swing.JFrame;
 
 public class Engine implements Runnable
 {
-	public static Engine instance;
-	private final Thread thread;
+	private final Stack<Context> contexts;
 	private final Window window;
+	private final Thread thread;
 	private final boolean unlockFrameRate;
 	private final int desiredFPS;
 	private boolean running;
 
 	public Engine(Window window)
 	{
-		if (instance != null)
-		{
-			System.err.println("Multiple instances of Engine can not exist!");
-			System.exit(-1);
-		}
-		else
-		{
-			instance = this;
-		}
-		this.thread = new Thread(this);
+		this.contexts = new Stack<>();
 		this.window = window;
+		this.thread = new Thread(this);
 		this.running = false;
 		unlockFrameRate = false;
 		desiredFPS = 60;
-	}
-
-	public void setFrameCloseOperation(JFrame frame)
-	{
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		frame.addWindowListener(new WindowAdapter()
+		window.getJFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		window.getJFrame().addWindowListener(new WindowAdapter()
 		{
 			public void windowClosing(WindowEvent e)
 			{
-				stop();
-				frame.dispose();
-				System.exit(0);
+				stop(false);
 			}
 		});
+	}
+
+	public void addContext(Context context)
+	{
+		context.init();
+		contexts.push(context);
+	}
+
+	public void removeCurrentContext()
+	{
+		if (contexts.isEmpty())
+			return;
+		contexts.pop().dispose();
 	}
 
 	public void start()
 	{
 		if (running)
 			return;
-		window.disposeFromEngine();
 		running = true;
 		thread.start();
 	}
@@ -64,8 +63,6 @@ public class Engine implements Runnable
 		double timeAccumulated = 0;
 		boolean shouldRender;
 
-		// Init();
-
 		while (running)
 		{
 			long currentTime = System.nanoTime();
@@ -75,14 +72,14 @@ public class Engine implements Runnable
 			shouldRender = unlockFrameRate;
 			while (timeAccumulated >= timeSlice)
 			{
-				// Update()
+				contexts.peek().update();
 				ups++;
 				timeAccumulated -= timeSlice;
 				shouldRender = true;
 			}
 			if (shouldRender)
 			{
-				// Render()
+				contexts.peek().render();
 				fps++;
 			}
 			else
@@ -108,13 +105,19 @@ public class Engine implements Runnable
 				ups = 0;
 			}
 		}
+		window.getJFrame().dispose();
+		System.exit(0);
 	}
 
-	public void stop()
+	public void stop(boolean disposeContexts)
 	{
 		if (!running)
 			return;
 		running = false;
-		System.out.println("Exiting!");
+		if (disposeContexts)
+		{
+			while (!contexts.isEmpty())
+				removeCurrentContext();
+		}
 	}
 }

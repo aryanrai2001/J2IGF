@@ -43,29 +43,24 @@ public class Window
 		graphics = strategy.getDrawGraphics();
 	}
 
-	public int[] getFrameBuffer()
-	{
-		return ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
-	}
-
 	public void updateFrame()
 	{
 		graphics.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
 		strategy.show();
 	}
 
-	public void disposeFromEngine()
+	public int[] getFrameBuffer()
 	{
-		if (Engine.instance == null)
-		{
-			System.err.println("Valid Engine instance required to link!");
-			System.exit(-1);
-		}
-		if (frame.getDefaultCloseOperation() == JFrame.HIDE_ON_CLOSE)
-		{
-			System.err.println("Engine instance already linked! (DO NOT CALL THE 'disposeFromEngine()' FUNCTION MANUALLY)");
-			System.exit(-1);
-		}
-		Engine.instance.setFrameCloseOperation(frame);
+		return ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+	}
+
+	public JFrame getJFrame()
+	{
+		return frame;
+	}
+
+	public Canvas getCanvas()
+	{
+		return canvas;
 	}
 }

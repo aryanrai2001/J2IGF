@@ -1,30 +1,34 @@
 package com.j2igf.driver;
 
 import com.j2igf.framework.core.Context;
+import com.j2igf.framework.core.J2IGF;
 
 public class TestContext extends Context
 {
+	int x, y;
 	@Override
 	public void init()
 	{
-		System.out.println("Test Context Initialized");
+		x = y = 0;
+		J2IGF.createRenderer();
 	}
 
 	@Override
 	public void update()
 	{
-		System.out.println("Test Context Updating");
+		x++;
+		y++;
 	}
 
 	@Override
 	public void render()
 	{
-		System.out.println("Test Context Rendering");
+		J2IGF.renderer.setPixels(x, y, 0xffffff);
 	}
 
 	@Override
 	public void dispose()
 	{
-		System.out.println("Test Context Disposed");
+
 	}
 }

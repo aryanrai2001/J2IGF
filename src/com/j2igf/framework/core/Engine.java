@@ -16,6 +16,11 @@ public class Engine implements Runnable
 
 	public Engine(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
 	{
+		if (J2IGF.window == null)
+		{
+			System.err.println("A Window must be created before Engine.");
+			System.exit(-1);
+		}
 		this.contexts = new Stack<>();
 		this.thread = new Thread(this);
 		this.running = false;

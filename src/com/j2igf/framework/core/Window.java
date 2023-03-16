@@ -17,11 +17,6 @@ public class Window
 	private final BufferStrategy strategy;
 	private final Graphics graphics;
 
-	public static void create(int width, int height, String title)
-	{
-		J2IGF.window = new Window(width, height, title);
-	}
-
 	private Window(int width, int height, String title)
 	{
 		Dimension size = new Dimension(width * J2IGF.getRenderScale(), height * J2IGF.getRenderScale());
@@ -40,12 +35,18 @@ public class Window
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.setVisible(true);
-		frame.setFocusable(true);
-		frame.requestFocusInWindow();
+
+		canvas.setFocusable(true);
+		canvas.requestFocusInWindow();
 
 		canvas.createBufferStrategy(2);
 		strategy = canvas.getBufferStrategy();
 		graphics = strategy.getDrawGraphics();
+	}
+
+	public static void create(int width, int height, String title)
+	{
+		J2IGF.window = new Window(width, height, title);
 	}
 
 	public void updateFrame()

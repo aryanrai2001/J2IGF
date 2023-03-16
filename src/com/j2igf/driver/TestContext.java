@@ -2,6 +2,7 @@ package com.j2igf.driver;
 
 import com.j2igf.framework.core.Context;
 import com.j2igf.framework.core.J2IGF;
+import java.awt.event.KeyEvent;
 
 public class TestContext extends Context
 {
@@ -11,14 +12,21 @@ public class TestContext extends Context
 	public void init()
 	{
 		x = y = 0;
-		J2IGF.createRenderer();
+		J2IGF.initInput();
+		J2IGF.initRenderer();
 	}
 
 	@Override
 	public void update()
 	{
-		x++;
-		y++;
+		if (J2IGF.input.isKey(KeyEvent.VK_W))
+			y--;
+		if (J2IGF.input.isKey(KeyEvent.VK_S))
+			y++;
+		if (J2IGF.input.isKey(KeyEvent.VK_A))
+			x--;
+		if (J2IGF.input.isKey(KeyEvent.VK_D))
+			x++;
 	}
 
 	@Override

@@ -10,9 +10,18 @@ public class Engine implements Runnable
 	private final Stack<Context> contexts;
 	private final Thread thread;
 	private final int desiredUPS;
-	private final boolean unlockFrameRate;
-	private final boolean debugMode;
+	private final boolean unlockFrameRate, debugMode;
 	private boolean running;
+
+	private Engine(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
+	{
+		this.contexts = new Stack<>();
+		this.thread = new Thread(this);
+		this.desiredUPS = desiredUPS;
+		this.unlockFrameRate = unlockFrameRate;
+		this.debugMode = debugMode;
+		this.running = false;
+	}
 
 	public static void create(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
 	{
@@ -22,29 +31,32 @@ public class Engine implements Runnable
 			System.exit(-1);
 		}
 		J2IGF.engine = new Engine(desiredUPS, unlockFrameRate, debugMode);
-	}
-
-	private Engine(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
-	{
-		this.contexts = new Stack<>();
-		this.thread = new Thread(this);
-		this.running = false;
-		this.desiredUPS = desiredUPS;
-		this.unlockFrameRate = unlockFrameRate;
-		this.debugMode = debugMode;
 		J2IGF.window.getJFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		J2IGF.window.getJFrame().addWindowListener(new WindowAdapter()
 		{
 			public void windowClosing(WindowEvent e)
 			{
-				if (!running)
+				if (!J2IGF.engine.running)
 				{
 					J2IGF.window.getJFrame().dispose();
 					System.exit(0);
 				}
-				stop(false);
+				J2IGF.engine.stop(false);
 			}
 		});
+	}
+
+	public void update()
+	{
+		if (!contexts.isEmpty())
+			contexts.peek().update();
+	}
+
+	public void render()
+	{
+		if (!contexts.isEmpty())
+			contexts.peek().render();
+		J2IGF.window.updateFrame();
 	}
 
 	public void addContext(Context context)
@@ -87,16 +99,14 @@ public class Engine implements Runnable
 			shouldRender = unlockFrameRate;
 			while (timeAccumulated >= timeSlice)
 			{
-				if (!contexts.isEmpty())
-					contexts.peek().update();
+				J2IGF.update();
 				ups++;
 				timeAccumulated -= timeSlice;
 				shouldRender = true;
 			}
 			if (shouldRender)
 			{
-				if (!contexts.isEmpty())
-					contexts.peek().render();
+				J2IGF.render();
 				fps++;
 			}
 			else
@@ -111,8 +121,6 @@ public class Engine implements Runnable
 				}
 			}
 
-			J2IGF.window.updateFrame();
-
 			timer2 = System.currentTimeMillis();
 			if (timer2 - timer1 > 1000)
 			{
@@ -123,8 +131,6 @@ public class Engine implements Runnable
 				ups = 0;
 			}
 		}
-		J2IGF.window.dispose();
-		System.exit(0);
 	}
 
 	public void stop(boolean disposeContexts)
@@ -132,10 +138,20 @@ public class Engine implements Runnable
 		if (!running)
 			return;
 		running = false;
+		try
+		{
+			thread.join();
+		}
+		catch (InterruptedException e)
+		{
+			throw new RuntimeException(e);
+		}
 		if (disposeContexts)
 		{
 			while (!contexts.isEmpty())
 				removeCurrentContext();
 		}
+		J2IGF.window.dispose();
+		System.exit(0);
 	}
 }

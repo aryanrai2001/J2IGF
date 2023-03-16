@@ -6,8 +6,8 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		J2IGF.createWindow(940, 720, 1, "Test");
-		J2IGF.createEngine(60, false, false);
+		J2IGF.initWindow(126, 126, 7, "Test");
+		J2IGF.initEngine(60, true, true);
 		J2IGF.engine.addContext(new TestContext());
 		J2IGF.engine.start();
 	}

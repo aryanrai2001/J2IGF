@@ -8,21 +8,21 @@ public class Renderer
 	private final int width;
 	private final int height;
 
-	public static void create()
+	private Renderer()
 	{
-		J2IGF.renderer = new Renderer();
+		this.pixels = J2IGF.window.getFrameBuffer();
+		this.width = J2IGF.getWidth();
+		this.height = J2IGF.getHeight();
 	}
 
-	private Renderer()
+	public static void create()
 	{
 		if (J2IGF.window == null)
 		{
 			System.err.println("A Window must be created before Renderer.");
 			System.exit(-1);
 		}
-		this.pixels = J2IGF.window.getFrameBuffer();
-		this.width = J2IGF.getWidth();
-		this.height = J2IGF.getHeight();
+		J2IGF.renderer = new Renderer();
 	}
 
 	public void clear(int color)

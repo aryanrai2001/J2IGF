@@ -14,13 +14,18 @@ public class Engine implements Runnable
 	private final boolean debugMode;
 	private boolean running;
 
-	public Engine(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
+	public static void create(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
 	{
 		if (J2IGF.window == null)
 		{
 			System.err.println("A Window must be created before Engine.");
 			System.exit(-1);
 		}
+		J2IGF.engine = new Engine(desiredUPS, unlockFrameRate, debugMode);
+	}
+
+	private Engine(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
+	{
 		this.contexts = new Stack<>();
 		this.thread = new Thread(this);
 		this.running = false;
@@ -82,14 +87,16 @@ public class Engine implements Runnable
 			shouldRender = unlockFrameRate;
 			while (timeAccumulated >= timeSlice)
 			{
-				if (!contexts.isEmpty()) contexts.peek().update();
+				if (!contexts.isEmpty())
+					contexts.peek().update();
 				ups++;
 				timeAccumulated -= timeSlice;
 				shouldRender = true;
 			}
 			if (shouldRender)
 			{
-				if (!contexts.isEmpty()) contexts.peek().render();
+				if (!contexts.isEmpty())
+					contexts.peek().render();
 				fps++;
 			}
 			else
@@ -116,7 +123,7 @@ public class Engine implements Runnable
 				ups = 0;
 			}
 		}
-		J2IGF.window.getJFrame().dispose();
+		J2IGF.window.dispose();
 		System.exit(0);
 	}
 

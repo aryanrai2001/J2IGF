@@ -17,9 +17,14 @@ public class Window
 	private final BufferStrategy strategy;
 	private final Graphics graphics;
 
-	public Window(int width, int height, String title)
+	public static void create(int width, int height, String title)
 	{
-		Dimension size = new Dimension(width, height);
+		J2IGF.window = new Window(width, height, title);
+	}
+
+	private Window(int width, int height, String title)
+	{
+		Dimension size = new Dimension(width * J2IGF.getRenderScale(), height * J2IGF.getRenderScale());
 		frame = new JFrame(title);
 		canvas = new Canvas();
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -51,7 +56,7 @@ public class Window
 
 	public int[] getFrameBuffer()
 	{
-		return ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+		return ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 	}
 
 	public JFrame getJFrame()
@@ -62,5 +67,12 @@ public class Window
 	public Canvas getCanvas()
 	{
 		return canvas;
+	}
+
+	public void dispose()
+	{
+		graphics.dispose();
+		strategy.dispose();
+		frame.dispose();
 	}
 }

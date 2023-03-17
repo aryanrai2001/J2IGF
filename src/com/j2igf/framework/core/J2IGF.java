@@ -38,9 +38,9 @@ public final class J2IGF
 
 	public static void update()
 	{
+		engine.update();
 		if (input != null)
 			input.update();
-		engine.update();
 	}
 
 	public static void render()

@@ -78,6 +78,16 @@ public class Engine implements Runnable
 			return;
 		running = true;
 		thread.start();
+		try
+		{
+			thread.join();
+		}
+		catch (InterruptedException e)
+		{
+			throw new RuntimeException(e);
+		}
+		J2IGF.window.dispose();
+		System.exit(0);
 	}
 
 	public void run()
@@ -138,20 +148,10 @@ public class Engine implements Runnable
 		if (!running)
 			return;
 		running = false;
-		try
-		{
-			thread.join();
-		}
-		catch (InterruptedException e)
-		{
-			throw new RuntimeException(e);
-		}
 		if (disposeContexts)
 		{
 			while (!contexts.isEmpty())
 				removeCurrentContext();
 		}
-		J2IGF.window.dispose();
-		System.exit(0);
 	}
 }

@@ -3,30 +3,27 @@ package com.j2igf.driver;
 import com.j2igf.framework.core.Context;
 import com.j2igf.framework.core.J2IGF;
 import com.j2igf.framework.event.Input;
-import com.j2igf.framework.graphics.image.Bitmap;
+import com.j2igf.framework.graphics.image.Image;
 
 public class TestContext extends Context
 {
-
-	Bitmap img = new Bitmap(1000, 1000);
+	Image img = new Image("[INPUT_PATH]");
 	int x, y;
+
 	@Override
 	public void init()
 	{
-		// Drawing to bitmap using renderer
+		// Drawing to Image using renderer
 		J2IGF.initInput();
 		J2IGF.initRenderer();
 		J2IGF.renderer.setTarget(img);
 		J2IGF.renderer.fillTriangle(100, 150, 250, 450, 600, 350, 0xffff0000);
 		J2IGF.renderer.fillCircle(500, 500, 150, 0xff00ff00);
-		J2IGF.renderer.fillRect( 500, 600, 800, 900, 0xff0000ff);
+		J2IGF.renderer.fillRect(500, 600, 800, 900, 0xff0000ff);
 		J2IGF.renderer.resetTarget();
 
-		//Drawing to bitmap manually using setPixel() method
-		for(int i = 0; i < img.getWidth(); i++)
-		{
-			img.setPixel(i, i, 0xffffff00);
-		}
+		// Saving Image to file
+		img.saveToFile("[OUTPUT_PATH]", "[FILENAME]");
 	}
 
 	@Override

@@ -26,11 +26,13 @@ public class Renderer
 
 	public void setTarget(Bitmap target)
 	{
-		if (target == null) return;
+		if (target == null)
+			return;
 		this.pixels = target.getPixels();
 		this.width = target.getWidth();
 		this.height = target.getHeight();
 	}
+
 	public void resetTarget()
 	{
 		this.pixels = J2IGF.window.getFrameBuffer();
@@ -67,17 +69,20 @@ public class Renderer
 		while (true)
 		{
 			setPixel(x0, y0, color);
-			if (x0 == x1 && y0 == y1) break;
+			if (x0 == x1 && y0 == y1)
+				break;
 			int e2 = 2 * error;
 			if (e2 >= dy)
 			{
-				if (x0 == x1) break;
+				if (x0 == x1)
+					break;
 				error = error + dy;
 				x0 = x0 + sx;
 			}
 			if (e2 <= dx)
 			{
-				if (y0 == y1) break;
+				if (y0 == y1)
+					break;
 				error = error + dx;
 				y0 = y0 + sy;
 			}
@@ -86,26 +91,32 @@ public class Renderer
 
 	public void drawRect(int x0, int y0, int x1, int y1, int strokeWidth, int color)
 	{
-		if (x0 > x1) x0 = x0 ^ x1 ^ (x1 = x0);
-		if (y0 > y1) y0 = y0 ^ y1 ^ (y1 = y0);
-		strokeWidth = Math.min(strokeWidth, Math.min(x1-x0, y1-y0) + 1);
+		if (x0 > x1)
+			x0 = x0 ^ x1 ^ (x1 = x0);
+		if (y0 > y1)
+			y0 = y0 ^ y1 ^ (y1 = y0);
+		strokeWidth = Math.min(strokeWidth, Math.min(x1 - x0, y1 - y0) + 1);
 		while (strokeWidth > 0)
 		{
 			drawLine(x0, y0, x1, y0, color);
 			drawLine(x0, y1, x1, y1, color);
 			drawLine(x0, y0, x0, y1, color);
 			drawLine(x1, y0, x1, y1, color);
-			x0++; y0++;
-			x1--; y1--;
+			x0++;
+			y0++;
+			x1--;
+			y1--;
 			strokeWidth--;
 		}
 	}
 
 	public void fillRect(int x0, int y0, int x1, int y1, int color)
 	{
-		if (x0 > x1) x0 = x0 ^ x1 ^ (x1 = x0);
-		if (y0 > y1) y0 = y0 ^ y1 ^ (y1 = y0);
-		for (int y  = y0; y <= y1; y++)
+		if (x0 > x1)
+			x0 = x0 ^ x1 ^ (x1 = x0);
+		if (y0 > y1)
+			y0 = y0 ^ y1 ^ (y1 = y0);
+		for (int y = y0; y <= y1; y++)
 		{
 			for (int x = x0; x <= x1; x++)
 			{
@@ -118,14 +129,14 @@ public class Renderer
 	{
 		int currX = 0, currY = Math.abs(radius);
 		int decisionParameter = 3 - 2 * radius;
-		setPixel(x+currX, y+currY, color);
-		setPixel(x-currX, y+currY, color);
-		setPixel(x+currX, y-currY, color);
-		setPixel(x-currX, y-currY, color);
-		setPixel(x+currY, y+currX, color);
-		setPixel(x-currY, y+currX, color);
-		setPixel(x+currY, y-currX, color);
-		setPixel(x-currY, y-currX, color);
+		setPixel(x + currX, y + currY, color);
+		setPixel(x - currX, y + currY, color);
+		setPixel(x + currX, y - currY, color);
+		setPixel(x - currX, y - currY, color);
+		setPixel(x + currY, y + currX, color);
+		setPixel(x - currY, y + currX, color);
+		setPixel(x + currY, y - currX, color);
+		setPixel(x - currY, y - currX, color);
 		while (currY >= currX)
 		{
 			currX++;
@@ -136,14 +147,14 @@ public class Renderer
 			}
 			else
 				decisionParameter = decisionParameter + 4 * currX + 6;
-			setPixel(x+currX, y+currY, color);
-			setPixel(x-currX, y+currY, color);
-			setPixel(x+currX, y-currY, color);
-			setPixel(x-currX, y-currY, color);
-			setPixel(x+currY, y+currX, color);
-			setPixel(x-currY, y+currX, color);
-			setPixel(x+currY, y-currX, color);
-			setPixel(x-currY, y-currX, color);
+			setPixel(x + currX, y + currY, color);
+			setPixel(x - currX, y + currY, color);
+			setPixel(x + currX, y - currY, color);
+			setPixel(x - currX, y - currY, color);
+			setPixel(x + currY, y + currX, color);
+			setPixel(x - currY, y + currX, color);
+			setPixel(x + currY, y - currX, color);
+			setPixel(x - currY, y - currX, color);
 		}
 	}
 
@@ -176,12 +187,12 @@ public class Renderer
 		height = Math.abs(height);
 		if (width < 1)
 		{
-			drawLine(x, y-height, x, y+height, color);
+			drawLine(x, y - height, x, y + height, color);
 			return;
 		}
 		if (height < 1)
 		{
-			drawLine(x-width, y, x+width, y, color);
+			drawLine(x - width, y, x + width, y, color);
 			return;
 		}
 		int currX, currY;
@@ -189,21 +200,21 @@ public class Renderer
 		int error;
 		int TwoASquare, TwoBSquare;
 		int StoppingX, StoppingY;
-		TwoASquare = 2*width*width;
-		TwoBSquare = 2*height*height;
+		TwoASquare = 2 * width * width;
+		TwoBSquare = 2 * height * height;
 		currX = width;
 		currY = 0;
-		dx = height*height*(1-2*width);
-		dy = width*width;
+		dx = height * height * (1 - 2 * width);
+		dy = width * width;
 		error = 0;
-		StoppingX = TwoBSquare*width;
+		StoppingX = TwoBSquare * width;
 		StoppingY = 0;
-		while ( StoppingX >= StoppingY )
+		while (StoppingX >= StoppingY)
 		{
-			setPixel(x+currX, y+currY, color);
-			setPixel(x-currX, y+currY, color);
-			setPixel(x-currX, y-currY, color);
-			setPixel(x+currX, y-currY, color);
+			setPixel(x + currX, y + currY, color);
+			setPixel(x - currX, y + currY, color);
+			setPixel(x - currX, y - currY, color);
+			setPixel(x + currX, y - currY, color);
 			currY++;
 			StoppingY += TwoASquare;
 			error += dy;
@@ -218,17 +229,17 @@ public class Renderer
 		}
 		currX = 0;
 		currY = height;
-		dx = height*height;
-		dy = width*width*(1-2*height);
+		dx = height * height;
+		dy = width * width * (1 - 2 * height);
 		error = 0;
 		StoppingX = 0;
-		StoppingY = TwoASquare*height;
-		while ( StoppingX <= StoppingY )
+		StoppingY = TwoASquare * height;
+		while (StoppingX <= StoppingY)
 		{
-			setPixel(x+currX, y+currY, color);
-			setPixel(x-currX, y+currY, color);
-			setPixel(x-currX, y-currY, color);
-			setPixel(x+currX, y-currY, color);
+			setPixel(x + currX, y + currY, color);
+			setPixel(x - currX, y + currY, color);
+			setPixel(x - currX, y - currY, color);
+			setPixel(x + currX, y - currY, color);
 			currX++;
 			StoppingX += TwoBSquare;
 			error += dx;
@@ -249,12 +260,12 @@ public class Renderer
 		height = Math.abs(height);
 		if (width < 1)
 		{
-			drawLine(x, y-height, x, y+height, color);
+			drawLine(x, y - height, x, y + height, color);
 			return;
 		}
 		if (height < 1)
 		{
-			drawLine(x-width, y, x+width, y, color);
+			drawLine(x - width, y, x + width, y, color);
 			return;
 		}
 		int currX, currY;
@@ -262,19 +273,19 @@ public class Renderer
 		int error;
 		int TwoASquare, TwoBSquare;
 		int StoppingX, StoppingY;
-		TwoASquare = 2*width*width;
-		TwoBSquare = 2*height*height;
+		TwoASquare = 2 * width * width;
+		TwoBSquare = 2 * height * height;
 		currX = width;
 		currY = 0;
-		dx = height*height*(1-2*width);
-		dy = width*width;
+		dx = height * height * (1 - 2 * width);
+		dy = width * width;
 		error = 0;
-		StoppingX = TwoBSquare*width;
+		StoppingX = TwoBSquare * width;
 		StoppingY = 0;
-		while ( StoppingX >= StoppingY )
+		while (StoppingX >= StoppingY)
 		{
-			drawLine(x+currX, y+currY, x-currX, y+currY, color);
-			drawLine(x-currX, y-currY, x+currX, y-currY, color);
+			drawLine(x + currX, y + currY, x - currX, y + currY, color);
+			drawLine(x - currX, y - currY, x + currX, y - currY, color);
 			currY++;
 			StoppingY += TwoASquare;
 			error += dy;
@@ -289,15 +300,15 @@ public class Renderer
 		}
 		currX = 0;
 		currY = height;
-		dx = height*height;
-		dy = width*width*(1-2*height);
+		dx = height * height;
+		dy = width * width * (1 - 2 * height);
 		error = 0;
 		StoppingX = 0;
-		StoppingY = TwoASquare*height;
-		while ( StoppingX <= StoppingY )
+		StoppingY = TwoASquare * height;
+		while (StoppingX <= StoppingY)
 		{
-			drawLine(x+currX, y+currY, x-currX, y+currY, color);
-			drawLine(x-currX, y-currY, x+currX, y-currY, color);
+			drawLine(x + currX, y + currY, x - currX, y + currY, color);
+			drawLine(x - currX, y - currY, x + currX, y - currY, color);
 			currX++;
 			StoppingX += TwoBSquare;
 			error += dx;
@@ -329,7 +340,7 @@ public class Renderer
 
 		for (int scanlineY = y0; scanlineY <= y1; scanlineY++)
 		{
-			drawLine((int)curx1, scanlineY, (int)curx2, scanlineY, color);
+			drawLine((int) curx1, scanlineY, (int) curx2, scanlineY, color);
 			curx1 += invslope1;
 			curx2 += invslope2;
 		}
@@ -345,7 +356,7 @@ public class Renderer
 
 		for (int scanlineY = y2; scanlineY > y0; scanlineY--)
 		{
-			drawLine((int)curx1, scanlineY, (int)curx2, scanlineY, color);
+			drawLine((int) curx1, scanlineY, (int) curx2, scanlineY, color);
 			curx1 -= invslope1;
 			curx2 -= invslope2;
 		}
@@ -379,7 +390,7 @@ public class Renderer
 		}
 		else
 		{
-			int x3 = (int)(x0 + ((float)(y1 - y0) / (float)(y2 - y0)) * (x2 - x0));
+			int x3 = (int) (x0 + ((float) (y1 - y0) / (float) (y2 - y0)) * (x2 - x0));
 			fillBottomFlatTriangle(x0, y0, x1, y1, x3, y1, color);
 			fillTopFlatTriangle(x1, y1, x3, y1, x2, y2, color);
 		}

@@ -1,18 +1,17 @@
 package com.j2igf.framework.graphics;
 
 import com.j2igf.framework.core.J2IGF;
+import com.j2igf.framework.graphics.image.Bitmap;
 
 public class Renderer
 {
-	private final int[] pixels;
-	private final int width;
-	private final int height;
+	private int[] pixels;
+	private int width;
+	private int height;
 
 	private Renderer()
 	{
-		this.pixels = J2IGF.window.getFrameBuffer();
-		this.width = J2IGF.getWidth();
-		this.height = J2IGF.getHeight();
+		resetTarget();
 	}
 
 	public static void create()
@@ -25,13 +24,27 @@ public class Renderer
 		J2IGF.renderer = new Renderer();
 	}
 
+	public void setTarget(Bitmap target)
+	{
+		if (target == null) return;
+		this.pixels = target.getPixels();
+		this.width = target.getWidth();
+		this.height = target.getHeight();
+	}
+	public void resetTarget()
+	{
+		this.pixels = J2IGF.window.getFrameBuffer();
+		this.width = J2IGF.getWidth();
+		this.height = J2IGF.getHeight();
+	}
+
 	public void clear(int color)
 	{
 		for (int y = 0; y < height; y++)
 		{
 			for (int x = 0; x < width; x++)
 			{
-				pixels[x + y * width] = color;
+				pixels[x + y * width] = color | 0xff000000;
 			}
 		}
 	}
@@ -369,6 +382,17 @@ public class Renderer
 			int x3 = (int)(x0 + ((float)(y1 - y0) / (float)(y2 - y0)) * (x2 - x0));
 			fillBottomFlatTriangle(x0, y0, x1, y1, x3, y1, color);
 			fillTopFlatTriangle(x1, y1, x3, y1, x2, y2, color);
+		}
+	}
+
+	public void renderBitmap(int x, int y, Bitmap bitmap)
+	{
+		for (int i = 0; i < bitmap.getHeight(); i++)
+		{
+			for (int j = 0; j < bitmap.getWidth(); j++)
+			{
+				setPixel(x + j, y + i, bitmap.getPixel(j, i));
+			}
 		}
 	}
 }

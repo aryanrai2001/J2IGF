@@ -9,15 +9,15 @@ public class Engine implements Runnable
 {
 	private final Stack<Context> contexts;
 	private final Thread thread;
-	private final int desiredUPS;
+	private final int targetUPS;
 	private final boolean unlockFrameRate, debugMode;
 	private boolean running;
 
-	private Engine(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
+	private Engine(int targetUPS, boolean unlockFrameRate, boolean debugMode)
 	{
 		this.contexts = new Stack<>();
 		this.thread = new Thread(this);
-		this.desiredUPS = desiredUPS;
+		this.targetUPS = targetUPS;
 		this.unlockFrameRate = unlockFrameRate;
 		this.debugMode = debugMode;
 		this.running = false;
@@ -96,7 +96,7 @@ public class Engine implements Runnable
 		int ups = 0;
 		long lastTime = System.nanoTime();
 		long timer1 = System.currentTimeMillis(), timer2;
-		double timeSlice = 1000000000.0 / desiredUPS;
+		double timeSlice = 1000000000.0 / targetUPS;
 		double timeAccumulated = 0;
 		boolean shouldRender;
 

@@ -10,6 +10,8 @@ public class Image extends Bitmap
 {
 	public Image(Bitmap bitmap, boolean copy)
 	{
+		this.originX = bitmap.originX;
+		this.originY = bitmap.originY;
 		this.width = bitmap.width;
 		this.height = bitmap.height;
 		if (copy)
@@ -34,9 +36,12 @@ public class Image extends Bitmap
 		}
 		assert image != null;
 
+		this.originX = 0;
+		this.originY = 0;
 		this.width = image.getWidth();
 		this.height = image.getHeight();
 		this.pixels = image.getRGB(0, 0, width, height, null, 0, width);
+		image.flush();
 	}
 
 	public void saveToFile(String path, String name)

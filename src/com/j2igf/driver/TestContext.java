@@ -48,7 +48,7 @@ public class TestContext extends Context
 	public void render()
 	{
 		J2IGF.renderer.clear(0);
-		J2IGF.renderer.renderBitmap(x, y, img);
+		J2IGF.renderer.renderBitmap(J2IGF.input.getMouseX(), J2IGF.input.getMouseY(), img);
 	}
 
 	@Override

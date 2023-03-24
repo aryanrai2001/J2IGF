@@ -53,7 +53,7 @@ public class Renderer
 
 	public void setPixel(int x, int y, int color)
 	{
-		if (x < 0 || x >= width || y < 0 || y >= height)
+		if (x < 0 || x >= width || y < 0 || y >= height || (color & 0xffffff) == 0xff00ff)
 			return;
 		pixels[x + y * width] = color;
 	}
@@ -398,11 +398,26 @@ public class Renderer
 
 	public void renderBitmap(int x, int y, Bitmap bitmap)
 	{
-		for (int i = 0; i < bitmap.getHeight(); i++)
+		x -= bitmap.getOriginX();
+		y -= bitmap.getOriginY();
+
+		int startX = 0, startY = 0;
+		int endX = bitmap.getWidth(), endY = bitmap.getHeight();
+
+		if (x < 0)
+			startX -= x;
+		if (y < 0)
+			startY -= y;
+		if (x + endX > width)
+			endX = width - x;
+		if (y + endY > height)
+			endY = height - y;
+
+		for (int currY = startY; currY < endY; currY++)
 		{
-			for (int j = 0; j < bitmap.getWidth(); j++)
+			for (int currX = startX; currX < endX; currX++)
 			{
-				setPixel(x + j, y + i, bitmap.getPixel(j, i));
+				setPixel(x + currX, y + currY, bitmap.getPixel(currX, currY));
 			}
 		}
 	}

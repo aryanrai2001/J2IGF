@@ -10,22 +10,21 @@ public class Engine implements Runnable
 	private final Stack<Context> contexts;
 	private final Thread thread;
 	private final int targetUPS;
-	private final boolean unlockFrameRate, debugMode;
+	private final boolean debugMode;
 	private boolean running;
 
-	private Engine(int targetUPS, boolean unlockFrameRate, boolean debugMode)
+	private Engine(int targetUPS, boolean debugMode)
 	{
 		this.contexts = new Stack<>();
 		this.thread = new Thread(this);
 		this.targetUPS = targetUPS;
-		this.unlockFrameRate = unlockFrameRate;
 		this.debugMode = debugMode;
 		this.running = false;
 	}
 
-	public static void create(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
+	public static void create(int desiredUPS, boolean debugMode)
 	{
-		J2IGF.engine = new Engine(desiredUPS, unlockFrameRate, debugMode);
+		J2IGF.engine = new Engine(desiredUPS, debugMode);
 		J2IGF.window.getJFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		J2IGF.window.getJFrame().addWindowListener(new WindowAdapter()
 		{
@@ -92,38 +91,22 @@ public class Engine implements Runnable
 		long timer1 = System.currentTimeMillis(), timer2;
 		double timeSlice = 1000000000.0 / targetUPS;
 		double timeAccumulated = 0;
-		boolean shouldRender;
 
 		while (running)
 		{
 			long currentTime = System.nanoTime();
-			long deltaTime = currentTime - lastTime;
+			long frameTime = currentTime - lastTime;
+			double deltaTime = J2IGF.time.getTimeScale() * frameTime / 1000000000.0;
 			lastTime = currentTime;
-			timeAccumulated += deltaTime;
-			shouldRender = unlockFrameRate;
+			timeAccumulated += frameTime;
 			while (timeAccumulated >= timeSlice)
 			{
-				J2IGF.update();
+				J2IGF.update(J2IGF.time.getTimeScale() * timeSlice / 1000000000.0);
 				ups++;
 				timeAccumulated -= timeSlice;
-				shouldRender = true;
 			}
-			if (shouldRender)
-			{
-				J2IGF.render();
-				fps++;
-			}
-			else
-			{
-				try
-				{
-					Thread.sleep(1);
-				}
-				catch (InterruptedException e)
-				{
-					throw new RuntimeException(e);
-				}
-			}
+			J2IGF.render(deltaTime);
+			fps++;
 
 			timer2 = System.currentTimeMillis();
 			if (timer2 - timer1 > 1000)

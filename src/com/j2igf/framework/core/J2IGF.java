@@ -4,6 +4,7 @@ public final class J2IGF
 {
 	public static Window window;
 	public static Engine engine;
+	public static Time time;
 	public static Renderer renderer;
 	public static Input input;
 	private static int width, height, renderScale;
@@ -17,7 +18,7 @@ public final class J2IGF
 		Window.create(width, height, title);
 	}
 
-	public static void initEngine(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
+	public static void initEngine(int desiredUPS, boolean debugMode)
 	{
 		if (J2IGF.window == null)
 		{
@@ -25,7 +26,8 @@ public final class J2IGF
 			System.exit(-1);
 		}
 		J2IGF.debugMode = debugMode;
-		Engine.create(desiredUPS, unlockFrameRate, debugMode);
+		Engine.create(desiredUPS, debugMode);
+		Time.create();
 	}
 
 	public static void initRenderer()
@@ -48,15 +50,17 @@ public final class J2IGF
 		Input.create();
 	}
 
-	public static void update()
+	public static void update(double deltaTime)
 	{
+		time.setDeltaTime(deltaTime);
 		engine.update();
 		if (input != null)
 			input.update();
 	}
 
-	public static void render()
+	public static void render(double deltaTime)
 	{
+		time.setDeltaTime(deltaTime);
 		engine.render();
 		window.updateFrame();
 	}

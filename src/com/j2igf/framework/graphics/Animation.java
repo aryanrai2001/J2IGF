@@ -7,13 +7,13 @@ import com.j2igf.framework.graphics.bitmap.TileSet;
 public class Animation
 {
 	private final Sprite[] frames;
-	private final float speed;
+	private final double fps;
 	private float frameIndex;
 
-	public Animation(TileSet tileSet, float speed)
+	public Animation(TileSet tileSet, double fps)
 	{
 		this.frameIndex = 0;
-		this.speed = speed;
+		this.fps = fps;
 		this.frames = new Sprite[tileSet.getNumTilesX() * tileSet.getNumTilesY()];
 		for (int i = 0; i < frames.length; i++)
 			frames[i] = tileSet.getTile(i);
@@ -21,7 +21,7 @@ public class Animation
 
 	public void update()
 	{
-		frameIndex += speed;
+		frameIndex += fps * J2IGF.time.getDeltaTime();
 		if (frameIndex >= frames.length)
 			frameIndex = 0;
 	}

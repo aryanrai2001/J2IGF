@@ -11,7 +11,7 @@ public class TestContext extends Context
 {
 	Image img = new Image("res/images/coin.png");
 	TileSet tileSet = new TileSet(img, 8, 1);
-	Animation anim = new Animation(tileSet, 0.2f);
+	Animation anim = new Animation(tileSet, 15);
 	int x, y;
 
 	@Override
@@ -37,7 +37,6 @@ public class TestContext extends Context
 			y++;
 		if (J2IGF.input.isKey(Input.KeyCode.D))
 			x++;
-
 		anim.update();
 	}
 

@@ -1,7 +1,6 @@
-package com.j2igf.framework.graphics;
+package com.j2igf.framework.core;
 
-import com.j2igf.framework.core.J2IGF;
-import com.j2igf.framework.graphics.image.Bitmap;
+import com.j2igf.framework.graphics.bitmap.Bitmap;
 
 public class Renderer
 {
@@ -16,11 +15,6 @@ public class Renderer
 
 	public static void create()
 	{
-		if (J2IGF.window == null)
-		{
-			System.err.println("A Window must be created before Renderer.");
-			System.exit(-1);
-		}
 		J2IGF.renderer = new Renderer();
 	}
 

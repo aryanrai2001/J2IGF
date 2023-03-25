@@ -2,16 +2,16 @@ package com.j2igf.driver;
 
 import com.j2igf.framework.core.Context;
 import com.j2igf.framework.core.J2IGF;
-import com.j2igf.framework.event.Input;
-import com.j2igf.framework.graphics.image.Image;
-import com.j2igf.framework.graphics.image.Sprite;
-import com.j2igf.framework.graphics.image.TileSet;
+import com.j2igf.framework.core.Input;
+import com.j2igf.framework.graphics.Animation;
+import com.j2igf.framework.graphics.bitmap.Image;
+import com.j2igf.framework.graphics.bitmap.TileSet;
 
 public class TestContext extends Context
 {
-	Image img = new Image("[INPUT_PATH]");
-	TileSet tileSet = new TileSet(img, 10, 10);
-	Sprite tile = tileSet.getTile(5, 9);
+	Image img = new Image("res/images/coin.png");
+	TileSet tileSet = new TileSet(img, 8, 1);
+	Animation anim = new Animation(tileSet, 0.2f);
 	int x, y;
 
 	@Override
@@ -37,13 +37,15 @@ public class TestContext extends Context
 			y++;
 		if (J2IGF.input.isKey(Input.KeyCode.D))
 			x++;
+
+		anim.update();
 	}
 
 	@Override
 	public void render()
 	{
 		J2IGF.renderer.clear(0);
-		J2IGF.renderer.renderBitmap(J2IGF.input.getMouseX(), J2IGF.input.getMouseY(), tile);
+		anim.render(J2IGF.input.getMouseX(), J2IGF.input.getMouseY());
 	}
 
 	@Override

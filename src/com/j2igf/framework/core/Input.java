@@ -1,6 +1,4 @@
-package com.j2igf.framework.event;
-
-import com.j2igf.framework.core.J2IGF;
+package com.j2igf.framework.core;
 
 import java.awt.event.*;
 

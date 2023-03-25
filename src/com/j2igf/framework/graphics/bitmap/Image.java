@@ -1,4 +1,4 @@
-package com.j2igf.framework.graphics.image;
+package com.j2igf.framework.graphics.bitmap;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

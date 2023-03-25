@@ -1,4 +1,5 @@
-package com.j2igf.framework.graphics.image;
+package com.j2igf.framework.graphics.bitmap;
+
 public class TileSet extends Bitmap
 {
 	private final int numTilesX;
@@ -48,5 +49,25 @@ public class TileSet extends Bitmap
 			}
 		}
 		return tile;
+	}
+
+	public int getNumTilesX()
+	{
+		return numTilesX;
+	}
+
+	public int getNumTilesY()
+	{
+		return numTilesY;
+	}
+
+	public int getTileWidth()
+	{
+		return tileWidth;
+	}
+
+	public int getTileHeight()
+	{
+		return tileHeight;
 	}
 }

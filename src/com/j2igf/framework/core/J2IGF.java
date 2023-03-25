@@ -1,8 +1,5 @@
 package com.j2igf.framework.core;
 
-import com.j2igf.framework.graphics.Renderer;
-import com.j2igf.framework.event.Input;
-
 public final class J2IGF
 {
 	public static Window window;
@@ -22,17 +19,32 @@ public final class J2IGF
 
 	public static void initEngine(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
 	{
+		if (J2IGF.window == null)
+		{
+			System.err.println("Engine requires the Window instance to initialize.");
+			System.exit(-1);
+		}
 		J2IGF.debugMode = debugMode;
 		Engine.create(desiredUPS, unlockFrameRate, debugMode);
 	}
 
 	public static void initRenderer()
 	{
+		if (J2IGF.window == null)
+		{
+			System.err.println("A Window must be created before Renderer.");
+			System.exit(-1);
+		}
 		Renderer.create();
 	}
 
 	public static void initInput()
 	{
+		if (J2IGF.window == null)
+		{
+			System.err.println("Input requires the Engine instance to initialize.");
+			System.exit(-1);
+		}
 		Input.create();
 	}
 
@@ -46,6 +58,7 @@ public final class J2IGF
 	public static void render()
 	{
 		engine.render();
+		window.updateFrame();
 	}
 
 	public static int getWidth()

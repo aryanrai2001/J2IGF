@@ -25,11 +25,6 @@ public class Engine implements Runnable
 
 	public static void create(int desiredUPS, boolean unlockFrameRate, boolean debugMode)
 	{
-		if (J2IGF.window == null)
-		{
-			System.err.println("A Window must be created before Engine.");
-			System.exit(-1);
-		}
 		J2IGF.engine = new Engine(desiredUPS, unlockFrameRate, debugMode);
 		J2IGF.window.getJFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		J2IGF.window.getJFrame().addWindowListener(new WindowAdapter()
@@ -56,7 +51,6 @@ public class Engine implements Runnable
 	{
 		if (!contexts.isEmpty())
 			contexts.peek().render();
-		J2IGF.window.updateFrame();
 	}
 
 	public void addContext(Context context)

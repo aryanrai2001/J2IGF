@@ -26,18 +26,18 @@ public final class J2IGF
 			System.exit(-1);
 		}
 		J2IGF.debugMode = debugMode;
-		Engine.create(desiredUPS, debugMode);
+		Engine.create(desiredUPS);
 		Time.create();
 	}
 
-	public static void initRenderer()
+	public static void initRenderer(boolean alphaEnabled)
 	{
 		if (J2IGF.window == null)
 		{
 			System.err.println("A Window must be created before Renderer.");
 			System.exit(-1);
 		}
-		Renderer.create();
+		Renderer.create(alphaEnabled);
 	}
 
 	public static void initInput()

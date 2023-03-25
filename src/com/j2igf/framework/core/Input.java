@@ -176,8 +176,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 
 	private Input()
 	{
-		this.mouseX = 0;
-		this.mouseY = 0;
+		this.mouseX = J2IGF.getWidth() / 2;
+		this.mouseY = J2IGF.getHeight() / 2;
 		this.reset();
 	}
 

@@ -7,15 +7,19 @@ public class Renderer
 	private int[] pixels;
 	private int width;
 	private int height;
+	private float globalAlpha;
+	private boolean alphaEnabled;
 
-	private Renderer()
+	private Renderer(boolean alphaEnabled)
 	{
+		this.globalAlpha = -1;
+		this.alphaEnabled = alphaEnabled;
 		resetTarget();
 	}
 
-	public static void create()
+	public static void create(boolean alphaEnabled)
 	{
-		J2IGF.renderer = new Renderer();
+		J2IGF.renderer = new Renderer(alphaEnabled);
 	}
 
 	public void setTarget(Bitmap target)
@@ -25,6 +29,7 @@ public class Renderer
 		this.pixels = target.getPixels();
 		this.width = target.getWidth();
 		this.height = target.getHeight();
+		this.alphaEnabled = false;
 	}
 
 	public void resetTarget()
@@ -32,6 +37,22 @@ public class Renderer
 		this.pixels = J2IGF.window.getFrameBuffer();
 		this.width = J2IGF.getWidth();
 		this.height = J2IGF.getHeight();
+		this.alphaEnabled = true;
+	}
+
+	public void useGlobalAlpha(float alpha)
+	{
+		if (alpha < 0 || alpha > 1)
+		{
+			System.err.println("Alpha value must be between 0 and 1.");
+			System.exit(-1);
+		}
+		globalAlpha = alpha;
+	}
+
+	public void useLocalAlpha()
+	{
+		globalAlpha = -1;
 	}
 
 	public void clear(int color)
@@ -47,9 +68,34 @@ public class Renderer
 
 	public void setPixel(int x, int y, int color)
 	{
-		if (x < 0 || x >= width || y < 0 || y >= height || (color & 0xffffff) == 0xff00ff)
+
+		int alpha = (color >> 24) & 0xff;
+		if (x < 0 || x >= width || y < 0 || y >= height || alpha == 0)
 			return;
-		pixels[x + y * width] = color;
+
+		if (alphaEnabled)
+		{
+			int previousColor = pixels[x + y * width];
+			int red = (previousColor >> 16) & 0xff;
+			int green = (previousColor >> 8) & 0xff;
+			int blue = (previousColor) & 0xff;
+			if (globalAlpha == -1)
+			{
+				float alphaF = (float) alpha / 0xff;
+				red = (int) (((1 - alphaF) * red + alphaF * ((color >> 16) & 0xff)));
+				green = (int) ((1 - alphaF) * green + alphaF * ((color >> 8) & 0xff));
+				blue = (int) ((1 - alphaF) * blue + alphaF * (color & 0xff));
+			}
+			else
+			{
+				red = (int) (((1 - globalAlpha) * red + globalAlpha * ((color >> 16) & 0xff)));
+				green = (int) ((1 - globalAlpha) * green + globalAlpha * ((color >> 8) & 0xff));
+				blue = (int) ((1 - globalAlpha) * blue + globalAlpha * (color & 0xff));
+			}
+			pixels[x + y * width] = 0xff000000 | red << 16 | green << 8 | blue;
+		}
+		else
+			pixels[x + y * width] = color | 0xff000000;
 	}
 
 	public void drawLine(int x0, int y0, int x1, int y1, int color)

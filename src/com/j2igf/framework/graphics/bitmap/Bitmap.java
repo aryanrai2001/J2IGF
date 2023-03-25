@@ -40,7 +40,7 @@ public abstract class Bitmap
 	public int getPixel(int x, int y)
 	{
 		if (x < 0 || x >= width || y < 0 || y >= height)
-			return 0xffff00ff;
+			return 0x00000000;
 		return pixels[x + y * width];
 	}
 }

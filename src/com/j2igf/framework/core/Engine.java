@@ -10,21 +10,19 @@ public class Engine implements Runnable
 	private final Stack<Context> contexts;
 	private final Thread thread;
 	private final int targetUPS;
-	private final boolean debugMode;
 	private boolean running;
 
-	private Engine(int targetUPS, boolean debugMode)
+	private Engine(int targetUPS)
 	{
 		this.contexts = new Stack<>();
 		this.thread = new Thread(this);
 		this.targetUPS = targetUPS;
-		this.debugMode = debugMode;
 		this.running = false;
 	}
 
-	public static void create(int desiredUPS, boolean debugMode)
+	public static void create(int desiredUPS)
 	{
-		J2IGF.engine = new Engine(desiredUPS, debugMode);
+		J2IGF.engine = new Engine(desiredUPS);
 		J2IGF.window.getJFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		J2IGF.window.getJFrame().addWindowListener(new WindowAdapter()
 		{
@@ -112,8 +110,8 @@ public class Engine implements Runnable
 			if (timer2 - timer1 > 1000)
 			{
 				timer1 = timer2;
-				if (debugMode)
-					System.out.println(ups + " UPS | " + fps + " FPS");
+				if (J2IGF.isDebugMode())
+					J2IGF.window.getJFrame().setTitle(ups + " UPS | " + fps + " FPS");
 				fps = 0;
 				ups = 0;
 			}

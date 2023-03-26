@@ -8,7 +8,7 @@ public final class J2IGF
 	public static Renderer renderer;
 	public static Input input;
 	private static int width, height, renderScale;
-	private static boolean debugMode;
+	private static boolean debugMode, alphaEnabled;
 
 	public static void initWindow(int width, int height, int renderScale, String title)
 	{
@@ -37,6 +37,7 @@ public final class J2IGF
 			System.err.println("A Window must be created before Renderer.");
 			System.exit(-1);
 		}
+		J2IGF.alphaEnabled = alphaEnabled;
 		Renderer.create(alphaEnabled);
 	}
 
@@ -53,6 +54,7 @@ public final class J2IGF
 	public static void update(double deltaTime)
 	{
 		time.setDeltaTime(deltaTime);
+		time.update();
 		engine.update();
 		if (input != null)
 			input.update();
@@ -62,7 +64,6 @@ public final class J2IGF
 	{
 		time.setDeltaTime(deltaTime);
 		engine.render();
-		window.updateFrame();
 	}
 
 	public static int getWidth()
@@ -83,5 +84,10 @@ public final class J2IGF
 	public static boolean isDebugMode()
 	{
 		return debugMode;
+	}
+
+	public static boolean isAlphaEnabled()
+	{
+		return alphaEnabled;
 	}
 }

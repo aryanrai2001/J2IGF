@@ -1,5 +1,6 @@
 package com.j2igf.framework.core;
 
+import com.j2igf.framework.graphics.bitmap.FontAtlas;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Stack;
@@ -83,38 +84,46 @@ public class Engine implements Runnable
 
 	public void run()
 	{
-		int fps = 0;
-		int ups = 0;
+		int ups = 0, fps = 0;
+		int updates = 0, frames = 0;
 		long lastTime = System.nanoTime();
-		long timer1 = System.currentTimeMillis(), timer2;
 		double timeSlice = 1000000000.0 / targetUPS;
 		double timeAccumulated = 0;
+		double timer = 0;
 
 		while (running)
 		{
 			long currentTime = System.nanoTime();
 			long frameTime = currentTime - lastTime;
-			double deltaTime = J2IGF.time.getTimeScale() * frameTime / 1000000000.0;
 			lastTime = currentTime;
 			timeAccumulated += frameTime;
 			while (timeAccumulated >= timeSlice)
 			{
 				J2IGF.update(J2IGF.time.getTimeScale() * timeSlice / 1000000000.0);
-				ups++;
+				updates++;
 				timeAccumulated -= timeSlice;
 			}
-			J2IGF.render(deltaTime);
-			fps++;
+			J2IGF.render(J2IGF.time.getTimeScale() * frameTime / 1000000000.0);
+			frames++;
 
-			timer2 = System.currentTimeMillis();
-			if (timer2 - timer1 > 1000)
+			if (J2IGF.isDebugMode())
 			{
-				timer1 = timer2;
-				if (J2IGF.isDebugMode())
-					J2IGF.window.getJFrame().setTitle(ups + " UPS | " + fps + " FPS");
-				fps = 0;
-				ups = 0;
+				if (timer > 1)
+				{
+					ups = updates;
+					fps = frames;
+					timer = updates = frames = 0;
+				}
+				timer += J2IGF.time.getDeltaTime();
+
+				FontAtlas originalFont = J2IGF.renderer.getFont();
+				J2IGF.renderer.setFont(FontAtlas.defaultFont);
+				J2IGF.renderer.fillRect(0, 0, 125, 12, 0xff000000);
+				J2IGF.renderer.drawText(0, 0, 0xffffff, ups + " UPS | " + fps + " FPS");
+				J2IGF.renderer.setFont(originalFont);
 			}
+
+			J2IGF.window.updateFrame();
 		}
 	}
 

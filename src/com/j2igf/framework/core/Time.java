@@ -4,16 +4,23 @@ public class Time
 {
 	private double timeScale;
 	private double deltaTime;
+	private double timeStamp;
 
 	private Time()
 	{
 		timeScale = 1;
 		deltaTime = 0;
+		timeStamp = 0;
 	}
 
 	public static void create()
 	{
 		J2IGF.time = new Time();
+	}
+
+	public void update()
+	{
+		timeStamp += deltaTime;
 	}
 
 	public double getTimeScale()
@@ -34,5 +41,10 @@ public class Time
 	public void setDeltaTime(double deltaTime)
 	{
 		this.deltaTime = deltaTime;
+	}
+
+	public double getTimeStamp()
+	{
+		return timeStamp;
 	}
 }

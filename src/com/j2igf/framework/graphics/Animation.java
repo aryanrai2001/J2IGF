@@ -28,6 +28,6 @@ public class Animation
 
 	public void render(int x, int y)
 	{
-		J2IGF.renderer.renderBitmap(x, y, frames[(int) frameIndex]);
+		J2IGF.renderer.drawBitmap(x, y, frames[(int) frameIndex]);
 	}
 }

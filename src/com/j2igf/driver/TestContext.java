@@ -2,54 +2,34 @@ package com.j2igf.driver;
 
 import com.j2igf.framework.core.Context;
 import com.j2igf.framework.core.J2IGF;
-import com.j2igf.framework.core.Input;
-import com.j2igf.framework.graphics.bitmap.Image;
+import com.j2igf.framework.graphics.bitmap.FontAtlas;
 
 public class TestContext extends Context
 {
-	Image sampleAlpha = new Image("res/images/sampleAlpha.png");
-	Image poster = new Image("res/images/poster.png");
-	int x, y;
-
-	float alpha = -1;
+	FontAtlas myFont = new FontAtlas("Times New Roman", 72);
 
 	@Override
 	public void init()
 	{
 		J2IGF.initInput();
 		J2IGF.initRenderer(true);
-		sampleAlpha.setOrigin(360, 360);
-		poster.setOrigin(360, 360);
+		J2IGF.renderer.setFont(myFont);
+		FontAtlas.listAllFonts();
 	}
 
 	@Override
 	public void update()
 	{
-		if (J2IGF.input.isKeyDown(Input.KeyCode.ESCAPE))
-		{
-			System.out.println("Escape Pressed Down!");
-			J2IGF.engine.stop(true);
-		}
-		if (J2IGF.input.isKey(Input.KeyCode.W))
-			y--;
-		if (J2IGF.input.isKey(Input.KeyCode.A))
-			x--;
-		if (J2IGF.input.isKey(Input.KeyCode.S))
-			y++;
-		if (J2IGF.input.isKey(Input.KeyCode.D))
-			x++;
-		alpha += 0.01;
-		if (alpha >= 1) alpha = -1;
+
 	}
 
 	@Override
 	public void render()
 	{
 		J2IGF.renderer.clear(0);
-		J2IGF.renderer.renderBitmap(500, 500, poster);
-		J2IGF.renderer.useGlobalAlpha(Math.abs(alpha));
-		J2IGF.renderer.renderBitmap(J2IGF.input.getMouseX(), J2IGF.input.getMouseY(), sampleAlpha);
-		J2IGF.renderer.useLocalAlpha();
+		J2IGF.renderer.fillRect(J2IGF.input.getMouseX(), J2IGF.input.getMouseY(), 580, 90, 0xffffffff);
+		J2IGF.renderer.drawRect(J2IGF.input.getMouseX(), J2IGF.input.getMouseY(), 580, 90, 10, 0xff00ff00);
+		J2IGF.renderer.drawText(J2IGF.input.getMouseX() + 15, J2IGF.input.getMouseY() + 9, 0xffff0000, "Hello, World! - " + ((int) J2IGF.time.getTimeStamp()) % 100);
 	}
 
 	@Override

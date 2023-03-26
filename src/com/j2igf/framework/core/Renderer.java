@@ -1,6 +1,7 @@
 package com.j2igf.framework.core;
 
 import com.j2igf.framework.graphics.bitmap.Bitmap;
+import com.j2igf.framework.graphics.bitmap.FontAtlas;
 
 public class Renderer
 {
@@ -10,16 +11,29 @@ public class Renderer
 	private float globalAlpha;
 	private boolean alphaEnabled;
 
+	private FontAtlas fontAtlas;
+
 	private Renderer(boolean alphaEnabled)
 	{
 		this.globalAlpha = -1;
 		this.alphaEnabled = alphaEnabled;
+		this.fontAtlas = FontAtlas.defaultFont;
 		resetTarget();
 	}
 
 	public static void create(boolean alphaEnabled)
 	{
 		J2IGF.renderer = new Renderer(alphaEnabled);
+	}
+
+	public void setFont(FontAtlas fontAtlas)
+	{
+		this.fontAtlas = fontAtlas;
+	}
+
+	public FontAtlas getFont()
+	{
+		return fontAtlas;
 	}
 
 	public void setTarget(Bitmap target)
@@ -37,7 +51,7 @@ public class Renderer
 		this.pixels = J2IGF.window.getFrameBuffer();
 		this.width = J2IGF.getWidth();
 		this.height = J2IGF.getHeight();
-		this.alphaEnabled = true;
+		this.alphaEnabled = J2IGF.isAlphaEnabled();
 	}
 
 	public void useGlobalAlpha(float alpha)
@@ -129,12 +143,14 @@ public class Renderer
 		}
 	}
 
-	public void drawRect(int x0, int y0, int x1, int y1, int strokeWidth, int color)
+	public void drawRect(int x, int y, int width, int height, int strokeWidth, int color)
 	{
-		if (x0 > x1)
-			x0 = x0 ^ x1 ^ (x1 = x0);
-		if (y0 > y1)
-			y0 = y0 ^ y1 ^ (y1 = y0);
+		if ( width < 0 || height < 0)
+			return;
+		int x0 = x;
+		int y0 = y;
+		int x1 = x + width;
+		int y1 = y + height;
 		strokeWidth = Math.min(strokeWidth, Math.min(x1 - x0, y1 - y0) + 1);
 		while (strokeWidth > 0)
 		{
@@ -150,17 +166,15 @@ public class Renderer
 		}
 	}
 
-	public void fillRect(int x0, int y0, int x1, int y1, int color)
+	public void fillRect(int x, int y, int width, int height, int color)
 	{
-		if (x0 > x1)
-			x0 = x0 ^ x1 ^ (x1 = x0);
-		if (y0 > y1)
-			y0 = y0 ^ y1 ^ (y1 = y0);
-		for (int y = y0; y <= y1; y++)
+		if (width < 0 || height < 0)
+			return;
+		for (int yy = y; yy <= y + height; yy++)
 		{
-			for (int x = x0; x <= x1; x++)
+			for (int xx = x; xx <= x + width; xx++)
 			{
-				setPixel(x, y, color);
+				setPixel(xx, yy, color);
 			}
 		}
 	}
@@ -436,7 +450,7 @@ public class Renderer
 		}
 	}
 
-	public void renderBitmap(int x, int y, Bitmap bitmap)
+	public void drawBitmap(int x, int y, Bitmap bitmap)
 	{
 		x -= bitmap.getOriginX();
 		y -= bitmap.getOriginY();
@@ -459,6 +473,26 @@ public class Renderer
 			{
 				setPixel(x + currX, y + currY, bitmap.getPixel(currX, currY));
 			}
+		}
+	}
+
+	public void drawText(int x, int y, int color, String text)
+	{
+		int xOffset = 0;
+		for (int i = 0; i < text.length(); i++)
+		{
+			int ch = text.charAt(i);
+			int offset = fontAtlas.getOffset(ch);
+			int glyphWidth = fontAtlas.getGlyphWidth(ch);
+			for (int yy = 0; yy < fontAtlas.getHeight(); yy++)
+			{
+				for (int xx = 0; xx < glyphWidth; xx++)
+				{
+					int fontAlpha = (fontAtlas.getPixel(xx + offset, yy) & 0xff000000);
+					setPixel(x + xx + xOffset, y + yy, fontAlpha | (color & 0xffffff));
+				}
+			}
+			xOffset += glyphWidth;
 		}
 	}
 }

@@ -11,12 +11,16 @@ public class Renderer
 	private float globalAlpha;
 	private boolean alphaEnabled;
 
+	private boolean isScreen;
+
+	private Viewport viewport;
 	private FontAtlas fontAtlas;
 
 	private Renderer(boolean alphaEnabled)
 	{
 		this.globalAlpha = -1;
 		this.alphaEnabled = alphaEnabled;
+		this.viewport = Viewport.defaultViewport;
 		this.fontAtlas = FontAtlas.defaultFont;
 		resetTarget();
 	}
@@ -28,12 +32,24 @@ public class Renderer
 
 	public void setFont(FontAtlas fontAtlas)
 	{
+		assert fontAtlas != null;
 		this.fontAtlas = fontAtlas;
 	}
 
 	public FontAtlas getFont()
 	{
 		return fontAtlas;
+	}
+
+	public void setViewport(Viewport viewport)
+	{
+		assert viewport != null;
+		this.viewport = viewport;
+	}
+
+	public Viewport getViewport()
+	{
+		return viewport;
 	}
 
 	public void setTarget(Bitmap target)
@@ -44,6 +60,7 @@ public class Renderer
 		this.width = target.getWidth();
 		this.height = target.getHeight();
 		this.alphaEnabled = false;
+		this.isScreen = false;
 	}
 
 	public void resetTarget()
@@ -52,6 +69,7 @@ public class Renderer
 		this.width = J2IGF.getWidth();
 		this.height = J2IGF.getHeight();
 		this.alphaEnabled = J2IGF.isAlphaEnabled();
+		this.isScreen = true;
 	}
 
 	public void useGlobalAlpha(float alpha)
@@ -71,20 +89,55 @@ public class Renderer
 
 	public void clear(int color)
 	{
-		for (int y = 0; y < height; y++)
+		for (int y = viewport.getYRealPos(); y < viewport.getYRealPos() + viewport.getHeight(); y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = viewport.getXRealPos(); x < viewport.getXRealPos() + viewport.getWidth(); x++)
 			{
 				pixels[x + y * width] = color | 0xff000000;
 			}
 		}
 	}
 
+	public void showDebugInfo(String info)
+	{
+		int xOffset = 0;
+		for (int i = 0; i < info.length(); i++)
+		{
+			int ch = info.charAt(i);
+			int offset = FontAtlas.defaultFont.getOffset(ch);
+			int glyphWidth = FontAtlas.defaultFont.getGlyphWidth(ch);
+			for (int y = 0; y < FontAtlas.defaultFont.getHeight(); y++)
+			{
+				for (int x = 0; x < glyphWidth; x++)
+				{
+					int fontAlpha = (FontAtlas.defaultFont.getPixel(x + offset, y) & 0xff000000) >> 24;
+					if (fontAlpha == 0)
+					{
+						pixels[x + xOffset + y * width] = 0xff000000;
+					}
+					else
+					{
+						float alphaF = (float) fontAlpha / 0xff;
+						pixels[x + xOffset + y * width] = 0xff000000 | (int) (alphaF * 0xff) << 16 | (int) (alphaF * 0xff) << 8 | (int) (alphaF * 0xff);
+					}
+				}
+			}
+			xOffset += glyphWidth;
+		}
+	}
+
 	public void setPixel(int x, int y, int color)
 	{
+		if (isScreen)
+		{
+			x = viewport.transformX(x);
+			y = viewport.transformY(y);
+		}
+		else if (x < 0 || x >= width || y < 0 || y >= height)
+			return;
 
 		int alpha = (color >> 24) & 0xff;
-		if (x < 0 || x >= width || y < 0 || y >= height || alpha == 0)
+		if (x == -1 || y == -1 || alpha == 0)
 			return;
 
 		if (alphaEnabled)
@@ -145,13 +198,13 @@ public class Renderer
 
 	public void drawRect(int x, int y, int width, int height, int strokeWidth, int color)
 	{
-		if ( width < 0 || height < 0)
+		if (width <= 0 || height <= 0)
 			return;
 		int x0 = x;
 		int y0 = y;
 		int x1 = x + width;
 		int y1 = y + height;
-		strokeWidth = Math.min(strokeWidth, Math.min(x1 - x0, y1 - y0) + 1);
+		strokeWidth = Math.min(strokeWidth, Math.min(width, height) + 1);
 		while (strokeWidth > 0)
 		{
 			drawLine(x0, y0, x1, y0, color);
@@ -168,7 +221,7 @@ public class Renderer
 
 	public void fillRect(int x, int y, int width, int height, int color)
 	{
-		if (width < 0 || height < 0)
+		if (width <= 0 || height <= 0)
 			return;
 		for (int yy = y; yy <= y + height; yy++)
 		{
@@ -181,7 +234,9 @@ public class Renderer
 
 	public void drawCircle(int x, int y, int radius, int color)
 	{
-		int currX = 0, currY = Math.abs(radius);
+		if (radius <= 0)
+			return;
+		int currX = 0, currY = radius;
 		int decisionParameter = 3 - 2 * radius;
 		setPixel(x + currX, y + currY, color);
 		setPixel(x - currX, y + currY, color);
@@ -214,7 +269,8 @@ public class Renderer
 
 	public void fillCircle(int x, int y, int radius, int color)
 	{
-		radius = Math.abs(radius);
+		if (radius <= 0)
+			return;
 		int currX = 0, currY = radius;
 		int decisionParameter = 3 - 2 * radius;
 		drawLine(x + currY, y + currX, x - currY, y + currX, color);
@@ -237,18 +293,8 @@ public class Renderer
 
 	public void drawEllipse(int x, int y, int width, int height, int color)
 	{
-		width = Math.abs(width);
-		height = Math.abs(height);
-		if (width < 1)
-		{
-			drawLine(x, y - height, x, y + height, color);
+		if (width <= 0 || height <= 0)
 			return;
-		}
-		if (height < 1)
-		{
-			drawLine(x - width, y, x + width, y, color);
-			return;
-		}
 		int currX, currY;
 		int dx, dy;
 		int error;
@@ -310,18 +356,8 @@ public class Renderer
 
 	public void fillEllipse(int x, int y, int width, int height, int color)
 	{
-		width = Math.abs(width);
-		height = Math.abs(height);
-		if (width < 1)
-		{
-			drawLine(x, y - height, x, y + height, color);
+		if (width <= 0 || height <= 0)
 			return;
-		}
-		if (height < 1)
-		{
-			drawLine(x - width, y, x + width, y, color);
-			return;
-		}
 		int currX, currY;
 		int dx, dy;
 		int error;

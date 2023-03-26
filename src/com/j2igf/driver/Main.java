@@ -6,8 +6,12 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		J2IGF.initWindow(1000, 1000, 1, "Test");
-		J2IGF.initEngine(60, true);
+		J2IGF.Data data = new J2IGF.Data();
+		data.width = 1000;
+		data.height = 1000;
+		data.title = "MyIGF";
+		data.debugMode = true;
+		J2IGF.initialize(data);
 		J2IGF.engine.addContext(new TestContext());
 		J2IGF.engine.start();
 	}

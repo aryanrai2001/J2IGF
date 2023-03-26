@@ -1,6 +1,5 @@
 package com.j2igf.framework.core;
 
-import com.j2igf.framework.graphics.bitmap.FontAtlas;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Stack;
@@ -21,9 +20,9 @@ public class Engine implements Runnable
 		this.running = false;
 	}
 
-	public static void create(int desiredUPS)
+	public static void create(int targetUPS)
 	{
-		J2IGF.engine = new Engine(desiredUPS);
+		J2IGF.engine = new Engine(targetUPS);
 		J2IGF.window.getJFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		J2IGF.window.getJFrame().addWindowListener(new WindowAdapter()
 		{
@@ -115,12 +114,7 @@ public class Engine implements Runnable
 					timer = updates = frames = 0;
 				}
 				timer += J2IGF.time.getDeltaTime();
-
-				FontAtlas originalFont = J2IGF.renderer.getFont();
-				J2IGF.renderer.setFont(FontAtlas.defaultFont);
-				J2IGF.renderer.fillRect(0, 0, 125, 12, 0xff000000);
-				J2IGF.renderer.drawText(0, 0, 0xffffff, ups + " UPS | " + fps + " FPS");
-				J2IGF.renderer.setFont(originalFont);
+				J2IGF.renderer.showDebugInfo(ups + " UPS | " + fps + " FPS");
 			}
 
 			J2IGF.window.updateFrame();

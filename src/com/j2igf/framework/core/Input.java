@@ -288,15 +288,15 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
-		mouseX = (e.getX() / J2IGF.getRenderScale());
-		mouseY = (e.getY() / J2IGF.getRenderScale());
+		mouseX = (e.getX() / J2IGF.getRenderScale()) - J2IGF.renderer.getViewport().getXPos();
+		mouseY = (e.getY() / J2IGF.getRenderScale()) - J2IGF.renderer.getViewport().getYPos();
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e)
 	{
-		mouseX = (e.getX() / J2IGF.getRenderScale());
-		mouseY = (e.getY() / J2IGF.getRenderScale());
+		mouseX = (e.getX() / J2IGF.getRenderScale()) - J2IGF.renderer.getViewport().getXPos();
+		mouseY = (e.getY() / J2IGF.getRenderScale()) - J2IGF.renderer.getViewport().getYPos();
 	}
 
 	@Override

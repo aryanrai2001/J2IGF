@@ -10,7 +10,41 @@ public final class J2IGF
 	private static int width, height, renderScale;
 	private static boolean debugMode, alphaEnabled;
 
-	public static void initWindow(int width, int height, int renderScale, String title)
+	public static class Data
+	{
+		public int width;
+		public int height;
+		public int renderScale;
+		public int targetUPS;
+		public boolean debugMode;
+		public boolean alphaEnabled;
+		public String title;
+
+		public Data()
+		{
+			width = 1280;
+			height = 720;
+			renderScale = 1;
+			targetUPS = 60;
+			debugMode = false;
+			alphaEnabled = true;
+			title = "Untitled";
+		}
+	}
+
+	private J2IGF()
+	{
+	}
+
+	public static void initialize(Data data)
+	{
+		initWindow(data.width, data.height, data.renderScale, data.title);
+		initEngine(data.targetUPS, data.debugMode);
+		initRenderer(data.alphaEnabled);
+		initInput();
+	}
+
+	private static void initWindow(int width, int height, int renderScale, String title)
 	{
 		J2IGF.width = width;
 		J2IGF.height = height;
@@ -18,36 +52,21 @@ public final class J2IGF
 		Window.create(width, height, title);
 	}
 
-	public static void initEngine(int desiredUPS, boolean debugMode)
+	private static void initEngine(int targetUPS, boolean debugMode)
 	{
-		if (J2IGF.window == null)
-		{
-			System.err.println("Engine requires the Window instance to initialize.");
-			System.exit(-1);
-		}
 		J2IGF.debugMode = debugMode;
-		Engine.create(desiredUPS);
+		Engine.create(targetUPS);
 		Time.create();
 	}
 
-	public static void initRenderer(boolean alphaEnabled)
+	private static void initRenderer(boolean alphaEnabled)
 	{
-		if (J2IGF.window == null)
-		{
-			System.err.println("A Window must be created before Renderer.");
-			System.exit(-1);
-		}
 		J2IGF.alphaEnabled = alphaEnabled;
 		Renderer.create(alphaEnabled);
 	}
 
-	public static void initInput()
+	private static void initInput()
 	{
-		if (J2IGF.window == null)
-		{
-			System.err.println("Input requires the Engine instance to initialize.");
-			System.exit(-1);
-		}
 		Input.create();
 	}
 

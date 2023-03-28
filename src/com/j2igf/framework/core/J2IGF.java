@@ -18,6 +18,7 @@ public final class J2IGF
 		public int targetUPS;
 		public boolean debugMode;
 		public boolean alphaEnabled;
+		public boolean fullscreen;
 		public String title;
 
 		public Data()
@@ -28,6 +29,7 @@ public final class J2IGF
 			targetUPS = 60;
 			debugMode = false;
 			alphaEnabled = true;
+			fullscreen = false;
 			title = "Untitled";
 		}
 	}
@@ -38,35 +40,18 @@ public final class J2IGF
 
 	public static void initialize(Data data)
 	{
-		initWindow(data.width, data.height, data.renderScale, data.title);
-		initEngine(data.targetUPS, data.debugMode);
-		initRenderer(data.alphaEnabled);
-		initInput();
-	}
+		J2IGF.renderScale = data.renderScale;
+		Window.create(data.width, data.height, data.fullscreen, data.title);
+		J2IGF.width = window.getImage().getWidth();
+		J2IGF.height = window.getImage().getHeight();
 
-	private static void initWindow(int width, int height, int renderScale, String title)
-	{
-		J2IGF.width = width;
-		J2IGF.height = height;
-		J2IGF.renderScale = renderScale;
-		Window.create(width, height, title);
-	}
-
-	private static void initEngine(int targetUPS, boolean debugMode)
-	{
-		J2IGF.debugMode = debugMode;
-		Engine.create(targetUPS);
+		J2IGF.debugMode = data.debugMode;
+		Engine.create(data.targetUPS);
 		Time.create();
-	}
 
-	private static void initRenderer(boolean alphaEnabled)
-	{
-		J2IGF.alphaEnabled = alphaEnabled;
+		J2IGF.alphaEnabled = data.alphaEnabled;
 		Renderer.create(alphaEnabled);
-	}
 
-	private static void initInput()
-	{
 		Input.create();
 	}
 

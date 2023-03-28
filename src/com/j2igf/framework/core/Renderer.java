@@ -10,9 +10,7 @@ public class Renderer
 	private int height;
 	private float globalAlpha;
 	private boolean alphaEnabled;
-
 	private boolean isScreen;
-
 	private Viewport viewport;
 	private FontAtlas fontAtlas;
 
@@ -110,7 +108,7 @@ public class Renderer
 			{
 				for (int x = 0; x < glyphWidth; x++)
 				{
-					int fontAlpha = (FontAtlas.defaultFont.getPixel(x + offset, y) & 0xff000000) >> 24;
+					int fontAlpha = (FontAtlas.defaultFont.getPixel(x + offset, y) >>> 24);
 					if (fontAlpha == 0)
 					{
 						pixels[x + xOffset + y * width] = 0xff000000;
@@ -136,7 +134,7 @@ public class Renderer
 		else if (x < 0 || x >= width || y < 0 || y >= height)
 			return;
 
-		int alpha = (color >> 24) & 0xff;
+		int alpha = (color >>> 24);
 		if (x == -1 || y == -1 || alpha == 0)
 			return;
 
@@ -274,141 +272,25 @@ public class Renderer
 		int currX = 0, currY = radius;
 		int decisionParameter = 3 - 2 * radius;
 		drawLine(x + currY, y + currX, x - currY, y + currX, color);
-		while (currY >= currX)
+		while (currY > currX)
 		{
 			currX++;
+			if (currX == currY)
+				break;
 			if (decisionParameter > 0)
 			{
 				currY--;
+				drawLine(x + currX, y + currY, x - currX, y + currY, color);
+				drawLine(x + currX, y - currY, x - currX, y - currY, color);
 				decisionParameter = decisionParameter + 4 * (currX - currY) + 10;
 			}
 			else
 				decisionParameter = decisionParameter + 4 * currX + 6;
-			drawLine(x + currX, y + currY, x - currX, y + currY, color);
-			drawLine(x + currX, y - currY, x - currX, y - currY, color);
-			drawLine(x + currY, y + currX, x - currY, y + currX, color);
-			drawLine(x + currY, y - currX, x - currY, y - currX, color);
-		}
-	}
 
-	public void drawEllipse(int x, int y, int width, int height, int color)
-	{
-		if (width <= 0 || height <= 0)
-			return;
-		int currX, currY;
-		int dx, dy;
-		int error;
-		int TwoASquare, TwoBSquare;
-		int StoppingX, StoppingY;
-		TwoASquare = 2 * width * width;
-		TwoBSquare = 2 * height * height;
-		currX = width;
-		currY = 0;
-		dx = height * height * (1 - 2 * width);
-		dy = width * width;
-		error = 0;
-		StoppingX = TwoBSquare * width;
-		StoppingY = 0;
-		while (StoppingX >= StoppingY)
-		{
-			setPixel(x + currX, y + currY, color);
-			setPixel(x - currX, y + currY, color);
-			setPixel(x - currX, y - currY, color);
-			setPixel(x + currX, y - currY, color);
-			currY++;
-			StoppingY += TwoASquare;
-			error += dy;
-			dy += TwoASquare;
-			if ((2 * error + dx) > 0)
+			if (currY > currX)
 			{
-				currX--;
-				StoppingX -= TwoBSquare;
-				error += dx;
-				dx += TwoBSquare;
-			}
-		}
-		currX = 0;
-		currY = height;
-		dx = height * height;
-		dy = width * width * (1 - 2 * height);
-		error = 0;
-		StoppingX = 0;
-		StoppingY = TwoASquare * height;
-		while (StoppingX <= StoppingY)
-		{
-			setPixel(x + currX, y + currY, color);
-			setPixel(x - currX, y + currY, color);
-			setPixel(x - currX, y - currY, color);
-			setPixel(x + currX, y - currY, color);
-			currX++;
-			StoppingX += TwoBSquare;
-			error += dx;
-			dx += TwoBSquare;
-			if ((2 * error + dy) > 0)
-			{
-				currY--;
-				StoppingY -= TwoASquare;
-				error += dy;
-				dy += TwoASquare;
-			}
-		}
-	}
-
-	public void fillEllipse(int x, int y, int width, int height, int color)
-	{
-		if (width <= 0 || height <= 0)
-			return;
-		int currX, currY;
-		int dx, dy;
-		int error;
-		int TwoASquare, TwoBSquare;
-		int StoppingX, StoppingY;
-		TwoASquare = 2 * width * width;
-		TwoBSquare = 2 * height * height;
-		currX = width;
-		currY = 0;
-		dx = height * height * (1 - 2 * width);
-		dy = width * width;
-		error = 0;
-		StoppingX = TwoBSquare * width;
-		StoppingY = 0;
-		while (StoppingX >= StoppingY)
-		{
-			drawLine(x + currX, y + currY, x - currX, y + currY, color);
-			drawLine(x - currX, y - currY, x + currX, y - currY, color);
-			currY++;
-			StoppingY += TwoASquare;
-			error += dy;
-			dy += TwoASquare;
-			if ((2 * error + dx) > 0)
-			{
-				currX--;
-				StoppingX -= TwoBSquare;
-				error += dx;
-				dx += TwoBSquare;
-			}
-		}
-		currX = 0;
-		currY = height;
-		dx = height * height;
-		dy = width * width * (1 - 2 * height);
-		error = 0;
-		StoppingX = 0;
-		StoppingY = TwoASquare * height;
-		while (StoppingX <= StoppingY)
-		{
-			drawLine(x + currX, y + currY, x - currX, y + currY, color);
-			drawLine(x - currX, y - currY, x + currX, y - currY, color);
-			currX++;
-			StoppingX += TwoBSquare;
-			error += dx;
-			dx += TwoBSquare;
-			if ((2 * error + dy) > 0)
-			{
-				currY--;
-				StoppingY -= TwoASquare;
-				error += dy;
-				dy += TwoASquare;
+				drawLine(x + currY, y + currX, x - currY, y + currX, color);
+				drawLine(x + currY, y - currX, x - currY, y - currX, color);
 			}
 		}
 	}
@@ -515,6 +397,7 @@ public class Renderer
 	public void drawText(int x, int y, int color, String text)
 	{
 		int xOffset = 0;
+		float alpha = (float) (color >>> 24) / 0xff;
 		for (int i = 0; i < text.length(); i++)
 		{
 			int ch = text.charAt(i);
@@ -524,7 +407,7 @@ public class Renderer
 			{
 				for (int xx = 0; xx < glyphWidth; xx++)
 				{
-					int fontAlpha = (fontAtlas.getPixel(xx + offset, yy) & 0xff000000);
+					int fontAlpha = (int) ((fontAtlas.getPixel(xx + offset, yy) >>> 24) * alpha) << 24;
 					setPixel(x + xx + xOffset, y + yy, fontAlpha | (color & 0xffffff));
 				}
 			}

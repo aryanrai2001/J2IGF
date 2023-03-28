@@ -3,45 +3,34 @@ package com.j2igf.driver;
 import com.j2igf.framework.core.Context;
 import com.j2igf.framework.core.Input;
 import com.j2igf.framework.core.J2IGF;
-import com.j2igf.framework.core.Viewport;
 import com.j2igf.framework.graphics.bitmap.FontAtlas;
+import com.j2igf.framework.graphics.bitmap.Sprite;
 
 public class TestContext extends Context
 {
-	int x = -500;
-	int y = -500;
-	Viewport myView1 = new Viewport(J2IGF.getWidth() - 200, J2IGF.getHeight() - 200);
-	Viewport myView2 = new Viewport(J2IGF.getWidth(), J2IGF.getHeight());
-	FontAtlas myFont = new FontAtlas("Times New Roman", 72);
+	FontAtlas myFont = new FontAtlas("Times New Roman", 72, true);
+	Sprite label1 = myFont.textToSprite("Hello", 0x55ff0000);
+	Sprite label2 = myFont.textToSprite("World", 0x5500ff00);
 
 	@Override
 	public void init()
 	{
 		J2IGF.renderer.setFont(myFont);
-		J2IGF.renderer.setViewport(myView2);
 	}
 
 	@Override
 	public void update()
 	{
-		if (J2IGF.input.isKey(Input.KeyCode.W))
-			y--;
-		if (J2IGF.input.isKey(Input.KeyCode.A))
-			x--;
-		if (J2IGF.input.isKey(Input.KeyCode.S))
-			y++;
-		if (J2IGF.input.isKey(Input.KeyCode.D))
-			x++;
-		myView2.setPos(x, y);
+		if (J2IGF.input.isKeyDown(Input.KeyCode.ESCAPE))
+			J2IGF.engine.stop(false);
 	}
 
 	@Override
 	public void render()
 	{
-		J2IGF.renderer.clear(0xff);
-		J2IGF.renderer.fillRect(0, 0, 580, 90, 0xffffffff);
-		J2IGF.renderer.drawRect(0, 0, 580, 90, 10, 0xff00ff00);
-		J2IGF.renderer.drawText(15, 9, 0xffff0000, "Hello, World! - " + ((int) J2IGF.time.getTimeStamp()) % 100);
+		J2IGF.renderer.clear(0);
+		J2IGF.renderer.drawBitmap(50, 50, label1);
+		J2IGF.renderer.drawBitmap(100, 75, label2);
 	}
 
 	@Override

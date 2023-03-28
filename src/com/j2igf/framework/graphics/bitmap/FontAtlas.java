@@ -9,11 +9,11 @@ import javax.swing.JPanel;
 
 public class FontAtlas extends Bitmap
 {
-	public static final FontAtlas defaultFont = new FontAtlas("Dialog.plain", 12);
+	public static final FontAtlas defaultFont = new FontAtlas("Dialog.plain", 12, true);
 	private final int[] offsets;
 	private final int[] glyphWidths;
 
-	public FontAtlas(String fontName, int fontSize)
+	public FontAtlas(String fontName, int fontSize, boolean antiAliased)
 	{
 		if (fontName == null || fontSize < 5)
 		{
@@ -53,7 +53,8 @@ public class FontAtlas extends Bitmap
 
 		BufferedImage sprite = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = sprite.createGraphics();
-		graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+		if (antiAliased)
+			graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 		graphics.setFont(font);
 
 		for (int c = 0, x = 0; c < 256; c++, x++)
@@ -68,6 +69,33 @@ public class FontAtlas extends Bitmap
 		this.height = height;
 		this.pixels = sprite.getRGB(0, 0, width, height, null, 0, width);
 		this.originX = this.originY = 0;
+	}
+
+	public Sprite textToSprite(String text, int color)
+	{
+		int textWidth = 0;
+		for (int i = 0; i < text.length(); i++)
+			textWidth += getGlyphWidth(text.charAt(i));
+		Sprite textSprite = new Sprite(textWidth, getHeight());
+
+		int xOffset = 0;
+		for (int i = 0; i < text.length(); i++)
+		{
+			int ch = text.charAt(i);
+			int offset = getOffset(ch);
+			int glyphWidth = getGlyphWidth(ch);
+			for (int y = 0; y < getHeight(); y++)
+			{
+				for (int x = 0; x < glyphWidth; x++)
+				{
+					int textAlpha = (int) ((getPixel(x + offset, y) >>> 24) * ((float) (color >>> 24) / 0xff)) << 24;
+					textSprite.setPixel(x + xOffset, y, textAlpha | (color & 0xffffff));
+				}
+			}
+			xOffset += glyphWidth;
+		}
+
+		return textSprite;
 	}
 
 	public int getOffset(int ch)

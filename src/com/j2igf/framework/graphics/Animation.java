@@ -10,13 +10,18 @@ public class Animation
 	private final double fps;
 	private float frameIndex;
 
-	public Animation(TileSet tileSet, double fps)
+	public Animation(TileSet tileSet, boolean verticalScan, int offset, int size, double fps)
 	{
+		if (offset + size > tileSet.getNumTilesX() * tileSet.getNumTilesY())
+		{
+			System.err.println("Not enough frames in the TileSet!");
+			System.exit(-1);
+		}
 		this.frameIndex = 0;
 		this.fps = fps;
-		this.frames = new Sprite[tileSet.getNumTilesX() * tileSet.getNumTilesY()];
-		for (int i = 0; i < frames.length; i++)
-			frames[i] = tileSet.getTile(i);
+		this.frames = new Sprite[size];
+		for (int i = 0; i < size; i++)
+			frames[i] = tileSet.getTile(offset + i, verticalScan);
 	}
 
 	public void update()
@@ -29,5 +34,10 @@ public class Animation
 	public void render(int x, int y)
 	{
 		J2IGF.renderer.drawBitmap(x, y, frames[(int) frameIndex]);
+	}
+
+	public void reset()
+	{
+		frameIndex = 0;
 	}
 }

@@ -25,12 +25,14 @@ public class TileSet extends Bitmap
 		this.tileHeight = height / numTilesY;
 	}
 
-	public Sprite getTile(int index)
+	public Sprite getTile(int index, boolean verticalScan)
 	{
 		if (index >= numTilesX * numTilesY)
 			return null;
-
-		return getTile(index % numTilesX, index / numTilesX);
+		if (verticalScan)
+			return getTile(index / numTilesX, index % numTilesX);
+		else
+			return getTile(index % numTilesX, index / numTilesX);
 	}
 
 	public Sprite getTile(int x, int y)
@@ -43,10 +45,8 @@ public class TileSet extends Bitmap
 		Sprite tile = new Sprite(tileWidth, tileHeight);
 		for (int i = 0; i < tileHeight; i++)
 		{
-			for (int j = 0; j < tileWidth; j++)
-			{
-				tile.pixels[j + i * tileWidth] = pixels[(xPos + j) + (yPos + i) * width];
-			}
+			if (tileWidth >= 0)
+				System.arraycopy(pixels, xPos + (yPos + i) * width, tile.pixels, i * tileWidth, tileWidth);
 		}
 		return tile;
 	}

@@ -1,5 +1,6 @@
 package com.j2igf.framework.graphics.staticGFX;
 
+import com.j2igf.framework.graphics.Bitmap;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -10,14 +11,14 @@ public class Image extends Bitmap
 {
 	public Image(Bitmap bitmap, boolean copy)
 	{
-		this.originX = bitmap.originX;
-		this.originY = bitmap.originY;
-		this.width = bitmap.width;
-		this.height = bitmap.height;
+		this.originX = bitmap.getOriginX();
+		this.originY = bitmap.getOriginY();
+		this.width = bitmap.getWidth();
+		this.height = bitmap.getHeight();
 		if (copy)
-			this.pixels = Arrays.copyOf(bitmap.pixels, bitmap.pixels.length);
+			this.pixels = Arrays.copyOf(bitmap.getPixels(), bitmap.getPixels().length);
 		else
-			this.pixels = bitmap.pixels;
+			this.pixels = bitmap.getPixels();
 	}
 
 	public Image(String path)

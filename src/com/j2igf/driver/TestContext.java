@@ -19,7 +19,7 @@ public class TestContext extends Context
 	public void update(Input input)
 	{
 		if (input.isKeyDown(Input.ESCAPE))
-			J2IGF.exit();
+			J2IGF.removeCurrentContext();
 	}
 
 	@Override

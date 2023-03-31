@@ -4,6 +4,7 @@ import com.j2igf.framework.event.Input;
 import com.j2igf.framework.event.Time;
 import com.j2igf.framework.graphics.Renderer;
 import com.j2igf.framework.graphics.staticGFX.FontAtlas;
+import com.j2igf.framework.graphics.staticGFX.Sprite;
 import java.util.Stack;
 
 public final class J2IGF
@@ -16,10 +17,38 @@ public final class J2IGF
 	private static Engine engine;
 	private static Renderer renderer;
 	private static Input input;
-
 	private static String title = "";
 	private static int width = 0;
 	private static int height = 0;
+	private static final Context baseContext = new Context()
+	{
+		private Sprite label;
+		private int x, y;
+
+		@Override
+		public void init()
+		{
+			label = new FontAtlas("Times New Roman", J2IGF.height / 10, true).textToSprite("No Context Available!", 0xFFFF0000);
+			x = (J2IGF.width - label.getWidth()) / 2;
+			y = (J2IGF.height - label.getHeight()) / 2;
+		}
+
+		@Override
+		public void update(Input input)
+		{
+			if (input.isKeyDown(Input.ESCAPE))
+				J2IGF.exit();
+		}
+
+		@Override
+		public void render(Renderer renderer)
+		{
+			renderer.clear(0);
+			renderer.enableAlphaBlending();
+			renderer.drawBitmap(x, y, label);
+			renderer.disableAlphaBlending();
+		}
+	};
 	private static int pixelScale = 1;
 	private static int targetUPS = 60;
 	private static int flags = FLAG_FULL_SCREEN;
@@ -37,6 +66,7 @@ public final class J2IGF
 		Input.create();
 		renderer = new Renderer(window.getFrameBuffer(), width, height);
 		initialized = true;
+		addContext(baseContext);
 	}
 
 	public static void addContext(Context context)
@@ -48,7 +78,7 @@ public final class J2IGF
 
 	public static void removeCurrentContext()
 	{
-		if (contexts.isEmpty())
+		if (contexts.peek().equals(baseContext))
 			return;
 		contexts.pop();
 	}

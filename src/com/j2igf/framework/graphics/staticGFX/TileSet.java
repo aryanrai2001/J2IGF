@@ -1,5 +1,7 @@
 package com.j2igf.framework.graphics.staticGFX;
 
+import com.j2igf.framework.graphics.Bitmap;
+
 public class TileSet extends Bitmap
 {
 	private final int numTilesX;
@@ -9,8 +11,8 @@ public class TileSet extends Bitmap
 
 	public TileSet(Bitmap src, int numTilesX, int numTilesY)
 	{
-		this.width = src.width;
-		this.height = src.height;
+		this.width = src.getWidth();
+		this.height = src.getHeight();
 		this.numTilesX = numTilesX;
 		this.numTilesY = numTilesY;
 		if (width % numTilesX != 0 || height % numTilesY != 0)
@@ -18,9 +20,9 @@ public class TileSet extends Bitmap
 			System.err.println("Bitmap dimensions are incompatible with TileSet.");
 			System.exit(-1);
 		}
-		this.originX = src.originX;
-		this.originY = src.originY;
-		this.pixels = src.pixels;
+		this.originX = src.getOriginX();
+		this.originY = src.getOriginY();
+		this.pixels = src.getPixels();
 		this.tileWidth = width / numTilesX;
 		this.tileHeight = height / numTilesY;
 	}
@@ -46,7 +48,7 @@ public class TileSet extends Bitmap
 		for (int i = 0; i < tileHeight; i++)
 		{
 			if (tileWidth >= 0)
-				System.arraycopy(pixels, xPos + (yPos + i) * width, tile.pixels, i * tileWidth, tileWidth);
+				System.arraycopy(pixels, xPos + (yPos + i) * width, tile.getPixels(), i * tileWidth, tileWidth);
 		}
 		return tile;
 	}

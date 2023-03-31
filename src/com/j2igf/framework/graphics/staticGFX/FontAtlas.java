@@ -1,5 +1,6 @@
 package com.j2igf.framework.graphics.staticGFX;
 
+import com.j2igf.framework.graphics.Bitmap;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
@@ -57,13 +58,13 @@ public class FontAtlas extends Bitmap
 			graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 		graphics.setFont(font);
 
+		graphics.setColor(Color.WHITE);
 		for (int c = 0, x = 0; c < 256; c++, x++)
 		{
-			this.offsets[c] = x++;
-			graphics.setColor(Color.WHITE);
+			this.glyphWidths[c] = metrics.charWidth((char) c);
+			this.offsets[c] = x;
 			graphics.drawString(String.valueOf((char) c), x, fontSize);
-			x += metrics.charWidth((char) c);
-			this.glyphWidths[c] = x - this.offsets[c];
+			x += this.glyphWidths[c] + (fontSize >> 2);
 		}
 		this.width = width;
 		this.height = height;

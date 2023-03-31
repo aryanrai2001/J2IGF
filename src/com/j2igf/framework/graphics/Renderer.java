@@ -1,6 +1,5 @@
 package com.j2igf.framework.graphics;
 
-import com.j2igf.framework.graphics.staticGFX.Bitmap;
 import com.j2igf.framework.graphics.staticGFX.FontAtlas;
 
 public class Renderer

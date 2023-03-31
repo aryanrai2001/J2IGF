@@ -1,66 +1,39 @@
 package com.j2igf.framework.core;
 
+import com.j2igf.framework.event.Time;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Stack;
 import javax.swing.JFrame;
 
 public class Engine implements Runnable
 {
-	private final Stack<Context> contexts;
 	private final Thread thread;
 	private final int targetUPS;
 	private boolean running;
 
-	private Engine(int targetUPS)
+	private Engine()
 	{
-		this.contexts = new Stack<>();
 		this.thread = new Thread(this);
-		this.targetUPS = targetUPS;
+		this.targetUPS = J2IGF.getTargetUPS();
 		this.running = false;
 	}
 
-	public static void create(int targetUPS)
+	public static void create()
 	{
-		J2IGF.engine = new Engine(targetUPS);
-		J2IGF.window.getJFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		J2IGF.window.getJFrame().addWindowListener(new WindowAdapter()
+		J2IGF.setEngine(new Engine());
+		J2IGF.getWindow().getJFrame().setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		J2IGF.getWindow().getJFrame().addWindowListener(new WindowAdapter()
 		{
 			public void windowClosing(WindowEvent e)
 			{
-				if (!J2IGF.engine.running)
+				if (!J2IGF.getEngine().running)
 				{
-					J2IGF.window.getJFrame().dispose();
+					J2IGF.getWindow().getJFrame().dispose();
 					System.exit(0);
 				}
-				J2IGF.engine.stop(false);
+				J2IGF.getEngine().stop();
 			}
 		});
-	}
-
-	public void update()
-	{
-		if (!contexts.isEmpty())
-			contexts.peek().update();
-	}
-
-	public void render()
-	{
-		if (!contexts.isEmpty())
-			contexts.peek().render();
-	}
-
-	public void addContext(Context context)
-	{
-		context.init();
-		contexts.push(context);
-	}
-
-	public void removeCurrentContext()
-	{
-		if (contexts.isEmpty())
-			return;
-		contexts.pop().dispose();
 	}
 
 	public void start()
@@ -77,7 +50,7 @@ public class Engine implements Runnable
 		{
 			throw new RuntimeException(e);
 		}
-		J2IGF.window.dispose();
+		J2IGF.getWindow().dispose();
 		System.exit(0);
 	}
 
@@ -98,11 +71,11 @@ public class Engine implements Runnable
 			timeAccumulated += frameTime;
 			while (timeAccumulated >= timeSlice)
 			{
-				J2IGF.update(J2IGF.time.getTimeScale() * timeSlice / 1000000000.0);
+				J2IGF.update(Time.getTimeScale() * timeSlice / 1000000000.0);
 				updates++;
 				timeAccumulated -= timeSlice;
 			}
-			J2IGF.render(J2IGF.time.getTimeScale() * frameTime / 1000000000.0);
+			J2IGF.render(Time.getTimeScale() * frameTime / 1000000000.0);
 			frames++;
 
 			if (J2IGF.isDebugMode())
@@ -113,23 +86,18 @@ public class Engine implements Runnable
 					fps = frames;
 					timer = updates = frames = 0;
 				}
-				timer += J2IGF.time.getDeltaTime();
-				J2IGF.renderer.showDebugInfo(ups + " UPS | " + fps + " FPS");
+				timer += Time.getDeltaTime();
+				J2IGF.getRenderer().showDebugInfo(ups + " UPS | " + fps + " FPS");
 			}
 
-			J2IGF.window.updateFrame();
+			J2IGF.getWindow().updateFrame();
 		}
 	}
 
-	public void stop(boolean disposeContexts)
+	public void stop()
 	{
 		if (!running)
 			return;
 		running = false;
-		if (disposeContexts)
-		{
-			while (!contexts.isEmpty())
-				removeCurrentContext();
-		}
 	}
 }

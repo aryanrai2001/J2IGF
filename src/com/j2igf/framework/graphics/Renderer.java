@@ -1,7 +1,8 @@
-package com.j2igf.framework.core;
+package com.j2igf.framework.graphics;
 
-import com.j2igf.framework.graphics.bitmap.Bitmap;
-import com.j2igf.framework.graphics.bitmap.FontAtlas;
+import com.j2igf.framework.core.J2IGF;
+import com.j2igf.framework.graphics.staticGFX.Bitmap;
+import com.j2igf.framework.graphics.staticGFX.FontAtlas;
 
 public class Renderer
 {
@@ -9,23 +10,23 @@ public class Renderer
 	private int width;
 	private int height;
 	private float globalAlpha;
-	private boolean alphaEnabled;
 	private boolean isScreen;
-	private Viewport viewport;
+	private boolean isAlphaEnabled;
+	private Screen screen;
 	private FontAtlas fontAtlas;
 
-	private Renderer(boolean alphaEnabled)
+	private Renderer()
 	{
 		this.globalAlpha = -1;
-		this.alphaEnabled = alphaEnabled;
-		this.viewport = Viewport.defaultViewport;
-		this.fontAtlas = FontAtlas.defaultFont;
+		this.screen = Screen.DEFAULT_SCREEN;
+		this.fontAtlas = FontAtlas.DEFAULT_FONT;
+		this.isAlphaEnabled = true;
 		resetTarget();
 	}
 
-	public static void create(boolean alphaEnabled)
+	public static void create()
 	{
-		J2IGF.renderer = new Renderer(alphaEnabled);
+		J2IGF.setRenderer(new Renderer());
 	}
 
 	public void setFont(FontAtlas fontAtlas)
@@ -39,15 +40,15 @@ public class Renderer
 		return fontAtlas;
 	}
 
-	public void setViewport(Viewport viewport)
+	public void setScreen(Screen screen)
 	{
-		assert viewport != null;
-		this.viewport = viewport;
+		assert screen != null;
+		this.screen = screen;
 	}
 
-	public Viewport getViewport()
+	public Screen getScreen()
 	{
-		return viewport;
+		return screen;
 	}
 
 	public void setTarget(Bitmap target)
@@ -57,17 +58,25 @@ public class Renderer
 		this.pixels = target.getPixels();
 		this.width = target.getWidth();
 		this.height = target.getHeight();
-		this.alphaEnabled = false;
 		this.isScreen = false;
 	}
 
 	public void resetTarget()
 	{
-		this.pixels = J2IGF.window.getFrameBuffer();
+		this.pixels = J2IGF.getWindow().getFrameBuffer();
 		this.width = J2IGF.getWidth();
 		this.height = J2IGF.getHeight();
-		this.alphaEnabled = J2IGF.isAlphaEnabled();
 		this.isScreen = true;
+	}
+
+	public void enableAlphaBlending()
+	{
+		isAlphaEnabled = true;
+	}
+
+	public void disableAlphaBlending()
+	{
+		isAlphaEnabled = false;
 	}
 
 	public void useGlobalAlpha(float alpha)
@@ -87,9 +96,9 @@ public class Renderer
 
 	public void clear(int color)
 	{
-		for (int y = viewport.getYRealPos(); y < viewport.getYRealPos() + viewport.getHeight(); y++)
+		for (int y = screen.getYRealPos(); y < screen.getYRealPos() + screen.getHeight(); y++)
 		{
-			for (int x = viewport.getXRealPos(); x < viewport.getXRealPos() + viewport.getWidth(); x++)
+			for (int x = screen.getXRealPos(); x < screen.getXRealPos() + screen.getWidth(); x++)
 			{
 				pixels[x + y * width] = color | 0xff000000;
 			}
@@ -102,13 +111,13 @@ public class Renderer
 		for (int i = 0; i < info.length(); i++)
 		{
 			int ch = info.charAt(i);
-			int offset = FontAtlas.defaultFont.getOffset(ch);
-			int glyphWidth = FontAtlas.defaultFont.getGlyphWidth(ch);
-			for (int y = 0; y < FontAtlas.defaultFont.getHeight(); y++)
+			int offset = FontAtlas.DEFAULT_FONT.getOffset(ch);
+			int glyphWidth = FontAtlas.DEFAULT_FONT.getGlyphWidth(ch);
+			for (int y = 0; y < FontAtlas.DEFAULT_FONT.getHeight(); y++)
 			{
 				for (int x = 0; x < glyphWidth; x++)
 				{
-					int fontAlpha = (FontAtlas.defaultFont.getPixel(x + offset, y) >>> 24);
+					int fontAlpha = (FontAtlas.DEFAULT_FONT.getPixel(x + offset, y) >>> 24);
 					if (fontAlpha == 0)
 					{
 						pixels[x + xOffset + y * width] = 0xff000000;
@@ -128,8 +137,8 @@ public class Renderer
 	{
 		if (isScreen)
 		{
-			x = viewport.transformX(x);
-			y = viewport.transformY(y);
+			x = screen.transformX(x);
+			y = screen.transformY(y);
 		}
 		else if (x < 0 || x >= width || y < 0 || y >= height)
 			return;
@@ -138,7 +147,7 @@ public class Renderer
 		if (x == -1 || y == -1 || alpha == 0)
 			return;
 
-		if (alphaEnabled)
+		if (isAlphaEnabled)
 		{
 			int previousColor = pixels[x + y * width];
 			int red = (previousColor >> 16) & 0xff;

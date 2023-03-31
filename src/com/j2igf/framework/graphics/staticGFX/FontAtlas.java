@@ -1,4 +1,4 @@
-package com.j2igf.framework.graphics.bitmap;
+package com.j2igf.framework.graphics.staticGFX;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 public class FontAtlas extends Bitmap
 {
-	public static final FontAtlas defaultFont = new FontAtlas("Dialog.plain", 12, true);
+	public static final FontAtlas DEFAULT_FONT = new FontAtlas("Dialog.plain", 12, true);
 	private final int[] offsets;
 	private final int[] glyphWidths;
 

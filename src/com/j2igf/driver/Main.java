@@ -6,15 +6,14 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		J2IGF.Data data = new J2IGF.Data();
-		data.width = 640;
-		data.height = 360;
-		data.renderScale = 2;
-		data.title = "MyIGF";
-		data.debugMode = true;
-		J2IGF.initialize(data);
+		J2IGF.setTitle("Test");
+		J2IGF.setWidth(1280);
+		J2IGF.setHeight(720);
+		J2IGF.setPixelScale(2);
+		J2IGF.toggleFlags(J2IGF.FLAG_DEBUG_MODE);
+		J2IGF.initialize();
 
-		J2IGF.engine.addContext(new TestContext());
-		J2IGF.engine.start();
+		J2IGF.addContext(new TestContext());
+		J2IGF.run();
 	}
 }

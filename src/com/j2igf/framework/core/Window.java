@@ -14,15 +14,16 @@ public class Window
 	private final BufferStrategy strategy;
 	private final Graphics graphics;
 
-	private Window(int width, int height, boolean fullscreen, String title)
+	private Window()
 	{
-		frame = new JFrame(title);
+		frame = new JFrame(J2IGF.getTitle());
 		canvas = new Canvas();
 
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Rectangle rect;
 		int screenWidth, screenHeight;
 
+		boolean fullscreen = J2IGF.isFullScreen();
 		if (fullscreen)
 		{
 			rect = ge.getDefaultScreenDevice().getDefaultConfiguration().getBounds();
@@ -31,17 +32,23 @@ public class Window
 		}
 		else
 		{
+			if (J2IGF.getWidth() <= 0 || J2IGF.getHeight() <= 0)
+			{
+				System.err.println("Width and Height must be a non-zero positive number.");
+				System.exit(-1);
+			}
 			rect = ge.getMaximumWindowBounds();
 			canvas.setSize(rect.width, rect.height);
 			frame.add(canvas);
 			frame.pack();
-			screenWidth = Math.min(width * J2IGF.getRenderScale(), rect.width);
-			screenHeight = Math.min(height * J2IGF.getRenderScale(), rect.height - frame.getInsets().top);
+			screenWidth = Math.min(J2IGF.getWidth(), rect.width);
+			screenHeight = Math.min(J2IGF.getHeight(), rect.height - frame.getInsets().top);
 		}
 
-		width = screenWidth / J2IGF.getRenderScale();
-		height = screenHeight / J2IGF.getRenderScale();
-		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		J2IGF.setWidth(screenWidth / J2IGF.getPixelScale());
+		J2IGF.setHeight(screenHeight / J2IGF.getPixelScale());
+
+		image = new BufferedImage(J2IGF.getWidth(), J2IGF.getHeight(), BufferedImage.TYPE_INT_RGB);
 
 		Dimension size = new Dimension(screenWidth, screenHeight);
 		canvas.setMinimumSize(size);
@@ -72,9 +79,9 @@ public class Window
 		graphics = strategy.getDrawGraphics();
 	}
 
-	public static void create(int width, int height, boolean fullscreen, String title)
+	public static void create()
 	{
-		J2IGF.window = new Window(width, height, fullscreen, title);
+		J2IGF.setWindow(new Window());
 	}
 
 	public void updateFrame()

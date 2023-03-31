@@ -1,8 +1,9 @@
-package com.j2igf.framework.graphics;
+package com.j2igf.framework.graphics.dynamicGFX;
 
-import com.j2igf.framework.core.J2IGF;
-import com.j2igf.framework.graphics.bitmap.Sprite;
-import com.j2igf.framework.graphics.bitmap.TileSet;
+import com.j2igf.framework.event.Time;
+import com.j2igf.framework.graphics.Renderer;
+import com.j2igf.framework.graphics.staticGFX.Sprite;
+import com.j2igf.framework.graphics.staticGFX.TileSet;
 
 public class Animation
 {
@@ -26,14 +27,14 @@ public class Animation
 
 	public void update()
 	{
-		frameIndex += fps * J2IGF.time.getDeltaTime();
+		frameIndex += fps * Time.getDeltaTime();
 		if (frameIndex >= frames.length)
 			frameIndex = 0;
 	}
 
-	public void render(int x, int y)
+	public void render(Renderer renderer, int x, int y)
 	{
-		J2IGF.renderer.drawBitmap(x, y, frames[(int) frameIndex]);
+		renderer.drawBitmap(x, y, frames[(int) frameIndex]);
 	}
 
 	public void reset()

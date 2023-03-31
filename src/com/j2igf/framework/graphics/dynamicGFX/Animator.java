@@ -1,4 +1,6 @@
-package com.j2igf.framework.graphics;
+package com.j2igf.framework.graphics.dynamicGFX;
+
+import com.j2igf.framework.graphics.Renderer;
 
 public class Animator
 {
@@ -21,9 +23,9 @@ public class Animator
 		animations[currentAnimation].update();
 	}
 
-	public void render(int x, int y)
+	public void render(Renderer renderer, int x, int y)
 	{
-		animations[currentAnimation].render(x, y);
+		animations[currentAnimation].render(renderer, x, y);
 	}
 
 	public void reset()

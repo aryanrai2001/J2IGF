@@ -1,4 +1,4 @@
-package com.j2igf.framework.graphics.bitmap;
+package com.j2igf.framework.graphics.staticGFX;
 
 public abstract class Bitmap
 {

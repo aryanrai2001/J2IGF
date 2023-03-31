@@ -1,5 +1,6 @@
-package com.j2igf.framework.core;
+package com.j2igf.framework.event;
 
+import com.j2igf.framework.core.J2IGF;
 import java.awt.event.*;
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener
@@ -183,11 +184,11 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 
 	public static void create()
 	{
-		J2IGF.input = new Input();
-		J2IGF.window.getCanvas().addKeyListener(J2IGF.input);
-		J2IGF.window.getCanvas().addMouseListener(J2IGF.input);
-		J2IGF.window.getCanvas().addMouseMotionListener(J2IGF.input);
-		J2IGF.window.getCanvas().addMouseWheelListener(J2IGF.input);
+		J2IGF.setInput(new Input());
+		J2IGF.getWindow().getCanvas().addKeyListener(J2IGF.getInput());
+		J2IGF.getWindow().getCanvas().addMouseListener(J2IGF.getInput());
+		J2IGF.getWindow().getCanvas().addMouseMotionListener(J2IGF.getInput());
+		J2IGF.getWindow().getCanvas().addMouseWheelListener(J2IGF.getInput());
 	}
 
 	public final void reset()
@@ -288,15 +289,15 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
-		mouseX = (e.getX() / J2IGF.getRenderScale()) - J2IGF.renderer.getViewport().getXPos();
-		mouseY = (e.getY() / J2IGF.getRenderScale()) - J2IGF.renderer.getViewport().getYPos();
+		mouseX = (e.getX() / J2IGF.getPixelScale()) - J2IGF.getRenderer().getScreen().getXPos();
+		mouseY = (e.getY() / J2IGF.getPixelScale()) - J2IGF.getRenderer().getScreen().getYPos();
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e)
 	{
-		mouseX = (e.getX() / J2IGF.getRenderScale()) - J2IGF.renderer.getViewport().getXPos();
-		mouseY = (e.getY() / J2IGF.getRenderScale()) - J2IGF.renderer.getViewport().getYPos();
+		mouseX = (e.getX() / J2IGF.getPixelScale()) - J2IGF.getRenderer().getScreen().getXPos();
+		mouseY = (e.getY() / J2IGF.getPixelScale()) - J2IGF.getRenderer().getScreen().getYPos();
 	}
 
 	@Override

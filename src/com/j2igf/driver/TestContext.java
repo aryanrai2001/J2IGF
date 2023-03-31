@@ -1,12 +1,12 @@
 package com.j2igf.driver;
 
-import com.j2igf.framework.core.Context;
-import com.j2igf.framework.core.Input;
-import com.j2igf.framework.core.J2IGF;
-import com.j2igf.framework.graphics.Animation;
-import com.j2igf.framework.graphics.Animator;
-import com.j2igf.framework.graphics.bitmap.Image;
-import com.j2igf.framework.graphics.bitmap.TileSet;
+import com.j2igf.framework.core.*;
+import com.j2igf.framework.event.Input;
+import com.j2igf.framework.graphics.dynamicGFX.Animation;
+import com.j2igf.framework.graphics.dynamicGFX.Animator;
+import com.j2igf.framework.graphics.Renderer;
+import com.j2igf.framework.graphics.staticGFX.Image;
+import com.j2igf.framework.graphics.staticGFX.TileSet;
 
 public class TestContext extends Context
 {
@@ -24,8 +24,8 @@ public class TestContext extends Context
 	public void init()
 	{
 		update = false;
-		x = 320;
-		y = 180;
+		x = J2IGF.getWidth() / 2;
+		y = J2IGF.getHeight() / 2;
 		player.setAnimation(0, down);
 		player.setAnimation(1, left);
 		player.setAnimation(2, up);
@@ -33,30 +33,30 @@ public class TestContext extends Context
 	}
 
 	@Override
-	public void update()
+	public void update(Input input)
 	{
-		if (J2IGF.input.isKeyDown(Input.KeyCode.ESCAPE))
-			J2IGF.engine.stop(false);
+		if (input.isKeyDown(Input.KeyCode.ESCAPE))
+			J2IGF.exit();
 
-		if (J2IGF.input.isKey(Input.KeyCode.S))
+		if (input.isKey(Input.KeyCode.S))
 		{
 			player.setState(0, true);
 			update = true;
 			y++;
 		}
-		else if (J2IGF.input.isKey(Input.KeyCode.A))
+		else if (input.isKey(Input.KeyCode.A))
 		{
 			player.setState(1, true);
 			update = true;
 			x--;
 		}
-		else if (J2IGF.input.isKey(Input.KeyCode.W))
+		else if (input.isKey(Input.KeyCode.W))
 		{
 			player.setState(2, true);
 			update = true;
 			y--;
 		}
-		else if (J2IGF.input.isKey(Input.KeyCode.D))
+		else if (input.isKey(Input.KeyCode.D))
 		{
 			player.setState(3, true);
 			update = true;
@@ -72,15 +72,9 @@ public class TestContext extends Context
 	}
 
 	@Override
-	public void render()
+	public void render(Renderer renderer)
 	{
-		J2IGF.renderer.clear(0);
-		player.render(x, y);
-	}
-
-	@Override
-	public void dispose()
-	{
-
+		renderer.clear(0);
+		player.render(renderer, x, y);
 	}
 }

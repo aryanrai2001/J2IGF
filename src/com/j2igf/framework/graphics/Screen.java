@@ -1,8 +1,10 @@
-package com.j2igf.framework.core;
+package com.j2igf.framework.graphics;
 
-public class Viewport
+import com.j2igf.framework.core.J2IGF;
+
+public class Screen
 {
-	public static final Viewport defaultViewport = new Viewport(J2IGF.getWidth(), J2IGF.getHeight());
+	public static final Screen DEFAULT_SCREEN = new Screen(J2IGF.getWidth(), J2IGF.getHeight());
 	private final int width;
 	private final int height;
 	private final int xRealPos;
@@ -10,7 +12,7 @@ public class Viewport
 	private int xPos;
 	private int yPos;
 
-	public Viewport(int width, int height)
+	public Screen(int width, int height)
 	{
 		width = Math.min(width, J2IGF.getWidth());
 		height = Math.min(height, J2IGF.getHeight());

@@ -6,7 +6,9 @@ public class Time
 	private static double deltaTime = 0;
 	private static double timeStamp = 0;
 
-	private Time() { }
+	private Time()
+	{
+	}
 
 	public static void update()
 	{

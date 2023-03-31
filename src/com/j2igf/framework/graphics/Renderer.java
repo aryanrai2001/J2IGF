@@ -12,13 +12,11 @@ public class Renderer
 	private float globalAlpha;
 	private boolean isScreen;
 	private boolean isAlphaEnabled;
-	private Screen screen;
 	private FontAtlas fontAtlas;
 
 	private Renderer()
 	{
 		this.globalAlpha = -1;
-		this.screen = Screen.DEFAULT_SCREEN;
 		this.fontAtlas = FontAtlas.DEFAULT_FONT;
 		this.isAlphaEnabled = true;
 		resetTarget();
@@ -29,26 +27,15 @@ public class Renderer
 		J2IGF.setRenderer(new Renderer());
 	}
 
-	public void setFont(FontAtlas fontAtlas)
-	{
-		assert fontAtlas != null;
-		this.fontAtlas = fontAtlas;
-	}
-
 	public FontAtlas getFont()
 	{
 		return fontAtlas;
 	}
 
-	public void setScreen(Screen screen)
+	public void setFont(FontAtlas fontAtlas)
 	{
-		assert screen != null;
-		this.screen = screen;
-	}
-
-	public Screen getScreen()
-	{
-		return screen;
+		assert fontAtlas != null;
+		this.fontAtlas = fontAtlas;
 	}
 
 	public void setTarget(Bitmap target)
@@ -96,9 +83,9 @@ public class Renderer
 
 	public void clear(int color)
 	{
-		for (int y = screen.getYRealPos(); y < screen.getYRealPos() + screen.getHeight(); y++)
+		for (int y = 0; y < height; y++)
 		{
-			for (int x = screen.getXRealPos(); x < screen.getXRealPos() + screen.getWidth(); x++)
+			for (int x = 0; x < width; x++)
 			{
 				pixels[x + y * width] = color | 0xff000000;
 			}
@@ -135,16 +122,8 @@ public class Renderer
 
 	public void setPixel(int x, int y, int color)
 	{
-		if (isScreen)
-		{
-			x = screen.transformX(x);
-			y = screen.transformY(y);
-		}
-		else if (x < 0 || x >= width || y < 0 || y >= height)
-			return;
-
 		int alpha = (color >>> 24);
-		if (x == -1 || y == -1 || alpha == 0)
+		if (alpha == 0 || x < 0 || x >= width || y < 0 || y >= height)
 			return;
 
 		if (isAlphaEnabled)

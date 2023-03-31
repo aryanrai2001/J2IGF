@@ -22,7 +22,7 @@ public final class J2IGF
 	private static int pixelScale = 1;
 	private static int targetUPS = 60;
 	private static int flags = FLAG_FULL_SCREEN;
-	
+
 	private static boolean initialized = false;
 
 	private J2IGF()

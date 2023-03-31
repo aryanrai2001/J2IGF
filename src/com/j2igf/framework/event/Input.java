@@ -5,12 +5,155 @@ import java.awt.event.*;
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener
 {
+	private final int NUM_KEYS = 0xFF00, NUM_BUTTONS = 5;
+	private boolean[] keys;
+	private boolean[] lastKeys;
+	private boolean[] buttons;
+	private boolean[] lastButtons;
+	private int mouseX, mouseY, scroll;
+
+	private Input()
+	{
+		this.mouseX = J2IGF.getWidth() / 2;
+		this.mouseY = J2IGF.getHeight() / 2;
+		this.reset();
+	}
+
+	public static void create()
+	{
+		J2IGF.setInput(new Input());
+		J2IGF.getWindow().getCanvas().addKeyListener(J2IGF.getInput());
+		J2IGF.getWindow().getCanvas().addMouseListener(J2IGF.getInput());
+		J2IGF.getWindow().getCanvas().addMouseMotionListener(J2IGF.getInput());
+		J2IGF.getWindow().getCanvas().addMouseWheelListener(J2IGF.getInput());
+	}
+
+	public final void reset()
+	{
+		this.keys = new boolean[NUM_KEYS];
+		this.lastKeys = new boolean[NUM_KEYS];
+		this.buttons = new boolean[NUM_BUTTONS];
+		this.lastButtons = new boolean[NUM_BUTTONS];
+	}
+
+	public final void update()
+	{
+		System.arraycopy(keys, 0, lastKeys, 0, NUM_KEYS);
+		System.arraycopy(buttons, 0, lastButtons, 0, NUM_BUTTONS);
+		scroll = 0;
+	}
+
+	public boolean isKeyDown(int keyCode)
+	{
+		return !lastKeys[keyCode] && keys[keyCode];
+	}
+
+	public boolean isKey(int keyCode)
+	{
+		return keys[keyCode];
+	}
+
+	public boolean isKeyUp(int keyCode)
+	{
+		return lastKeys[keyCode] && !keys[keyCode];
+	}
+
+	public boolean isButtonDown(int button)
+	{
+		return !lastButtons[button] && buttons[button];
+	}
+
+	public boolean isButton(int button)
+	{
+		return buttons[button];
+	}
+
+	public boolean isButtonUp(int button)
+	{
+		return lastButtons[button] && !buttons[button];
+	}
+
+	public int getMouseX()
+	{
+		return mouseX;
+	}
+
+	public int getMouseY()
+	{
+		return mouseY;
+	}
+
+	public int getScroll()
+	{
+		return scroll;
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e)
+	{
+		keys[e.getKeyCode()] = true;
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e)
+	{
+		keys[e.getKeyCode()] = false;
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e)
+	{
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+		buttons[e.getButton()] = true;
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e)
+	{
+		buttons[e.getButton()] = false;
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e)
+	{
+		scroll = e.getWheelRotation();
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e)
+	{
+		mouseX = e.getX() / J2IGF.getPixelScale();
+		mouseY = e.getY() / J2IGF.getPixelScale();
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e)
+	{
+		mouseX = e.getX() / J2IGF.getPixelScale();
+		mouseY = e.getY() / J2IGF.getPixelScale();
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e)
+	{
+	}
+
 	public static class KeyCode
 	{
-		private KeyCode()
-		{
-		}
-
 		public static final int ENTER = '\n';
 		public static final int BACK_SPACE = '\b';
 		public static final int TAB = '\t';
@@ -166,152 +309,9 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 		public static final int UNDERSCORE = 0x020B;
 		public static final int WINDOWS = 0x020C;
 		public static final int CONTEXT_MENU = 0x020D;
-	}
 
-	private final int NUM_KEYS = 0xFF00, NUM_BUTTONS = 5;
-	private boolean[] keys;
-	private boolean[] lastKeys;
-	private boolean[] buttons;
-	private boolean[] lastButtons;
-	private int mouseX, mouseY, scroll;
-
-	private Input()
-	{
-		this.mouseX = J2IGF.getWidth() / 2;
-		this.mouseY = J2IGF.getHeight() / 2;
-		this.reset();
-	}
-
-	public static void create()
-	{
-		J2IGF.setInput(new Input());
-		J2IGF.getWindow().getCanvas().addKeyListener(J2IGF.getInput());
-		J2IGF.getWindow().getCanvas().addMouseListener(J2IGF.getInput());
-		J2IGF.getWindow().getCanvas().addMouseMotionListener(J2IGF.getInput());
-		J2IGF.getWindow().getCanvas().addMouseWheelListener(J2IGF.getInput());
-	}
-
-	public final void reset()
-	{
-		this.keys = new boolean[NUM_KEYS];
-		this.lastKeys = new boolean[NUM_KEYS];
-		this.buttons = new boolean[NUM_BUTTONS];
-		this.lastButtons = new boolean[NUM_BUTTONS];
-	}
-
-	public final void update()
-	{
-		System.arraycopy(keys, 0, lastKeys, 0, NUM_KEYS);
-		System.arraycopy(buttons, 0, lastButtons, 0, NUM_BUTTONS);
-		scroll = 0;
-	}
-
-	public boolean isKeyDown(int keyCode)
-	{
-		return !lastKeys[keyCode] && keys[keyCode];
-	}
-
-	public boolean isKey(int keyCode)
-	{
-		return keys[keyCode];
-	}
-
-	public boolean isKeyUp(int keyCode)
-	{
-		return lastKeys[keyCode] && !keys[keyCode];
-	}
-
-	public boolean isButtonDown(int button)
-	{
-		return !lastButtons[button] && buttons[button];
-	}
-
-	public boolean isButton(int button)
-	{
-		return buttons[button];
-	}
-
-	public boolean isButtonUp(int button)
-	{
-		return lastButtons[button] && !buttons[button];
-	}
-
-	public int getMouseX()
-	{
-		return mouseX;
-	}
-
-	public int getMouseY()
-	{
-		return mouseY;
-	}
-
-	public int getScroll()
-	{
-		return scroll;
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e)
-	{
-		keys[e.getKeyCode()] = true;
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e)
-	{
-		keys[e.getKeyCode()] = false;
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e)
-	{
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e)
-	{
-		buttons[e.getButton()] = true;
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e)
-	{
-		buttons[e.getButton()] = false;
-	}
-
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent e)
-	{
-		scroll = e.getWheelRotation();
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e)
-	{
-		mouseX = (e.getX() / J2IGF.getPixelScale()) - J2IGF.getRenderer().getScreen().getXPos();
-		mouseY = (e.getY() / J2IGF.getPixelScale()) - J2IGF.getRenderer().getScreen().getYPos();
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e)
-	{
-		mouseX = (e.getX() / J2IGF.getPixelScale()) - J2IGF.getRenderer().getScreen().getXPos();
-		mouseY = (e.getY() / J2IGF.getPixelScale()) - J2IGF.getRenderer().getScreen().getYPos();
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e)
-	{
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e)
-	{
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e)
-	{
+		private KeyCode()
+		{
+		}
 	}
 }

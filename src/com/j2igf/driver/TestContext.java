@@ -1,10 +1,11 @@
 package com.j2igf.driver;
 
-import com.j2igf.framework.core.*;
+import com.j2igf.framework.core.Context;
+import com.j2igf.framework.core.J2IGF;
 import com.j2igf.framework.event.Input;
+import com.j2igf.framework.graphics.Renderer;
 import com.j2igf.framework.graphics.dynamicGFX.Animation;
 import com.j2igf.framework.graphics.dynamicGFX.Animator;
-import com.j2igf.framework.graphics.Renderer;
 import com.j2igf.framework.graphics.staticGFX.Image;
 import com.j2igf.framework.graphics.staticGFX.TileSet;
 
@@ -16,8 +17,11 @@ public class TestContext extends Context
 	Animation up = new Animation(playerSprites, true, 8, 4, 8);
 	Animation right = new Animation(playerSprites, true, 12, 4, 8);
 	Animator player = new Animator(4);
+
 	int x;
 	int y;
+
+	int mouseX, mouseY;
 	boolean update;
 
 	@Override
@@ -69,6 +73,7 @@ public class TestContext extends Context
 		{
 			player.update();
 		}
+
 	}
 
 	@Override
@@ -76,5 +81,6 @@ public class TestContext extends Context
 	{
 		renderer.clear(0);
 		player.render(renderer, x, y);
+		renderer.fillCircle(J2IGF.getInput().getMouseX(), J2IGF.getInput().getMouseY(), 50, 0xff00ff00);
 	}
 }

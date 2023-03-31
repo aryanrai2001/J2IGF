@@ -71,6 +71,14 @@ public class FontAtlas extends Bitmap
 		this.originX = this.originY = 0;
 	}
 
+	public static void listAllFonts()
+	{
+		GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		java.awt.Font[] fonts = e.getAllFonts();
+		for (java.awt.Font font : fonts)
+			System.out.println(font.getName());
+	}
+
 	public Sprite textToSprite(String text, int color)
 	{
 		int textWidth = 0;
@@ -106,13 +114,5 @@ public class FontAtlas extends Bitmap
 	public int getGlyphWidth(int ch)
 	{
 		return glyphWidths[ch];
-	}
-
-	public static void listAllFonts()
-	{
-		GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		java.awt.Font[] fonts = e.getAllFonts();
-		for (java.awt.Font font : fonts)
-			System.out.println(font.getName());
 	}
 }

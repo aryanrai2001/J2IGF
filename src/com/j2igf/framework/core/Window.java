@@ -105,11 +105,6 @@ public class Window
 		return canvas;
 	}
 
-	public BufferedImage getImage()
-	{
-		return image;
-	}
-
 	public void dispose()
 	{
 		graphics.dispose();

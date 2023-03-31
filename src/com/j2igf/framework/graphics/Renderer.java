@@ -1,59 +1,42 @@
 package com.j2igf.framework.graphics;
 
-import com.j2igf.framework.core.J2IGF;
 import com.j2igf.framework.graphics.staticGFX.Bitmap;
 import com.j2igf.framework.graphics.staticGFX.FontAtlas;
 
 public class Renderer
 {
-	private int[] pixels;
-	private int width;
-	private int height;
+	private final int[] pixels;
+	private final int width;
+	private final int height;
 	private float globalAlpha;
-	private boolean isScreen;
 	private boolean isAlphaEnabled;
 	private FontAtlas fontAtlas;
 
-	private Renderer()
+	public Renderer(int[] pixels, int width, int height)
 	{
 		this.globalAlpha = -1;
 		this.fontAtlas = FontAtlas.DEFAULT_FONT;
-		this.isAlphaEnabled = true;
-		resetTarget();
+		this.isAlphaEnabled = false;
+		this.pixels = pixels;
+		this.width = width;
+		this.height = height;
 	}
 
-	public static void create()
+	public Renderer(Bitmap target)
 	{
-		J2IGF.setRenderer(new Renderer());
-	}
-
-	public FontAtlas getFont()
-	{
-		return fontAtlas;
+		assert target != null;
+		this.globalAlpha = -1;
+		this.fontAtlas = FontAtlas.DEFAULT_FONT;
+		this.isAlphaEnabled = false;
+		this.pixels = target.getPixels();
+		this.width = target.getWidth();
+		this.height = target.getHeight();
 	}
 
 	public void setFont(FontAtlas fontAtlas)
 	{
 		assert fontAtlas != null;
 		this.fontAtlas = fontAtlas;
-	}
-
-	public void setTarget(Bitmap target)
-	{
-		if (target == null)
-			return;
-		this.pixels = target.getPixels();
-		this.width = target.getWidth();
-		this.height = target.getHeight();
-		this.isScreen = false;
-	}
-
-	public void resetTarget()
-	{
-		this.pixels = J2IGF.getWindow().getFrameBuffer();
-		this.width = J2IGF.getWidth();
-		this.height = J2IGF.getHeight();
-		this.isScreen = true;
 	}
 
 	public void enableAlphaBlending()
@@ -89,34 +72,6 @@ public class Renderer
 			{
 				pixels[x + y * width] = color | 0xff000000;
 			}
-		}
-	}
-
-	public void showDebugInfo(String info)
-	{
-		int xOffset = 0;
-		for (int i = 0; i < info.length(); i++)
-		{
-			int ch = info.charAt(i);
-			int offset = FontAtlas.DEFAULT_FONT.getOffset(ch);
-			int glyphWidth = FontAtlas.DEFAULT_FONT.getGlyphWidth(ch);
-			for (int y = 0; y < FontAtlas.DEFAULT_FONT.getHeight(); y++)
-			{
-				for (int x = 0; x < glyphWidth; x++)
-				{
-					int fontAlpha = (FontAtlas.DEFAULT_FONT.getPixel(x + offset, y) >>> 24);
-					if (fontAlpha == 0)
-					{
-						pixels[x + xOffset + y * width] = 0xff000000;
-					}
-					else
-					{
-						float alphaF = (float) fontAlpha / 0xff;
-						pixels[x + xOffset + y * width] = 0xff000000 | (int) (alphaF * 0xff) << 16 | (int) (alphaF * 0xff) << 8 | (int) (alphaF * 0xff);
-					}
-				}
-			}
-			xOffset += glyphWidth;
 		}
 	}
 

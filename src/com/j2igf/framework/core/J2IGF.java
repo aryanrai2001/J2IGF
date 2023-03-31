@@ -3,6 +3,7 @@ package com.j2igf.framework.core;
 import com.j2igf.framework.event.Input;
 import com.j2igf.framework.event.Time;
 import com.j2igf.framework.graphics.Renderer;
+import com.j2igf.framework.graphics.staticGFX.FontAtlas;
 import java.util.Stack;
 
 public final class J2IGF
@@ -33,13 +34,14 @@ public final class J2IGF
 	{
 		Window.create();
 		Engine.create();
-		Renderer.create();
 		Input.create();
+		renderer = new Renderer(window.getFrameBuffer(), width, height);
 		initialized = true;
 	}
 
 	public static void addContext(Context context)
 	{
+		assert context != null;
 		context.init();
 		contexts.push(context);
 	}
@@ -174,18 +176,6 @@ public final class J2IGF
 		J2IGF.engine = engine;
 	}
 
-	public static Renderer getRenderer()
-	{
-		return renderer;
-	}
-
-	public static void setRenderer(Renderer renderer)
-	{
-		if (initialized)
-			return;
-		J2IGF.renderer = renderer;
-	}
-
 	public static Input getInput()
 	{
 		return input;
@@ -206,5 +196,34 @@ public final class J2IGF
 	public static boolean isFullScreen()
 	{
 		return (flags & FLAG_FULL_SCREEN) != 0;
+	}
+
+	public static void showDebugInfo(String info)
+	{
+		int[] pixels = window.getFrameBuffer();
+		int xOffset = 0;
+		for (int i = 0; i < info.length(); i++)
+		{
+			int ch = info.charAt(i);
+			int offset = FontAtlas.DEFAULT_FONT.getOffset(ch);
+			int glyphWidth = FontAtlas.DEFAULT_FONT.getGlyphWidth(ch);
+			for (int y = 0; y < FontAtlas.DEFAULT_FONT.getHeight(); y++)
+			{
+				for (int x = 0; x < glyphWidth; x++)
+				{
+					int fontAlpha = (FontAtlas.DEFAULT_FONT.getPixel(x + offset, y) >>> 24);
+					if (fontAlpha == 0)
+					{
+						pixels[x + xOffset + y * width] = 0xff000000;
+					}
+					else
+					{
+						float alphaF = (float) fontAlpha / 0xff;
+						pixels[x + xOffset + y * width] = 0xff000000 | (int) (alphaF * 0xff) << 16 | (int) (alphaF * 0xff) << 8 | (int) (alphaF * 0xff);
+					}
+				}
+			}
+			xOffset += glyphWidth;
+		}
 	}
 }

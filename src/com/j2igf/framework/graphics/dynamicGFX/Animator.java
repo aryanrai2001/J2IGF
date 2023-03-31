@@ -11,7 +11,7 @@ public class Animator
 	{
 		if (states <= 1)
 		{
-			System.err.println("There must be at least two animations.");
+			System.err.println("There must be at least two animation states.");
 			System.exit(-1);
 		}
 		animations = new Animation[states];
@@ -33,7 +33,7 @@ public class Animator
 		animations[currentAnimation].reset();
 	}
 
-	public void setState(int index, boolean reset)
+	public void changeState(int index, boolean reset)
 	{
 		if (currentAnimation == index)
 			return;
@@ -47,13 +47,13 @@ public class Animator
 			reset();
 	}
 
-	public void setAnimation(int index, Animation animation)
+	public void setState(int index, Animation animation)
 	{
+		if (index >= animations.length || index < 0)
+		{
+			System.err.println("Animations index out of bounds!");
+			System.exit(-1);
+		}
 		animations[index] = animation;
-	}
-
-	public Animation getAnimation(int index)
-	{
-		return animations[index];
 	}
 }

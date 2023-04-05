@@ -1,6 +1,6 @@
-package com.j2igf.framework.graphics.staticGFX;
+package com.j2igf.framework.graphics.auxiliary;
 
-import com.j2igf.framework.graphics.Bitmap;
+import com.j2igf.framework.graphics.visual.Sprite;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
@@ -8,14 +8,16 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
-public class FontAtlas extends Bitmap
+public class FontAtlas extends Sprite
 {
 	public static final FontAtlas DEFAULT_FONT = new FontAtlas("Dialog.plain", 12, true);
 	private final int[] offsets;
 	private final int[] glyphWidths;
+	private Sprite sprite;
 
 	public FontAtlas(String fontName, int fontSize, boolean antiAliased)
 	{
+		super();
 		if (fontName == null || fontSize < 5)
 		{
 			System.err.println("Invalid Font parameters!");

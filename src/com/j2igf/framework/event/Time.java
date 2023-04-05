@@ -2,9 +2,9 @@ package com.j2igf.framework.event;
 
 public class Time
 {
-	private static double timeScale = 1;
-	private static double deltaTime = 0;
-	private static double timeStamp = 0;
+	private static float timeScale = 1;
+	private static float deltaTime = 0;
+	private static float timeStamp = 0;
 
 	private Time()
 	{
@@ -15,27 +15,27 @@ public class Time
 		timeStamp += deltaTime;
 	}
 
-	public static double getTimeScale()
+	public static float getTimeScale()
 	{
 		return timeScale;
 	}
 
-	public static void setTimeScale(double timeScale)
+	public static void setTimeScale(float timeScale)
 	{
 		Time.timeScale = timeScale;
 	}
 
-	public static double getDeltaTime()
+	public static float getDeltaTime()
 	{
 		return deltaTime;
 	}
 
-	public static void setDeltaTime(double deltaTime)
+	public static void setDeltaTime(float deltaTime)
 	{
 		Time.deltaTime = deltaTime;
 	}
 
-	public static double getTimeStamp()
+	public static float getTimeStamp()
 	{
 		return timeStamp;
 	}

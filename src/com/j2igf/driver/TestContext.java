@@ -4,11 +4,11 @@ import com.j2igf.framework.core.Context;
 import com.j2igf.framework.core.J2IGF;
 import com.j2igf.framework.event.Input;
 import com.j2igf.framework.graphics.Renderer;
-import com.j2igf.framework.graphics.staticGFX.Image;
+import com.j2igf.framework.graphics.visual.Sprite;
 
 public class TestContext extends Context
 {
-	Image poster = new Image("res/images/poster.png");
+	Sprite poster = new Sprite("res/images/poster.png");
 
 	@Override
 	public void init()
@@ -26,6 +26,6 @@ public class TestContext extends Context
 	public void render(Renderer renderer)
 	{
 		renderer.clear(0);
-		renderer.drawBitmap(J2IGF.getInput().getMouseX(), J2IGF.getInput().getMouseY(), poster);
+		poster.render(renderer, J2IGF.getInput().getMouseX(), J2IGF.getInput().getMouseY());
 	}
 }

@@ -1,4 +1,4 @@
-package com.j2igf.framework.graphics.dynamicGFX;
+package com.j2igf.framework.graphics.visual;
 
 import com.j2igf.framework.graphics.Renderer;
 

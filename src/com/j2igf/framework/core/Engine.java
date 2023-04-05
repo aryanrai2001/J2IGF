@@ -21,9 +21,9 @@ public class Engine
 				int ups = 0, fps = 0;
 				int updates = 0, frames = 0;
 				long lastTime = System.nanoTime();
-				double timeSlice = 1000000000.0 / targetUPS;
-				double timeAccumulated = 0;
-				double timer = 0;
+				float timeSlice = 1000000000.0f / targetUPS;
+				float timeAccumulated = 0;
+				float timer = 0;
 
 				while (running)
 				{
@@ -33,11 +33,11 @@ public class Engine
 					timeAccumulated += frameTime;
 					while (timeAccumulated >= timeSlice)
 					{
-						J2IGF.update(Time.getTimeScale() * timeSlice / 1000000000.0);
+						J2IGF.update(Time.getTimeScale() * timeSlice / 1000000000.0f);
 						updates++;
 						timeAccumulated -= timeSlice;
 					}
-					J2IGF.render(Time.getTimeScale() * frameTime / 1000000000.0);
+					J2IGF.render(Time.getTimeScale() * frameTime / 1000000000.0f);
 					frames++;
 
 					if (J2IGF.isDebugMode())

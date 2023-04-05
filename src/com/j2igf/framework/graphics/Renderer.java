@@ -1,6 +1,7 @@
 package com.j2igf.framework.graphics;
 
-import com.j2igf.framework.graphics.staticGFX.FontAtlas;
+import com.j2igf.framework.graphics.auxiliary.FontAtlas;
+import com.j2igf.framework.graphics.visual.Sprite;
 
 public class Renderer
 {
@@ -21,7 +22,7 @@ public class Renderer
 		this.height = height;
 	}
 
-	public Renderer(Bitmap target)
+	public Renderer(Sprite target)
 	{
 		assert target != null;
 		this.globalAlpha = -1;
@@ -307,32 +308,6 @@ public class Renderer
 			int x3 = (int) (x0 + ((float) (y1 - y0) / (float) (y2 - y0)) * (x2 - x0));
 			fillBottomFlatTriangle(x0, y0, x1, y1, x3, y1, color);
 			fillTopFlatTriangle(x1, y1, x3, y1, x2, y2, color);
-		}
-	}
-
-	public void drawBitmap(int x, int y, Bitmap bitmap)
-	{
-		x -= bitmap.getOriginX();
-		y -= bitmap.getOriginY();
-
-		int startX = 0, startY = 0;
-		int endX = bitmap.getWidth(), endY = bitmap.getHeight();
-
-		if (x < 0)
-			startX -= x;
-		if (y < 0)
-			startY -= y;
-		if (x + endX > width)
-			endX = width - x;
-		if (y + endY > height)
-			endY = height - y;
-
-		for (int currY = startY; currY < endY; currY++)
-		{
-			for (int currX = startX; currX < endX; currX++)
-			{
-				setPixel(x + currX, y + currY, bitmap.getPixel(currX, currY));
-			}
 		}
 	}
 

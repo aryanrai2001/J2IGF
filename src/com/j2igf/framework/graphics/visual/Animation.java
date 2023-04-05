@@ -1,17 +1,16 @@
-package com.j2igf.framework.graphics.dynamicGFX;
+package com.j2igf.framework.graphics.visual;
 
 import com.j2igf.framework.event.Time;
 import com.j2igf.framework.graphics.Renderer;
-import com.j2igf.framework.graphics.staticGFX.Sprite;
-import com.j2igf.framework.graphics.staticGFX.TileSet;
+import com.j2igf.framework.graphics.auxiliary.TileSet;
 
 public class Animation
 {
 	private final Sprite[] frames;
-	private final double fps;
+	private final float fps;
 	private float frameIndex;
 
-	public Animation(TileSet tileSet, boolean verticalScan, int offset, int size, double fps)
+	public Animation(TileSet tileSet, boolean verticalScan, int offset, int size, float fps)
 	{
 		if (offset + size > tileSet.getNumTilesX() * tileSet.getNumTilesY())
 		{
@@ -34,7 +33,7 @@ public class Animation
 
 	public void render(Renderer renderer, int x, int y)
 	{
-		renderer.drawBitmap(x, y, frames[(int) frameIndex]);
+		frames[(int) frameIndex].render(renderer, x, y);
 	}
 
 	public void reset()

@@ -3,8 +3,8 @@ package com.j2igf.framework.core;
 import com.j2igf.framework.event.Input;
 import com.j2igf.framework.event.Time;
 import com.j2igf.framework.graphics.Renderer;
-import com.j2igf.framework.graphics.staticGFX.FontAtlas;
-import com.j2igf.framework.graphics.staticGFX.Sprite;
+import com.j2igf.framework.graphics.auxiliary.FontAtlas;
+import com.j2igf.framework.graphics.visual.Sprite;
 import java.util.Stack;
 
 public final class J2IGF
@@ -45,7 +45,7 @@ public final class J2IGF
 		{
 			renderer.clear(0);
 			renderer.enableAlphaBlending();
-			renderer.drawBitmap(x, y, label);
+			label.render(renderer, x, y);
 			renderer.disableAlphaBlending();
 		}
 	};
@@ -83,7 +83,7 @@ public final class J2IGF
 		contexts.pop();
 	}
 
-	public static void update(double deltaTime)
+	public static void update(float deltaTime)
 	{
 		Time.setDeltaTime(deltaTime);
 		Time.update();
@@ -95,7 +95,7 @@ public final class J2IGF
 			input.update();
 	}
 
-	public static void render(double deltaTime)
+	public static void render(float deltaTime)
 	{
 		Time.setDeltaTime(deltaTime);
 

@@ -1,15 +1,15 @@
-package com.j2igf.framework.graphics.staticGFX;
+package com.j2igf.framework.graphics.auxiliary;
 
-import com.j2igf.framework.graphics.Bitmap;
+import com.j2igf.framework.graphics.visual.Sprite;
 
-public class TileSet extends Bitmap
+public class TileSet extends Sprite
 {
 	private final int numTilesX;
 	private final int numTilesY;
 	private final int tileWidth;
 	private final int tileHeight;
 
-	public TileSet(Bitmap src, int numTilesX, int numTilesY)
+	public TileSet(Sprite src, int numTilesX, int numTilesY)
 	{
 		this.width = src.getWidth();
 		this.height = src.getHeight();
@@ -17,7 +17,7 @@ public class TileSet extends Bitmap
 		this.numTilesY = numTilesY;
 		if (width % numTilesX != 0 || height % numTilesY != 0)
 		{
-			System.err.println("Bitmap dimensions are incompatible with TileSet.");
+			System.err.println("Sprite dimensions are incompatible with TileSet.");
 			System.exit(-1);
 		}
 		this.originX = src.getOriginX();

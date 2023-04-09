@@ -18,6 +18,7 @@ public class FontAtlas extends Sprite
 	public FontAtlas(String fontName, int fontSize, boolean antiAliased)
 	{
 		super();
+
 		if (fontName == null || fontSize < 5)
 		{
 			System.err.println("Invalid Font parameters!");
@@ -71,7 +72,6 @@ public class FontAtlas extends Sprite
 		this.width = width;
 		this.height = height;
 		this.pixels = sprite.getRGB(0, 0, width, height, null, 0, width);
-		this.originX = this.originY = 0;
 	}
 
 	public static void listAllFonts()

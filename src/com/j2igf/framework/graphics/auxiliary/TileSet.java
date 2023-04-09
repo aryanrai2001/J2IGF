@@ -11,20 +11,19 @@ public class TileSet extends Sprite
 
 	public TileSet(Sprite src, int numTilesX, int numTilesY)
 	{
+		super();
+		this.pixels = src.getPixels();
 		this.width = src.getWidth();
 		this.height = src.getHeight();
 		this.numTilesX = numTilesX;
 		this.numTilesY = numTilesY;
+		this.tileWidth = width / numTilesX;
+		this.tileHeight = height / numTilesY;
 		if (width % numTilesX != 0 || height % numTilesY != 0)
 		{
 			System.err.println("Sprite dimensions are incompatible with TileSet.");
 			System.exit(-1);
 		}
-		this.originX = src.getOriginX();
-		this.originY = src.getOriginY();
-		this.pixels = src.getPixels();
-		this.tileWidth = width / numTilesX;
-		this.tileHeight = height / numTilesY;
 	}
 
 	public Sprite getTile(int index, boolean verticalScan)

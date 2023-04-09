@@ -10,25 +10,57 @@ import javax.imageio.ImageIO;
 
 public class Sprite
 {
-	protected int originX;
-	protected int originY;
+	protected int[] pixels;
 	protected int width;
 	protected int height;
-	protected int[] pixels;
+	protected int startTX;
+	protected int startTY;
+	protected int endTX;
+	protected int endTY;
+	protected float originX;
+	protected float originY;
+	protected float scaleX;
+	protected float scaleY;
+	protected float cos;
+	protected float sin;
 
-	public Sprite(Sprite bitmap)
+	protected Sprite()
 	{
-		this.originX = bitmap.getOriginX();
-		this.originY = bitmap.getOriginY();
-		this.width = bitmap.getWidth();
-		this.height = bitmap.getHeight();
-		this.pixels = Arrays.copyOf(bitmap.getPixels(), bitmap.getPixels().length);
+		this.pixels = null;
+		this.width = 0;
+		this.height = 0;
+		this.startTX = 0;
+		this.startTY = 0;
+		this.endTX = 0;
+		this.endTY = 0;
+		this.originX = 0;
+		this.originY = 0;
+		this.scaleX = 1;
+		this.scaleY = 1;
+		this.cos = 1;
+		this.sin = 0;
+	}
+
+	public Sprite(Sprite sprite)
+	{
+		this.pixels = Arrays.copyOf(sprite.getPixels(), sprite.getPixels().length);
+		this.width = sprite.width;
+		this.height = sprite.height;
+		this.startTX = sprite.startTX;
+		this.startTY = sprite.startTY;
+		this.endTX = sprite.endTX;
+		this.endTY = sprite.endTY;
+		this.originX = sprite.originX;
+		this.originY = sprite.originY;
+		this.scaleX = sprite.scaleX;
+		this.scaleY = sprite.scaleY;
+		this.cos = sprite.cos;
+		this.sin = sprite.sin;
 	}
 
 	public Sprite(int width, int height)
 	{
-		this.originX = 0;
-		this.originY = 0;
+		this();
 		this.width = width;
 		this.height = height;
 		this.pixels = new int[width * height];
@@ -36,6 +68,7 @@ public class Sprite
 
 	public Sprite(String path)
 	{
+		this();
 		if (path == null)
 			return;
 
@@ -50,28 +83,16 @@ public class Sprite
 		}
 		assert image != null;
 
-		this.originX = 0;
-		this.originY = 0;
 		this.width = image.getWidth();
 		this.height = image.getHeight();
 		this.pixels = image.getRGB(0, 0, width, height, null, 0, width);
 		image.flush();
 	}
 
-	protected Sprite()
-	{
-		this.originX = 0;
-		this.originY = 0;
-		this.width = 0;
-		this.height = 0;
-		this.pixels = null;
-	}
-
 	public void render(Renderer renderer, int x, int y)
 	{
-		x -= originX;
-		y -= originY;
-
+		x -= originX * width;
+		y -= originY * height;
 		int startX = 0, startY = 0;
 		int endX = width, endY = height;
 
@@ -91,6 +112,37 @@ public class Sprite
 				renderer.setPixel(x + currX, y + currY, getPixel(currX, currY));
 			}
 		}
+	}
+
+	public void renderTransformed(Renderer renderer, int x, int y)
+	{
+		for (int currY = startTY; currY < endTY; currY++)
+		{
+			for (int currX = startTX; currX < endTX; currX++)
+			{
+				int xVal = (int) (((currX * cos - currY * sin) / scaleX) + width * originX);
+				int yVal = (int) (((currX * sin + currY * cos) / scaleY) + height * originY);
+				renderer.setPixel(x + currX, y + currY, getPixel(xVal, yVal));
+			}
+		}
+	}
+
+	public Sprite getTransformed()
+	{
+		applyTransform();
+		Sprite sprite = new Sprite(endTX - startTX, endTY - startTY);
+		sprite.originX = 0.5f;
+		sprite.originY = 0.5f;
+		for (int currY = startTY; currY < endTY; currY++)
+		{
+			for (int currX = startTX; currX < endTX; currX++)
+			{
+				int xVal = (int) (((currX * cos - currY * sin) / scaleX) + width * originX);
+				int yVal = (int) (((currX * sin + currY * cos) / scaleY) + height * originY);
+				sprite.setPixel(Math.abs(startTX) + currX, Math.abs(startTY) + currY, getPixel(xVal, yVal));
+			}
+		}
+		return sprite;
 	}
 
 	public void saveToFile(String path, String name)
@@ -118,24 +170,13 @@ public class Sprite
 	public int getPixel(int x, int y)
 	{
 		if (x < 0 || x >= width || y < 0 || y >= height)
-			return 0x00000000;
+			return 0;
 		return pixels[x + y * width];
 	}
 
-	public void setOrigin(int originX, int originY)
+	public int[] getPixels()
 	{
-		this.originX = originX;
-		this.originY = originY;
-	}
-
-	public int getOriginX()
-	{
-		return originX;
-	}
-
-	public int getOriginY()
-	{
-		return originY;
+		return pixels;
 	}
 
 	public int getWidth()
@@ -148,8 +189,62 @@ public class Sprite
 		return height;
 	}
 
-	public int[] getPixels()
+	public void setOrigin(float oX, float oY)
 	{
-		return pixels;
+		this.originX = oX;
+		this.originY = oY;
+	}
+
+	public void setScale(float scaleX, float scaleY)
+	{
+		this.scaleX = Math.abs(scaleX);
+		this.scaleY = Math.abs(scaleY);
+	}
+
+	public void setAngleInRadians(float angleInRadians)
+	{
+		angleInRadians = (float) Math.atan2(Math.sin(angleInRadians), Math.cos(angleInRadians));
+		cos = (float) Math.cos(angleInRadians);
+		sin = (float) Math.sin(angleInRadians);
+	}
+
+	public void setAngleInDegrees(float angleInDegrees)
+	{
+		setAngleInRadians((float) Math.toRadians(angleInDegrees));
+	}
+
+	public void applyTransform()
+	{
+		float width = this.width * scaleX;
+		float height = this.height * scaleY;
+
+		if (Math.signum(cos) >= 0 && Math.signum(sin) >= 0)
+		{
+			startTX = (int) ((width * -originX) * cos + (height * -originY) * sin);
+			endTX = (int) ((width * (1 - originX)) * cos + (height * (1 - originY)) * sin);
+			startTY = (int) ((width * (1 - originX)) * -sin + (height * -originY) * cos);
+			endTY = (int) ((width * -originX) * -sin + (height * (1 - originY)) * cos);
+		}
+		else if (Math.signum(cos) < 0 && Math.signum(sin) >= 0)
+		{
+			startTX = (int) ((width * (1 - originX)) * cos + (height * -originY) * sin);
+			endTX = (int) ((width * -originX) * cos + (height * (1 - originY)) * sin);
+			startTY = (int) ((width * (1 - originX)) * -sin + (height * (1 - originY)) * cos);
+			endTY = (int) ((width * -originX) * -sin + (height * -originY) * cos);
+		}
+		else if (Math.signum(cos) < 0 && Math.signum(sin) < 0)
+		{
+			startTX = (int) ((width * (1 - originX)) * cos + (height * (1 - originY)) * sin);
+			endTX = (int) ((width * -originX) * cos + (height * -originY) * sin);
+			startTY = (int) ((width * -originX) * -sin + (height * (1 - originY)) * cos);
+			endTY = (int) ((width * (1 - originX)) * -sin + (height * -originY) * cos);
+		}
+		else
+		{
+			startTX = (int) ((width * -originX) * cos + (height * (1 - originY)) * sin);
+			endTX = (int) ((width * (1 - originX)) * cos + (height * -originY) * sin);
+			startTY = (int) ((width * -originX) * -sin + (height * -originY) * cos);
+			endTY = (int) ((width * (1 - originX)) * -sin + (height * (1 - originY)) * cos);
+		}
 	}
 }

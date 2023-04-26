@@ -22,15 +22,19 @@ public final class J2IGF
 	private static int height = 0;
 	private static final Context baseContext = new Context()
 	{
-		private Sprite label;
-		private int x, y;
+		private Sprite label, subLabel;
+		private int labelX, labelY, subLabelX, subLabelY;
 
 		@Override
 		public void init()
 		{
 			label = new FontAtlas("Times New Roman", J2IGF.height / 10, true).textToSprite("No Context Available!", 0xFFFF0000);
-			x = (J2IGF.width - label.getWidth()) / 2;
-			y = (J2IGF.height - label.getHeight()) / 2;
+			labelX = (J2IGF.width - label.getWidth()) / 2;
+			labelY = (J2IGF.height - label.getHeight()) / 2;
+
+			subLabel = new FontAtlas("Times New Roman", J2IGF.height / 25, true).textToSprite("Press ESCAPE to exit.", 0xFFaa0000);
+			subLabelX = (J2IGF.width - subLabel.getWidth()) / 2;
+			subLabelY = (J2IGF.height + label.getHeight()) / 2;
 		}
 
 		@Override
@@ -45,7 +49,8 @@ public final class J2IGF
 		{
 			renderer.clear(0);
 			renderer.enableAlphaBlending();
-			label.render(renderer, x, y);
+			label.render(renderer, labelX, labelY);
+			subLabel.render(renderer, subLabelX, subLabelY);
 			renderer.disableAlphaBlending();
 		}
 	};

@@ -2,6 +2,7 @@ package com.j2igf.framework.core;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -12,37 +13,39 @@ public final class Window {
     private final BufferedImage image;
     private final BufferStrategy strategy;
     private final Graphics graphics;
+    private final String title;
+    private final int width;
+    private final int height;
+    private final int pixelScale;
 
-    private Window() {
-        frame = new JFrame(J2IGF.getTitle());
+    public Window(String title, int width, int height, int pixelScale) {
+        this.title = title;
+        frame = new JFrame(title);
         canvas = new Canvas();
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle rect;
         int screenWidth, screenHeight;
 
-        boolean fullscreen = J2IGF.isFullScreen();
+        boolean fullscreen = width <= 0 || height <= 0;
         if (fullscreen) {
             rect = ge.getDefaultScreenDevice().getDefaultConfiguration().getBounds();
             screenWidth = rect.width;
             screenHeight = rect.height;
         } else {
-            if (J2IGF.getWidth() <= 0 || J2IGF.getHeight() <= 0) {
-                System.err.println("Width and Height must be a non-zero positive number.");
-                System.exit(-1);
-            }
             rect = ge.getMaximumWindowBounds();
             canvas.setSize(rect.width, rect.height);
             frame.add(canvas);
             frame.pack();
-            screenWidth = Math.min(J2IGF.getWidth(), rect.width);
-            screenHeight = Math.min(J2IGF.getHeight(), rect.height - frame.getInsets().top);
+            screenWidth = Math.min(width, rect.width);
+            screenHeight = Math.min(height, rect.height - frame.getInsets().top);
         }
 
-        J2IGF.setWidth(screenWidth / J2IGF.getPixelScale());
-        J2IGF.setHeight(screenHeight / J2IGF.getPixelScale());
+        this.width = (screenWidth / pixelScale);
+        this.height = (screenHeight / pixelScale);
+        this.pixelScale = pixelScale;
 
-        image = new BufferedImage(J2IGF.getWidth(), J2IGF.getHeight(), BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
 
         Dimension size = new Dimension(screenWidth, screenHeight);
         canvas.setMinimumSize(size);
@@ -70,8 +73,8 @@ public final class Window {
         graphics = strategy.getDrawGraphics();
     }
 
-    public static void create() {
-        J2IGF.setWindow(new Window());
+    public int[] getFrameBuffer() {
+        return ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
     }
 
     public void updateFrame() {
@@ -79,8 +82,15 @@ public final class Window {
         strategy.show();
     }
 
-    public int[] getFrameBuffer() {
-        return ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+    public void dispose() {
+        graphics.dispose();
+        strategy.dispose();
+        frame.dispose();
+    }
+
+    public void setCustomCloseOperation(WindowAdapter closeOperation) {
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        frame.addWindowListener(closeOperation);
     }
 
     public JFrame getJFrame() {
@@ -91,9 +101,19 @@ public final class Window {
         return canvas;
     }
 
-    public void dispose() {
-        graphics.dispose();
-        strategy.dispose();
-        frame.dispose();
+    public String getTitle() {
+        return title;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getPixelScale() {
+        return pixelScale;
     }
 }

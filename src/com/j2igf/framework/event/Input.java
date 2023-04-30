@@ -1,6 +1,6 @@
 package com.j2igf.framework.event;
 
-import com.j2igf.framework.core.J2IGF;
+import com.j2igf.framework.core.Window;
 
 import java.awt.event.*;
 
@@ -161,27 +161,24 @@ public final class Input implements KeyListener, MouseListener, MouseMotionListe
     public static final int WINDOWS = 0x020C;
     public static final int CONTEXT_MENU = 0x020D;
 
-
     private static final int NUM_KEYS = 0xFF00;
     private static final int NUM_BUTTONS = 5;
+    private final Window window;
     private boolean[] keys;
     private boolean[] lastKeys;
     private boolean[] buttons;
     private boolean[] lastButtons;
     private int mouseX, mouseY, scroll;
 
-    private Input() {
-        this.mouseX = J2IGF.getWidth() / 2;
-        this.mouseY = J2IGF.getHeight() / 2;
+    public Input(Window window) {
+        this.window = window;
+        this.mouseX = window.getWidth() / 2;
+        this.mouseY = window.getHeight() / 2;
+        window.getCanvas().addKeyListener(this);
+        window.getCanvas().addMouseListener(this);
+        window.getCanvas().addMouseMotionListener(this);
+        window.getCanvas().addMouseWheelListener(this);
         this.reset();
-    }
-
-    public static void create() {
-        J2IGF.setInput(new Input());
-        J2IGF.getWindow().getCanvas().addKeyListener(J2IGF.getInput());
-        J2IGF.getWindow().getCanvas().addMouseListener(J2IGF.getInput());
-        J2IGF.getWindow().getCanvas().addMouseMotionListener(J2IGF.getInput());
-        J2IGF.getWindow().getCanvas().addMouseWheelListener(J2IGF.getInput());
     }
 
     public void reset() {
@@ -264,14 +261,14 @@ public final class Input implements KeyListener, MouseListener, MouseMotionListe
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        mouseX = e.getX() / J2IGF.getPixelScale();
-        mouseY = e.getY() / J2IGF.getPixelScale();
+        mouseX = e.getX() / window.getPixelScale();
+        mouseY = e.getY() / window.getPixelScale();
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        mouseX = e.getX() / J2IGF.getPixelScale();
-        mouseY = e.getY() / J2IGF.getPixelScale();
+        mouseX = e.getX() / window.getPixelScale();
+        mouseY = e.getY() / window.getPixelScale();
     }
 
     @Override

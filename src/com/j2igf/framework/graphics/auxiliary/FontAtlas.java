@@ -14,6 +14,7 @@ public class FontAtlas extends Sprite {
     private static final int ATLAS_LENGTH = 256;
     private final int[] offsets;
     private final int[] glyphWidths;
+    private int lineSpacing;
 
     public FontAtlas(String fontName, int fontSize, boolean antiAliased) {
         super();
@@ -27,6 +28,7 @@ public class FontAtlas extends Sprite {
 
         this.offsets = new int[ATLAS_LENGTH];
         this.glyphWidths = new int[ATLAS_LENGTH];
+        this.lineSpacing = 0;
 
         StringBuilder buffer = new StringBuilder(ATLAS_LENGTH);
         for (int c = 0; c < ATLAS_LENGTH; c++)
@@ -106,5 +108,15 @@ public class FontAtlas extends Sprite {
 
     public int getGlyphWidth(int ch) {
         return glyphWidths[ch];
+    }
+
+    public int getLineSpacing() {
+        return lineSpacing;
+    }
+
+    public void setLineSpacing(int lineSpacing) {
+        if (lineSpacing < 0)
+            return;
+        this.lineSpacing = lineSpacing;
     }
 }

@@ -1,17 +1,19 @@
 package com.j2igf.driver;
 
-import com.j2igf.framework.core.J2IGF;
+import com.j2igf.framework.core.Engine;
+import com.j2igf.framework.core.Window;
+import com.j2igf.framework.event.Input;
+import com.j2igf.framework.graphics.Renderer;
 
 public final class Main {
     private Main() {
     }
 
     public static void main(String[] args) {
-        J2IGF.setTitle("Test");
-        J2IGF.setWidth(1280);
-        J2IGF.setHeight(720);
-        J2IGF.toggleFlags(J2IGF.FLAG_DEBUG_MODE);
-        J2IGF.initialize();
-        J2IGF.run();
+        Window window = new Window("Test", 1280, 720, 1);
+        Input input = new Input(window);
+        Renderer renderer = new Renderer(window);
+        Engine engine = new Engine(window, input, renderer, 60);
+        engine.start();
     }
 }

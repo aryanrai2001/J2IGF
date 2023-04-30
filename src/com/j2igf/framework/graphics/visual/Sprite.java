@@ -1,6 +1,5 @@
 package com.j2igf.framework.graphics.visual;
 
-import com.j2igf.framework.core.J2IGF;
 import com.j2igf.framework.graphics.Renderer;
 
 import javax.imageio.ImageIO;
@@ -92,10 +91,10 @@ public class Sprite {
             startX -= x;
         if (y < 0)
             startY -= y;
-        if (x + endX > J2IGF.getWidth())
-            endX = J2IGF.getWidth() - x;
-        if (y + endY > J2IGF.getHeight())
-            endY = J2IGF.getHeight() - y;
+        if (x + endX > renderer.getWidth())
+            endX = renderer.getWidth() - x;
+        if (y + endY > renderer.getHeight())
+            endY = renderer.getHeight() - y;
 
         for (int currY = startY; currY < endY; currY++) {
             for (int currX = startX; currX < endX; currX++) {

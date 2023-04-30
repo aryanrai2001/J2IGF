@@ -1,6 +1,5 @@
 package com.j2igf.framework.graphics;
 
-import com.j2igf.framework.core.J2IGF;
 import com.j2igf.framework.core.Window;
 import com.j2igf.framework.graphics.auxiliary.FontAtlas;
 import com.j2igf.framework.graphics.visual.Sprite;
@@ -18,8 +17,8 @@ public class Renderer {
         this.fontAtlas = FontAtlas.DEFAULT_FONT;
         this.isAlphaEnabled = false;
         this.pixels = window.getFrameBuffer();
-        this.width = J2IGF.getWidth();
-        this.height = J2IGF.getHeight();
+        this.width = window.getWidth();
+        this.height = window.getHeight();
     }
 
     public Renderer(Sprite target) {
@@ -70,7 +69,7 @@ public class Renderer {
         if (alpha == 0 || x < 0 || x >= width || y < 0 || y >= height)
             return;
 
-        if (isAlphaEnabled) {
+        if (isAlphaEnabled && alpha < 0xff) {
             int previousColor = pixels[x + y * width];
             int red = (previousColor >> 16) & 0xff;
             int green = (previousColor >> 8) & 0xff;
@@ -265,18 +264,31 @@ public class Renderer {
 
     public void drawText(int x, int y, int color, String text) {
         int xOffset = 0;
+        int yOffset = 0;
         float alpha = (float) (color >>> 24) / 0xff;
         for (int i = 0; i < text.length(); i++) {
             int ch = text.charAt(i);
+            if (ch == '\n') {
+                xOffset = 0;
+                yOffset += fontAtlas.getHeight() + fontAtlas.getLineSpacing();
+            }
             int offset = fontAtlas.getOffset(ch);
             int glyphWidth = fontAtlas.getGlyphWidth(ch);
             for (int yy = 0; yy < fontAtlas.getHeight(); yy++) {
                 for (int xx = 0; xx < glyphWidth; xx++) {
                     int fontAlpha = (int) ((fontAtlas.getPixel(xx + offset, yy) >>> 24) * alpha) << 24;
-                    setPixel(x + xx + xOffset, y + yy, fontAlpha | (color & 0xffffff));
+                    setPixel(x + xx + xOffset, y + yy + yOffset, fontAlpha | (color & 0xffffff));
                 }
             }
             xOffset += glyphWidth;
         }
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

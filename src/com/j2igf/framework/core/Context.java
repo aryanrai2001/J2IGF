@@ -15,7 +15,7 @@ public abstract class Context {
     protected Context(Engine engine) {
         if (engine == null) {
             Debug.logError(getClass().getName() + " -> Engine instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         }
         this.window = engine.getWindow();
         this.renderer = engine.getRenderer();

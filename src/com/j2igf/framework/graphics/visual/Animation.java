@@ -12,11 +12,11 @@ public class Animation {
     public Animation(TileSet tileSet, boolean verticalScan, int offset, int size, float fps) {
         if (tileSet == null) {
             Debug.logError(getClass().getName() + " -> TileSet instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         }
         else if (offset + size > tileSet.getNumberOfTilesHorizontally() * tileSet.getNumberOfTilesVertically()) {
             Debug.logError(getClass().getName() + " -> Illegal arguments for Animation constructor!");
-            System.exit(0);
+            System.exit(-1);
         }
         this.frameIndex = 0;
         this.fps = fps;

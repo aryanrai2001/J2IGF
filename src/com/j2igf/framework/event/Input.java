@@ -17,7 +17,7 @@ public final class Input implements KeyListener, MouseListener, MouseMotionListe
     public Input(Window window) {
         if (window == null) {
             Debug.logError(getClass().getName() + " -> Window instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         }
         this.window = window;
         this.mouseX = window.getWidth() / 2;

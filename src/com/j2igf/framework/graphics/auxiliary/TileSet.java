@@ -13,12 +13,12 @@ public class TileSet extends Sprite {
         super();
         if (src == null) {
             Debug.logError(getClass().getName() + " -> Sprite instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         } else if ((numberOfTilesHorizontally <= 1 && numberOfTilesVertically <= 1)
                 || (numberOfTilesHorizontally <= 0)
                 || (numberOfTilesVertically <= 0)){
             Debug.logError(getClass().getName() + " -> Illegal arguments for TileSet constructor!");
-            System.exit(0);
+            System.exit(-1);
         }
         this.pixels = src.getPixels();
         this.width = src.getWidth();
@@ -29,7 +29,7 @@ public class TileSet extends Sprite {
         this.tileHeight = height / numberOfTilesVertically;
         if (width % numberOfTilesHorizontally != 0 || height % numberOfTilesVertically != 0) {
             Debug.logError(getClass().getName() + " -> Illegal arguments for TileSet constructor!");
-            System.exit(0);
+            System.exit(-1);
         }
     }
 
@@ -61,14 +61,14 @@ public class TileSet extends Sprite {
                 || (numberOfTilesVertically <= 0)){
             Debug.logError(getClass().getName() +
                     " -> Illegal arguments for TileSet.setNumberOfTilesHorizontally() method!");
-            System.exit(0);
+            System.exit(-1);
         }
         this.numberOfTilesHorizontally = numberOfTilesHorizontally;
         this.tileWidth = width / numberOfTilesHorizontally;
         if (width % numberOfTilesHorizontally != 0) {
             Debug.logError(getClass().getName() +
                     " -> Illegal arguments for TileSet.setNumberOfTilesHorizontally() method!");
-            System.exit(0);
+            System.exit(-1);
         }
     }
 
@@ -82,14 +82,14 @@ public class TileSet extends Sprite {
                 || (numberOfTilesVertically <= 0)){
             Debug.logError(getClass().getName() +
                     " -> Illegal arguments for TileSet.setNumberOfTilesVertically() method!");
-            System.exit(0);
+            System.exit(-1);
         }
         this.numberOfTilesVertically = numberOfTilesVertically;
         this.tileHeight = height / numberOfTilesVertically;
         if (height % numberOfTilesVertically != 0){
             Debug.logError(getClass().getName() +
                     " -> Illegal arguments for TileSet.setNumberOfTilesVertically() method!");
-            System.exit(0);
+            System.exit(-1);
         }
     }
 

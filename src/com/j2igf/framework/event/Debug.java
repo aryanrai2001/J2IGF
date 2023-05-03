@@ -1,6 +1,6 @@
 package com.j2igf.framework.event;
 
-import com.j2igf.framework.core.Engine;
+import com.j2igf.framework.graphics.Renderer;
 import com.j2igf.framework.graphics.auxiliary.FontAtlas;
 
 import java.text.SimpleDateFormat;
@@ -9,14 +9,18 @@ import java.util.logging.*;
 
 public final class Debug {
     private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    private static Engine engine;
+    private static boolean enabled = false, initialized = false;
+
+    static {
+        init();
+    }
 
     private Debug() {
     }
 
-    public static void init(Engine engine) {
-        assert engine != null;
-        Debug.engine = engine;
+    public static void init() {
+        if (initialized)
+            return;
 
         LogManager.getLogManager().reset();
         LOGGER.setUseParentHandlers(false);
@@ -26,10 +30,14 @@ public final class Debug {
         formatter.setColor(LogFormatter.COLOR.WHITE);
         handler.setFormatter(formatter);
         LOGGER.addHandler(handler);
-        disableDebugMode();
+        enableDebugMode();
+
+        initialized = true;
     }
 
     private static void setColor(LogFormatter.COLOR color) {
+        if (!enabled)
+            return;
         ConsoleHandler handler = (ConsoleHandler) LOGGER.getHandlers()[0];
         LogFormatter formatter = (LogFormatter) handler.getFormatter();
         formatter.setColor(color);
@@ -37,10 +45,12 @@ public final class Debug {
     }
 
     public static void enableDebugMode() {
+        enabled = true;
         LOGGER.setLevel(Level.ALL);
     }
 
     public static void disableDebugMode() {
+        enabled = false;
         LOGGER.setLevel(Level.OFF);
     }
 
@@ -74,9 +84,9 @@ public final class Debug {
         LOGGER.log(Level.SEVERE, msg, thrown);
     }
 
-    public static void renderMessage(String message) {
-        if (message == null)
-            message = "";
+    public static void renderMessage(Renderer renderer, String message) {
+        if (message == null || renderer == null)
+            return;
         int xOffset = 0;
         int yOffset = 0;
         for (int i = 0; i < message.length(); i++) {
@@ -91,10 +101,10 @@ public final class Debug {
                 for (int x = 0; x < glyphWidth; x++) {
                     int fontAlpha = (FontAtlas.DEFAULT_FONT.getPixel(x + offset, y) >>> 24);
                     if (fontAlpha == 0) {
-                        engine.getRenderer().setPixel(x + xOffset, y + yOffset, 0xff000000);
+                        renderer.setPixel(x + xOffset, y + yOffset, 0xff000000);
                     } else {
                         float alphaF = (float) fontAlpha / 0xff;
-                        engine.getRenderer().setPixel(
+                        renderer.setPixel(
                                 x + xOffset,
                                 y + yOffset,
                                 0xff000000 |

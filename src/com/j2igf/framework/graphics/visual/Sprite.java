@@ -68,7 +68,7 @@ public class Sprite {
 
         if (path == null) {
             Debug.logError(getClass().getName() + " -> Invalid Path!");
-            System.exit(0);
+            System.exit(-1);
         }
 
         BufferedImage image = null;
@@ -80,7 +80,7 @@ public class Sprite {
 
         if (image == null) {
             Debug.logError(getClass().getName() + " -> Could not load image file!");
-            System.exit(0);
+            System.exit(-1);
         }
 
         this.width = image.getWidth();
@@ -92,7 +92,7 @@ public class Sprite {
     public void render(Renderer renderer, int x, int y) {
         if (renderer == null) {
             Debug.logError(getClass().getName() + " -> Renderer instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         }
         x -= originX * width;
         y -= originY * height;
@@ -118,7 +118,7 @@ public class Sprite {
     public void renderTransformed(Renderer renderer, int x, int y) {
         if (renderer == null) {
             Debug.logError(getClass().getName() + " -> Renderer instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         }
         for (int currY = transformedStartY; currY < transformedEndY; currY++) {
             for (int currX = transformedStartX; currX < transformedEndX; currX++) {

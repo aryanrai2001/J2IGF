@@ -21,7 +21,7 @@ public class FontAtlas extends Sprite {
         super();
         if (fontName == null || fontSize < 5) {
             Debug.logError(getClass().getName() + " -> Illegal arguments for FontAtlas constructor!");
-            System.exit(0);
+            System.exit(-1);
         }
 
         Font font = new Font(fontName, Font.PLAIN, fontSize);

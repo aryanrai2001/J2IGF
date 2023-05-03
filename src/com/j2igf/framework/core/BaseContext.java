@@ -40,7 +40,7 @@ public final class BaseContext extends Context {
     @Override
     public void update() {
         if (timer >= 1) {
-            Debug.renderMessage("Fixed Frames Per Second: " + engine.getFfps() + "\nFrames Per Second: " + engine.getFps());
+            Debug.renderMessage(renderer, "Fixed Frames Per Second: " + engine.getFfps() + "\nFrames Per Second: " + engine.getFps());
             timer = 0;
         }
     }

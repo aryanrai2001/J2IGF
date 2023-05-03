@@ -23,19 +23,19 @@ public final class Engine {
     private short ffps;
 
     public Engine(Window window, Renderer renderer, Input input, Time time, int targetUPS) {
-        Debug.init(this);
+        Debug.init();
         if (window == null) {
             Debug.logError(getClass().getName() + " -> Window instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         } else if (renderer == null) {
             Debug.logError(getClass().getName() + " -> Renderer instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         } else if (input == null) {
             Debug.logError(getClass().getName() + " -> Input instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         } else if (time == null) {
             Debug.logError(getClass().getName() + " -> Time instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         }
         this.contexts = new Stack<>();
         CloseOperation closeOperation = new CloseOperation();
@@ -55,7 +55,7 @@ public final class Engine {
     public void addContext(Context context) {
         if (context == null) {
             Debug.logError(getClass().getName() + " -> Context instance can not be null!");
-            System.exit(0);
+            System.exit(-1);
         }
         context.init();
         contexts.push(context);
@@ -71,6 +71,7 @@ public final class Engine {
         if (running)
             return;
         running = true;
+        Debug.disableDebugMode();
         thread.start();
         try {
             thread.join();

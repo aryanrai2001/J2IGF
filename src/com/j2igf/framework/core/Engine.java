@@ -7,6 +7,8 @@ import com.j2igf.framework.graphics.Renderer;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Stack;
 
 public final class Engine {
@@ -15,7 +17,6 @@ public final class Engine {
     private final Renderer renderer;
     private final Input input;
     private final Time time;
-    private final BaseContext baseContext;
     private final Thread thread;
     private final int targetUPS;
     private boolean running;
@@ -38,23 +39,25 @@ public final class Engine {
             System.exit(-1);
         }
         this.contexts = new Stack<>();
-        CloseOperation closeOperation = new CloseOperation();
         this.window = window;
         this.input = input;
         this.time = time;
         this.renderer = renderer;
-        window.setCustomCloseOperation(closeOperation);
-        this.baseContext = new BaseContext(this);
-        addContext(baseContext);
-        GameLoop loop = new GameLoop();
-        this.thread = new Thread(loop);
+        this.thread = new Thread(new GameLoop());
         this.targetUPS = targetUPS;
         this.running = false;
+        CloseOperation closeOperation = new CloseOperation();
+        window.setCustomCloseOperation(closeOperation);
+        addContext(BaseContext.class);
     }
 
-    public void addContext(Context context) {
-        if (context == null) {
-            Debug.logError(getClass().getName() + " -> Context instance can not be null!");
+    public <T extends Context> void addContext(Class<T> contextClass) {
+        T context = null;
+        try {
+            Constructor<T> contextConstructor = contextClass.getConstructor(Engine.class);
+            context = contextConstructor.newInstance(this);
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            Debug.logError(getClass().getName() + " -> Could not instantiate a valid Context of type " + contextClass.getName() + "!");
             System.exit(-1);
         }
         context.init();
@@ -62,7 +65,7 @@ public final class Engine {
     }
 
     public void removeCurrentContext() {
-        if (contexts.peek().equals(baseContext))
+        if (contexts.peek() instanceof BaseContext)
             return;
         contexts.pop();
     }

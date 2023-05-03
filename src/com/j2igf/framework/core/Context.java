@@ -12,7 +12,7 @@ public abstract class Context {
     protected final Time time;
     protected final Engine engine;
 
-    protected Context(Engine engine) {
+    public Context(Engine engine) {
         if (engine == null) {
             Debug.logError(getClass().getName() + " -> Engine instance can not be null!");
             System.exit(-1);

@@ -19,21 +19,21 @@ public final class Window {
     private final int pixelScale;
 
     public Window(String title, int width, int height, int pixelScale) {
-        this.title = title;
+        this.title = title == null ? "Untitled" : title;
         frame = new JFrame(title);
         canvas = new Canvas();
 
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle rect;
         int screenWidth, screenHeight;
 
         boolean fullscreen = width <= 0 || height <= 0;
         if (fullscreen) {
-            rect = ge.getDefaultScreenDevice().getDefaultConfiguration().getBounds();
+            rect = graphicsEnvironment.getDefaultScreenDevice().getDefaultConfiguration().getBounds();
             screenWidth = rect.width;
             screenHeight = rect.height;
         } else {
-            rect = ge.getMaximumWindowBounds();
+            rect = graphicsEnvironment.getMaximumWindowBounds();
             canvas.setSize(rect.width, rect.height);
             frame.add(canvas);
             frame.pack();
@@ -73,8 +73,10 @@ public final class Window {
         graphics = strategy.getDrawGraphics();
     }
 
-    public int[] getFrameBuffer() {
-        return ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+    public void dispose() {
+        graphics.dispose();
+        strategy.dispose();
+        frame.dispose();
     }
 
     public void updateFrame() {
@@ -82,15 +84,14 @@ public final class Window {
         strategy.show();
     }
 
-    public void dispose() {
-        graphics.dispose();
-        strategy.dispose();
-        frame.dispose();
-    }
-
     public void setCustomCloseOperation(WindowAdapter closeOperation) {
+        assert closeOperation != null;
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.addWindowListener(closeOperation);
+    }
+
+    public int[] getFrameBuffer() {
+        return ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
     }
 
     public JFrame getJFrame() {

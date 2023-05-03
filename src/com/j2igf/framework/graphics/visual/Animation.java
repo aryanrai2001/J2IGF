@@ -1,6 +1,6 @@
 package com.j2igf.framework.graphics.visual;
 
-import com.j2igf.framework.event.Time;
+import com.j2igf.framework.event.Debug;
 import com.j2igf.framework.graphics.Renderer;
 import com.j2igf.framework.graphics.auxiliary.TileSet;
 
@@ -10,9 +10,13 @@ public class Animation {
     private float frameIndex;
 
     public Animation(TileSet tileSet, boolean verticalScan, int offset, int size, float fps) {
-        if (offset + size > tileSet.getNumTilesX() * tileSet.getNumTilesY()) {
-            System.err.println("Not enough frames in the TileSet!");
-            System.exit(-1);
+        if (tileSet == null) {
+            Debug.logError(getClass().getName() + " -> TileSet instance can not be null!");
+            System.exit(0);
+        }
+        else if (offset + size > tileSet.getNumberOfTilesHorizontally() * tileSet.getNumberOfTilesVertically()) {
+            Debug.logError(getClass().getName() + " -> Illegal arguments for Animation constructor!");
+            System.exit(0);
         }
         this.frameIndex = 0;
         this.fps = fps;
@@ -22,8 +26,8 @@ public class Animation {
         }
     }
 
-    public void update() {
-        frameIndex += fps * Time.getDeltaTime();
+    public void update(float deltaTime) {
+        frameIndex += fps * deltaTime;
         if (frameIndex >= frames.length)
             frameIndex = 0;
     }

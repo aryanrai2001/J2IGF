@@ -1,34 +1,37 @@
 package com.j2igf.framework.event;
 
 public final class Time {
-    private static float timeScale = 1;
-    private static float deltaTime = 0;
-    private static float timeStamp = 0;
+    private float timeScale;
+    private float deltaTime;
+    private float timeStamp;
 
-    private Time() {
+    public Time(){
+        timeScale = 1;
+        deltaTime = 0;
+        timeStamp = 0;
     }
 
-    public static void update() {
+    public void update() {
         timeStamp += deltaTime;
     }
 
-    public static float getTimeScale() {
+    public float getTimeScale() {
         return timeScale;
     }
 
-    public static void setTimeScale(float timeScale) {
-        Time.timeScale = timeScale;
+    public void setTimeScale(float timeScale) {
+        this.timeScale = timeScale;
     }
 
-    public static float getDeltaTime() {
+    public float getDeltaTime() {
         return deltaTime;
     }
 
-    public static void setDeltaTime(float deltaTime) {
-        Time.deltaTime = deltaTime;
+    public void setDeltaTime(float deltaTime) {
+        this.deltaTime = deltaTime;
     }
 
-    public static float getTimeStamp() {
+    public float getTimeStamp() {
         return timeStamp;
     }
 }

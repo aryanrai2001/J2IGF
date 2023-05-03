@@ -1,5 +1,6 @@
 package com.j2igf.framework.graphics.auxiliary;
 
+import com.j2igf.framework.event.Debug;
 import com.j2igf.framework.graphics.visual.Sprite;
 
 import javax.swing.*;
@@ -12,21 +13,20 @@ import java.awt.image.BufferedImage;
 public class FontAtlas extends Sprite {
     public static final FontAtlas DEFAULT_FONT = new FontAtlas("Dialog.plain", 12, true);
     private static final int ATLAS_LENGTH = 256;
-    private final int[] offsets;
+    private final int[] xOffsets;
     private final int[] glyphWidths;
     private int lineSpacing;
 
     public FontAtlas(String fontName, int fontSize, boolean antiAliased) {
         super();
-
         if (fontName == null || fontSize < 5) {
-            System.err.println("Invalid Font parameters!");
-            System.exit(-1);
+            Debug.logError(getClass().getName() + " -> Illegal arguments for FontAtlas constructor!");
+            System.exit(0);
         }
 
         Font font = new Font(fontName, Font.PLAIN, fontSize);
 
-        this.offsets = new int[ATLAS_LENGTH];
+        this.xOffsets = new int[ATLAS_LENGTH];
         this.glyphWidths = new int[ATLAS_LENGTH];
         this.lineSpacing = 0;
 
@@ -40,15 +40,15 @@ public class FontAtlas extends Sprite {
         width = metrics.stringWidth(charMap) + ATLAS_LENGTH * 2;
 
         int height;
-        FontRenderContext frc = new FontRenderContext(new AffineTransform(), true, true);
-        GlyphVector vec = font.createGlyphVector(frc, charMap);
-        height = vec.getPixelBounds(null, 0, 0).height;
+        FontRenderContext fontRenderContext = new FontRenderContext(new AffineTransform(), true, true);
+        GlyphVector mapGlyphVector = font.createGlyphVector(fontRenderContext, charMap);
+        height = mapGlyphVector.getPixelBounds(null, 0, 0).height;
 
         int total = 0;
         int[] sizes = new int[ATLAS_LENGTH];
         for (int c = 0; c < ATLAS_LENGTH; c++) {
-            GlyphVector gv = font.createGlyphVector(frc, String.valueOf((char) c));
-            sizes[c] = gv.getPixelBounds(null, 0, 0).height;
+            GlyphVector charGlyphVector = font.createGlyphVector(fontRenderContext, String.valueOf((char) c));
+            sizes[c] = charGlyphVector.getPixelBounds(null, 0, 0).height;
         }
         for (int size : sizes)
             total += size;
@@ -63,20 +63,13 @@ public class FontAtlas extends Sprite {
         graphics.setColor(Color.WHITE);
         for (int c = 0, x = 0; c < ATLAS_LENGTH; c++, x++) {
             this.glyphWidths[c] = metrics.charWidth((char) c);
-            this.offsets[c] = x;
+            this.xOffsets[c] = x;
             graphics.drawString(String.valueOf((char) c), x, fontSize);
             x += this.glyphWidths[c] + (fontSize >> 2);
         }
         this.width = width;
         this.height = height;
         this.pixels = sprite.getRGB(0, 0, width, height, null, 0, width);
-    }
-
-    public static void listAllFonts() {
-        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        java.awt.Font[] fonts = e.getAllFonts();
-        for (java.awt.Font font : fonts)
-            System.out.println(font.getName());
     }
 
     public Sprite textToSprite(String text, int color) {
@@ -103,7 +96,7 @@ public class FontAtlas extends Sprite {
     }
 
     public int getOffset(int ch) {
-        return offsets[ch];
+        return xOffsets[ch];
     }
 
     public int getGlyphWidth(int ch) {

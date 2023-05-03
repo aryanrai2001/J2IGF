@@ -1,20 +1,25 @@
 package com.j2igf.framework.graphics;
 
 import com.j2igf.framework.core.Window;
+import com.j2igf.framework.event.Debug;
 import com.j2igf.framework.graphics.auxiliary.FontAtlas;
 import com.j2igf.framework.graphics.visual.Sprite;
 
-public class Renderer {
+public final class Renderer {
     private final int[] pixels;
     private final int width;
     private final int height;
+    private FontAtlas fontAtlas;
     private float globalAlpha;
     private boolean isAlphaEnabled;
-    private FontAtlas fontAtlas;
 
     public Renderer(Window window) {
-        this.globalAlpha = -1;
+        if (window == null) {
+            Debug.logError(getClass().getName() + " -> Window instance can not be null!");
+            System.exit(0);
+        }
         this.fontAtlas = FontAtlas.DEFAULT_FONT;
+        this.globalAlpha = -1;
         this.isAlphaEnabled = false;
         this.pixels = window.getFrameBuffer();
         this.width = window.getWidth();
@@ -22,9 +27,12 @@ public class Renderer {
     }
 
     public Renderer(Sprite target) {
-        assert target != null;
-        this.globalAlpha = -1;
+        if (target == null) {
+            Debug.logError(getClass().getName() + " -> Sprite instance can not be null!");
+            System.exit(0);
+        }
         this.fontAtlas = FontAtlas.DEFAULT_FONT;
+        this.globalAlpha = -1;
         this.isAlphaEnabled = false;
         this.pixels = target.getPixels();
         this.width = target.getWidth();
@@ -32,7 +40,10 @@ public class Renderer {
     }
 
     public void setFont(FontAtlas fontAtlas) {
-        assert fontAtlas != null;
+        if (fontAtlas == null) {
+            Debug.logError(getClass().getName() + " -> FontAtlas instance can not be null!");
+            System.exit(0);
+        }
         this.fontAtlas = fontAtlas;
     }
 
@@ -46,8 +57,8 @@ public class Renderer {
 
     public void useGlobalAlpha(float alpha) {
         if (alpha < 0 || alpha > 1) {
-            System.err.println("Alpha value must be between 0 and 1.");
-            System.exit(-1);
+            Debug.logError(getClass().getName() + " -> Illegal arguments for Renderer.useGlobalAlpha() method!");
+            System.exit(0);
         }
         globalAlpha = alpha;
     }
@@ -263,6 +274,7 @@ public class Renderer {
     }
 
     public void drawText(int x, int y, int color, String text) {
+        text = text == null ? "" : text;
         int xOffset = 0;
         int yOffset = 0;
         float alpha = (float) (color >>> 24) / 0xff;

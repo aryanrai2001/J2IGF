@@ -1,9 +1,9 @@
 package com.j2igf.framework.core;
 
+import com.j2igf.framework.event.Debug;
 import com.j2igf.framework.event.Input;
 import com.j2igf.framework.event.Time;
 import com.j2igf.framework.graphics.Renderer;
-import com.j2igf.framework.graphics.auxiliary.FontAtlas;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -11,25 +11,41 @@ import java.util.Stack;
 
 public final class Engine {
     private final Stack<Context> contexts;
-    private final Context baseContext;
     private final Window window;
-    private final Input input;
     private final Renderer renderer;
+    private final Input input;
+    private final Time time;
+    private final BaseContext baseContext;
     private final Thread thread;
     private final int targetUPS;
     private boolean running;
-    private int fps;
-    private int ups;
+    private short fps;
+    private short ffps;
 
-    public Engine(Window window, Input input, Renderer renderer, int targetUPS) {
+    public Engine(Window window, Renderer renderer, Input input, Time time, int targetUPS) {
+        Debug.init(this);
+        if (window == null) {
+            Debug.logError(getClass().getName() + " -> Window instance can not be null!");
+            System.exit(0);
+        } else if (renderer == null) {
+            Debug.logError(getClass().getName() + " -> Renderer instance can not be null!");
+            System.exit(0);
+        } else if (input == null) {
+            Debug.logError(getClass().getName() + " -> Input instance can not be null!");
+            System.exit(0);
+        } else if (time == null) {
+            Debug.logError(getClass().getName() + " -> Time instance can not be null!");
+            System.exit(0);
+        }
         this.contexts = new Stack<>();
-        this.baseContext = new BaseContext(window, input, renderer, this);
-        addContext(baseContext);
         CloseOperation closeOperation = new CloseOperation();
         this.window = window;
         this.input = input;
+        this.time = time;
         this.renderer = renderer;
         window.setCustomCloseOperation(closeOperation);
+        this.baseContext = new BaseContext(this);
+        addContext(baseContext);
         GameLoop loop = new GameLoop();
         this.thread = new Thread(loop);
         this.targetUPS = targetUPS;
@@ -37,7 +53,10 @@ public final class Engine {
     }
 
     public void addContext(Context context) {
-        assert context != null;
+        if (context == null) {
+            Debug.logError(getClass().getName() + " -> Context instance can not be null!");
+            System.exit(0);
+        }
         context.init();
         contexts.push(context);
     }
@@ -48,24 +67,6 @@ public final class Engine {
         contexts.pop();
     }
 
-    public void update(float deltaTime) {
-        Time.setDeltaTime(deltaTime);
-        Time.update();
-
-        if (!contexts.isEmpty())
-            contexts.peek().update();
-
-        if (input != null)
-            input.update();
-    }
-
-    public void render(float deltaTime) {
-        Time.setDeltaTime(deltaTime);
-
-        if (!contexts.isEmpty())
-            contexts.peek().render();
-    }
-
     public void start() {
         if (running)
             return;
@@ -74,7 +75,7 @@ public final class Engine {
         try {
             thread.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Debug.logError(getClass().getName() + " -> Starting Thread failed!", e);
         }
         window.dispose();
         System.exit(0);
@@ -88,71 +89,75 @@ public final class Engine {
         running = false;
     }
 
-    public void showDebugInfo(String info) {
-        int xOffset = 0;
-        int yOffset = 0;
-        for (int i = 0; i < info.length(); i++) {
-            int ch = info.charAt(i);
-            if (ch == '\n') {
-                xOffset = 0;
-                yOffset += FontAtlas.DEFAULT_FONT.getHeight() + FontAtlas.DEFAULT_FONT.getLineSpacing();
-            }
-            int offset = FontAtlas.DEFAULT_FONT.getOffset(ch);
-            int glyphWidth = FontAtlas.DEFAULT_FONT.getGlyphWidth(ch);
-            for (int y = 0; y < FontAtlas.DEFAULT_FONT.getHeight(); y++) {
-                for (int x = 0; x < glyphWidth; x++) {
-                    int fontAlpha = (FontAtlas.DEFAULT_FONT.getPixel(x + offset, y) >>> 24);
-                    if (fontAlpha == 0) {
-                        renderer.setPixel(x + xOffset, y + yOffset, 0xff000000);
-                    } else {
-                        float alphaF = (float) fontAlpha / 0xff;
-                        renderer.setPixel(x + xOffset, y + yOffset, 0xff000000 | (int) (alphaF * 0xff) << 16 | (int) (alphaF * 0xff) << 8 | (int) (alphaF * 0xff));
-                    }
-                }
-            }
-            xOffset += glyphWidth;
-        }
+    public Window getWindow() {
+        return window;
     }
 
-    public int getFps() {
+    public Renderer getRenderer() {
+        return renderer;
+    }
+
+    public Input getInput() {
+        return input;
+    }
+
+    public Time getTime() {
+        return time;
+    }
+
+    public short getFps() {
         return fps;
     }
 
-    public int getUps() {
-        return ups;
+    public short getFfps() {
+        return ffps;
     }
 
     private class GameLoop implements Runnable {
         @Override
         public void run() {
-            int updates = 0, frames = 0;
             long lastTime = System.nanoTime();
             float nanosecondsInOneSecond = 1000000000.0f;
             float timeSlice = nanosecondsInOneSecond / targetUPS;
             float timeAccumulated = 0;
             float timer = 0;
-
+            short fixedUpdates = 0;
+            short updates = 0;
             while (running) {
                 long currentTime = System.nanoTime();
                 long frameTime = currentTime - lastTime;
                 lastTime = currentTime;
                 timeAccumulated += frameTime;
                 while (timeAccumulated >= timeSlice) {
-                    update(Time.getTimeScale() * timeSlice / nanosecondsInOneSecond);
-                    updates++;
+                    {
+                        time.setDeltaTime((time.getTimeScale() * timeSlice) / nanosecondsInOneSecond);
+                        time.update();
+
+                        if (!contexts.isEmpty())
+                            contexts.peek().fixedUpdate();
+
+                        if (input != null)
+                            input.update();
+                    }
+                    fixedUpdates++;
                     timeAccumulated -= timeSlice;
                 }
-                render(Time.getTimeScale() * frameTime / nanosecondsInOneSecond);
-                frames++;
+                {
+                    time.setDeltaTime((time.getTimeScale() * frameTime) / nanosecondsInOneSecond);
+
+                    if (!contexts.isEmpty())
+                        contexts.peek().update();
+                }
+                updates++;
 
                 if (timer > 1) {
-                    ups = updates;
-                    fps = frames;
+                    ffps = fixedUpdates;
+                    fps = updates;
                     timer = 0;
+                    fixedUpdates = 0;
                     updates = 0;
-                    frames = 0;
                 }
-                timer += Time.getDeltaTime();
+                timer += time.getDeltaTime();
                 window.updateFrame();
             }
         }

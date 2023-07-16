@@ -30,13 +30,46 @@ import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+/**
+ * This class is used to create a font atlas for a given font.
+ *
+ * @author Aryan Rai
+ */
 public class FontAtlas extends Sprite {
+
+    /**
+     * The default font atlas.
+     */
     public static final FontAtlas DEFAULT_FONT = new FontAtlas("Dialog.plain", 12, true);
+
+    /**
+     * The constant that specifies the number of characters that the font atlas will contain.
+     */
     private static final int ATLAS_LENGTH = 256;
+
+    /**
+     * The array that stores the x-offsets of the characters in the font atlas.
+     */
     private final int[] xOffsets;
+
+    /**
+     * The array that stores the widths of the characters in the font atlas.
+     */
     private final int[] glyphWidths;
+
+    /**
+     * The line spacing of the font atlas.
+     */
     private int lineSpacing;
 
+    /**
+     * This is the constructor of the FontAtlas class.
+     * It constructs a font atlas for the given font.
+     *
+     * @param fontName     the name of the font
+     * @param fontSize     the size of the font
+     * @param antiAliased  whether the font should be anti-aliased or not
+     */
     public FontAtlas(String fontName, int fontSize, boolean antiAliased) {
         super();
         if (fontName == null || fontSize < 5) {
@@ -92,6 +125,14 @@ public class FontAtlas extends Sprite {
         this.pixels = sprite.getRGB(0, 0, width, height, null, 0, width);
     }
 
+    /**
+     * This method uses the current font atlas to create a sprite of any string in any color.
+     *
+     * @param text the string to be converted to a sprite
+     *                  (the string must only contain characters that are in the font atlas)
+     * @param color the color of the string
+     * @return an object of the Sprite class that represents the sprite of the given string in the given color
+     */
     public Sprite textToSprite(String text, int color) {
         int textWidth = 0;
         for (int i = 0; i < text.length(); i++)
@@ -115,18 +156,42 @@ public class FontAtlas extends Sprite {
         return textSprite;
     }
 
+    /**
+     * This method return the x-offset of the given character in the font atlas.
+     *
+     * @param ch the character whose x-offset is to be returned
+     *           (the character must be in the font atlas)
+     * @return the x-offset of the given character in the font atlas
+     */
     public int getOffset(int ch) {
         return xOffsets[ch];
     }
 
+    /**
+     * This method returns the width of the given character in the font atlas.
+     *
+     * @param ch the character whose width is to be returned
+     *           (the character must be in the font atlas)
+     * @return the width of the given character in the font atlas
+     */
     public int getGlyphWidth(int ch) {
         return glyphWidths[ch];
     }
 
+    /**
+     * This method returns the line spacing of the font atlas.
+     *
+     * @return the line spacing of the font atlas
+     */
     public int getLineSpacing() {
         return lineSpacing;
     }
 
+    /**
+     * This method sets the line spacing of the font atlas.
+     *
+     * @param lineSpacing the new line spacing of the font atlas
+     */
     public void setLineSpacing(int lineSpacing) {
         if (lineSpacing < 0)
             return;

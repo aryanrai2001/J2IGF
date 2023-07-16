@@ -24,11 +24,37 @@ import com.j2igf.framework.event.Debug;
 import com.j2igf.framework.graphics.Renderer;
 import com.j2igf.framework.graphics.auxiliary.TileSet;
 
+/**
+ * This class is responsible for handling animations.
+ *
+ * @author Aryan Rai
+ */
 public class Animation {
+
+    /**
+     * The frames of the animation as Sprite objects.
+     */
     private final Sprite[] frames;
+
+    /**
+     * The frames per second of the animation.
+     */
     private final float fps;
+
+    /**
+     * The current frame index.
+     */
     private float frameIndex;
 
+    /**
+     * This is the constructor of the Animation class.
+     *
+     * @param tileSet The TileSet object to use.
+     * @param verticalScan Whether to scan the TileSet vertically or horizontally.
+     * @param offset The offset of the first frame.
+     * @param size The size of the animation.
+     * @param fps The frames per second of the animation.
+     */
     public Animation(TileSet tileSet, boolean verticalScan, int offset, int size, float fps) {
         if (tileSet == null) {
             Debug.logError(getClass().getName() + " -> TileSet instance can not be null!");
@@ -46,16 +72,31 @@ public class Animation {
         }
     }
 
+    /**
+     * This method updates the animation.
+     *
+     * @param deltaTime The time passed since the last frame.
+     */
     public void update(float deltaTime) {
         frameIndex += fps * deltaTime;
         if (frameIndex >= frames.length)
             frameIndex = 0;
     }
 
+    /**
+     * This method renders the animation.
+     *
+     * @param renderer The Renderer object to use.
+     * @param x The x coordinate of the animation.
+     * @param y The y coordinate of the animation.
+     */
     public void render(Renderer renderer, int x, int y) {
         frames[(int) frameIndex].render(renderer, x, y);
     }
 
+    /**
+     * This method resets the animation.
+     */
     public void reset() {
         frameIndex = 0;
     }

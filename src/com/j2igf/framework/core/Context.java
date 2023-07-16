@@ -25,13 +25,55 @@ import com.j2igf.framework.event.Input;
 import com.j2igf.framework.event.Time;
 import com.j2igf.framework.graphics.Renderer;
 
+/**
+ * The Context class is the base class for all contexts.
+ * <p>
+ *     A context is a state of the game. For example, the main menu, the game, the pause menu, etc.
+ *     Each context has its own init(), update() and fixedUpdate() methods.
+ * </p>
+ *
+ * @author Aryan Rai
+ */
 public abstract class Context {
+    /**
+     * This is the object of the Window class.
+     *
+     * @see Window
+     */
     protected final Window window;
+    /**
+     * This is the object of the Renderer class.
+     *
+     * @see Renderer
+     */
     protected final Renderer renderer;
+    /**
+     * This is the object of the Input class.
+     *
+     * @see Input
+     */
     protected final Input input;
+    /**
+     * This is the object of the Time class.
+     *
+     * @see Time
+     */
     protected final Time time;
+    /**
+     * This is the object of the Engine class.
+     *
+     * @see Engine
+     */
     protected final Engine engine;
 
+    /**
+     * This is the constructor for the Context class.
+     * It takes in an Engine object and uses it to initialize all the fields of the class.
+     *
+     * @param engine This is an instance of the Engine class.
+     *               It can not be null.
+     * @see Engine
+     */
     public Context(Engine engine) {
         if (engine == null) {
             Debug.logError(getClass().getName() + " -> Engine instance can not be null!");
@@ -44,9 +86,22 @@ public abstract class Context {
         this.engine = engine;
     }
 
+    /**
+     * This method is called when the context is created.
+     * It is used to initialize the context.
+     * And it is called only once.
+     */
     public abstract void init();
 
-    public abstract void fixedUpdate();
-
+    /**
+     * This method is called every frame.
+     * It is used to update the context.
+     */
     public abstract void update();
+
+    /**
+     * This method is called every frame at a fixed time step.
+     * It is used to update the context at a fixed rate.
+     */
+    public abstract void fixedUpdate();
 }

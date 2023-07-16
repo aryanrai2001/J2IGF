@@ -20,37 +20,93 @@
 
 package com.j2igf.framework.event;
 
+/**
+ * This class is used to handle the Timing of the framework.
+ * It is used to get the time stamp and delta time.
+ * It is also used to get and set the timescale.
+ *
+ * @author Aryan Rai
+ */
 public final class Time {
+    /**
+     * The timescale of the framework.
+     */
     private float timeScale;
+
+    /**
+     * The delta time of the framework.
+     */
     private float deltaTime;
+
+    /**
+     * The time stamp of the framework.
+     */
     private float timeStamp;
 
+    /**
+     * The constructor for the Time class.
+     */
     public Time(){
         timeScale = 1;
         deltaTime = 0;
         timeStamp = 0;
     }
 
+    /**
+     * This method is used to update the time stamp.
+     */
     public void update() {
         timeStamp += deltaTime;
     }
 
+    /**
+     * This method is used to get the timescale.
+     *
+     * @return The timescale as a float value.
+     *         The default value is 1.
+     */
     public float getTimeScale() {
         return timeScale;
     }
 
+    /**
+     * This method is used to set the timescale.
+     *
+     * @param timeScale The timescale as a float value.
+     *                  The default value is 1.
+     */
     public void setTimeScale(float timeScale) {
         this.timeScale = timeScale;
     }
 
+    /**
+     * This method is used to get the delta time.
+     *
+     * @return The delta time as a float value.
+     *         The delta time is the time between the last frame and the current frame.
+     */
     public float getDeltaTime() {
         return deltaTime;
     }
 
+    /**
+     * This method is used to set the delta time.
+     * It is supposed to be used by the main loop of the framework.
+     * And not by any other class.
+     *
+     * @param deltaTime The delta time as a float value.
+     *                  The delta time is the time between the last frame and the current frame.
+     */
     public void setDeltaTime(float deltaTime) {
         this.deltaTime = deltaTime;
     }
 
+    /**
+     * This method is used to get the time stamp.
+     *
+     * @return The time stamp as a float value.
+     *         The time stamp is the time since the framework started.
+     */
     public float getTimeStamp() {
         return timeStamp;
     }

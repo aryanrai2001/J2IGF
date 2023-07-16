@@ -23,10 +23,27 @@ package com.j2igf.framework.graphics.visual;
 import com.j2igf.framework.event.Debug;
 import com.j2igf.framework.graphics.Renderer;
 
+/**
+ * This class is responsible for handling animation states.
+ *
+ * @author Aryan Rai
+ */
 public class Animator {
+    /**
+     * The animations of the animator.
+     */
     private final Animation[] animations;
+
+    /**
+     * The current animation index.
+     */
     private int currentAnimation;
 
+    /**
+     * This is the constructor of the Animator class.
+     *
+     * @param states The number of states of the animator.
+     */
     public Animator(int states) {
         if (states <= 1) {
             Debug.logError(getClass().getName() + " -> Illegal argument for Animator constructor!");
@@ -36,18 +53,39 @@ public class Animator {
         currentAnimation = 0;
     }
 
+    /**
+     * This method is responsible for updating the animation.
+     *
+     * @param deltaTime The time between the last frame and the current frame.
+     */
     public void update(float deltaTime) {
         animations[currentAnimation].update(deltaTime);
     }
 
+    /**
+     * This method is responsible for rendering the animation.
+     *
+     * @param renderer The renderer to use.
+     * @param x The x coordinate to render the animation at.
+     * @param y The y coordinate to render the animation at.
+     */
     public void render(Renderer renderer, int x, int y) {
         animations[currentAnimation].render(renderer, x, y);
     }
 
+    /**
+     * This method is responsible for resetting the animation.
+     */
     public void reset() {
         animations[currentAnimation].reset();
     }
 
+    /**
+     * This method is responsible for changing the animation state.
+     *
+     * @param index The index of the animation state to change to.
+     * @param reset Whether to reset the animation after changing the state.
+     */
     public void changeState(int index, boolean reset) {
         if (currentAnimation == index)
             return;
@@ -60,6 +98,12 @@ public class Animator {
             reset();
     }
 
+    /**
+     * This method is responsible for setting or changing the animation state.
+     *
+     * @param index The index of the animation state to set or change.
+     * @param animation The animation to set or change the state to.
+     */
     public void setState(int index, Animation animation) {
         if (index >= animations.length || index < 0) {
             Debug.logError(getClass().getName() + " -> Illegal arguments for Animation.setState() method!");

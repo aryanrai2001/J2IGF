@@ -27,17 +27,67 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
+/**
+ * This class is used to create a window and render to it.
+ *
+ * @author Aryan Rai
+ */
 public final class Window {
+    /**
+     * This is the JFrame object.
+     */
     private final JFrame frame;
+    /**
+     * This is the Canvas object.
+     */
     private final Canvas canvas;
+    /**
+     * This is the BufferedImage object.
+     */
     private final BufferedImage image;
+    /**
+     * This is the BufferStrategy object.
+     */
     private final BufferStrategy strategy;
+    /**
+     * This is the Graphics object.
+     */
     private final Graphics graphics;
+    /**
+     * This is the String that stores the window Title.
+     */
     private final String title;
+    /**
+     * This is the width of the window.
+     */
     private final int width;
+    /**
+     * This is the height of the window.
+     */
     private final int height;
+    /**
+     * This is the scale each pixel of the window.
+     */
     private final int pixelScale;
 
+    /**
+     * This is the constructor of the Window class.
+     * It creates a window with the specified title, width, height and pixelScale.
+     *
+     * @param title The title of the window.
+     *              If null, the title will be set to "Untitled".
+     * @param width The width of the window.
+     *              If less than or equal to 0, the window will be fullscreen.
+     *              If greater than the maximum width of the screen,
+     *              the width will be set to the maximum width of the screen.
+     * @param height The height of the window.
+     *               If less than or equal to 0, the window will be fullscreen.
+     *               If greater than the maximum height of the screen,
+     *               the height will be set to the maximum height of the screen.
+     * @param pixelScale The scale of each pixel of the window.
+     *                   Example: If pixelScale is 2, each pixel will be 2x2 pixels.
+     *                   If less than or equal to 0, the pixelScale will be set to 1.
+     */
     public Window(String title, int width, int height, int pixelScale) {
         this.title = title == null ? "Untitled" : title;
         frame = new JFrame(title);
@@ -63,6 +113,8 @@ public final class Window {
 
         this.width = (screenWidth / pixelScale);
         this.height = (screenHeight / pixelScale);
+
+        if (pixelScale <= 0) pixelScale = 1;
         this.pixelScale = pixelScale;
 
         image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
@@ -93,47 +145,93 @@ public final class Window {
         graphics = strategy.getDrawGraphics();
     }
 
+    /**
+     * This method disposes the window.
+     */
     public void dispose() {
         graphics.dispose();
         strategy.dispose();
         frame.dispose();
     }
 
+    /**
+     * This method draws the updated frame to the window.
+     */
     public void updateFrame() {
         graphics.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
         strategy.show();
     }
 
+    /**
+     * This method sets the custom close operation of the window.
+     *
+     * @param closeOperation The custom close operation.
+     */
     public void setCustomCloseOperation(WindowAdapter closeOperation) {
         assert closeOperation != null;
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.addWindowListener(closeOperation);
     }
 
+    /**
+     * This method gets the frame buffer of the window.
+     *
+     * @return The frame buffer of the window as an int[] that can be modified.
+     */
     public int[] getFrameBuffer() {
         return ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
     }
 
+    /**
+     * This method gets the JFrame object.
+     *
+     * @return The JFrame object.
+     */
     public JFrame getJFrame() {
         return frame;
     }
 
+    /**
+     * This method gets the Canvas object.
+     *
+     * @return The Canvas object.
+     */
     public Canvas getCanvas() {
         return canvas;
     }
 
+    /**
+     * This method gets the title of the window.
+     *
+     * @return The title as String.
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * This method gets the width of the window.
+     *
+     * @return The width of the window.
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * This method gets the height of the window.
+     *
+     * @return The height of the window.
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * This method gets the scale of each pixel of the window.
+     *
+     * @return The pixel scale of the window.
+     */
     public int getPixelScale() {
         return pixelScale;
     }

@@ -27,17 +27,34 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.*;
 
+/**
+ * This class provides a simple logging system for the framework.
+ *
+ * @author Aryan Rai
+ */
 public final class Debug {
+    /**
+     * This is the logger used by the framework.
+     */
     private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    /**
+     * These are some variables used by the class to determine the state of the logging system.
+     */
     private static boolean enabled = false, initialized = false;
 
     static {
         init();
     }
 
+    /**
+     * This is the constructor for the Debug class.
+     */
     private Debug() {
     }
 
+    /**
+     * This function initializes the logging system.
+     */
     public static void init() {
         if (initialized)
             return;
@@ -55,6 +72,11 @@ public final class Debug {
         initialized = true;
     }
 
+    /**
+     * This function sets the color of the logging system.
+     *
+     * @param color The color to set the logging system to.
+     */
     private static void setColor(LogFormatter.COLOR color) {
         if (!enabled)
             return;
@@ -64,46 +86,93 @@ public final class Debug {
         handler.setFormatter(formatter);
     }
 
+    /**
+     * This function enables the logging system.
+     */
     public static void enableDebugMode() {
         enabled = true;
         LOGGER.setLevel(Level.ALL);
     }
 
+    /**
+     * This function disables the logging system.
+     */
     public static void disableDebugMode() {
         enabled = false;
         LOGGER.setLevel(Level.OFF);
     }
 
+    /**
+     * This function logs a message to the console.
+     *
+     * @param msg The message to be logged.
+     */
     public static void log(String msg) {
         setColor(LogFormatter.COLOR.WHITE);
         LOGGER.log(Level.INFO, msg);
     }
 
+    /**
+     * This function logs a message to the console and throws an exception.
+     *
+     * @param msg The message to be logged.
+     * @param thrown The exception to be thrown.
+     */
     public static void log(String msg, Throwable thrown) {
         setColor(LogFormatter.COLOR.WHITE);
         LOGGER.log(Level.INFO, msg, thrown);
     }
 
+    /**
+     * This function logs a warning to the console.
+     *
+     * @param msg The warning to be logged.
+     */
     public static void logWarning(String msg) {
         setColor(LogFormatter.COLOR.YELLOW);
         LOGGER.log(Level.WARNING, msg);
     }
 
+    /**
+     * This function logs a warning to the console and throws an exception.
+     *
+     * @param msg The warning to be logged.
+     * @param thrown The exception to be thrown.
+     */
     public static void logWarning(String msg, Throwable thrown) {
         setColor(LogFormatter.COLOR.YELLOW);
         LOGGER.log(Level.WARNING, msg, thrown);
     }
 
+    /**
+     * This function logs an error to the console.
+     *
+     * @param msg The error to be logged.
+     */
     public static void logError(String msg) {
         setColor(LogFormatter.COLOR.RED);
         LOGGER.log(Level.SEVERE, msg);
     }
 
+    /**
+     * This function logs an error to the console and throws an exception.
+     *
+     * @param msg The error to be logged.
+     * @param thrown The exception to be thrown.
+     */
     public static void logError(String msg, Throwable thrown) {
         setColor(LogFormatter.COLOR.RED);
         LOGGER.log(Level.SEVERE, msg, thrown);
     }
 
+    /**
+     * This function renders debug information to the screen.
+     *
+     * @param renderer The renderer to render the debug information with.
+     *                 If this parameter is null, nothing will be rendered.
+     * @param message The message to be rendered.
+     *                If this parameter is null, nothing will be rendered.
+     */
     public static void renderMessage(Renderer renderer, String message) {
         if (message == null || renderer == null)
             return;
@@ -139,28 +208,92 @@ public final class Debug {
         }
     }
 
+    /**
+     * This is the inner class that defined the log formatter.
+     *
+     * @author Aryan Rai
+     */
     public static class LogFormatter extends Formatter {
+        /**
+         * This is the default constructor for the LogFormatter class.
+         */
+        public LogFormatter() {
+            super();
+        }
+
+        /**
+         * This enum defines the color values supported by the logger.
+         */
         public enum COLOR {
+            /**
+             * This enum value represents the color black.
+             */
             BLACK,
+
+            /**
+             * This enum value represents the color red.
+             */
             RED,
+
+            /**
+             * This enum value represents the color green.
+             */
             GREEN,
+
+            /**
+             * This enum value represents the color yellow.
+             */
             YELLOW,
+
+            /**
+             * This enum value represents the color blue.
+             */
             BLUE,
+
+            /**
+             * This enum value represents the color purple.
+             */
             PURPLE,
+
+            /**
+             * This enum value represents the color cyan.
+             */
             CYAN,
+
+            /**
+             * This enum value represents the color white.
+             */
             WHITE
         }
 
+        /**
+         * This variable stores the color of the logger.
+         */
         private COLOR color = COLOR.WHITE;
+
+        /**
+         * This array stores the ANSI color codes for the logger.
+         */
         private final String[] ansiColorCodes = {
                 "\u001B[30m", "\u001B[31m", "\u001B[32m", "\u001B[33m",
                 "\u001B[34m", "\u001B[35m", "\u001B[36m", "\u001B[37m"
         };
 
+        /**
+         * This function sets the color of the logger.
+         *
+         * @param color The color to be set.
+         */
         public void setColor(COLOR color) {
             this.color = color;
         }
 
+        /**
+         * This function formats the log record.
+         *
+         * @param record The log record to be formatted.
+         * @return The formatted log record as String.
+         */
         @Override
         public String format(LogRecord record) {
 
@@ -203,6 +336,12 @@ public final class Debug {
             return builder.toString();
         }
 
+        /**
+         * This function calculates the date from the milliseconds.
+         *
+         * @param milliseconds The milliseconds to be converted.
+         * @return The date as String.
+         */
         private String calcDate(long milliseconds) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date resultdate = new Date(milliseconds);

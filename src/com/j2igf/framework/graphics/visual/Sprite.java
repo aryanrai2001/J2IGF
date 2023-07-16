@@ -29,21 +29,80 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * This class is responsible for handling sprites.
+ *
+ * @author Aryan Rai
+ */
 public class Sprite {
+    /**
+     * The pixels of the sprite.
+     */
     protected int[] pixels;
+
+    /**
+     * The width of the sprite.
+     */
     protected int width;
+
+    /**
+     * The height of the sprite.
+     */
     protected int height;
+
+    /**
+     * The starting x coordinate of the sprite when using transformed rendering.
+     */
     protected int transformedStartX;
+
+    /**
+     * The starting y coordinate of the sprite when using transformed rendering.
+     */
     protected int transformedStartY;
+
+    /**
+     * The ending x coordinate of the sprite when using transformed rendering.
+     */
     protected int transformedEndX;
+
+    /**
+     * The ending y coordinate of the sprite when using transformed rendering.
+     */
     protected int transformedEndY;
+
+    /**
+     * The x coordinate of the origin of the sprite.
+     */
     protected float originX;
+
+    /**
+     * The y coordinate of the origin of the sprite.
+     */
     protected float originY;
+
+    /**
+     * The x scale of the sprite.
+     */
     protected float scaleX;
+
+    /**
+     * The y scale of the sprite.
+     */
     protected float scaleY;
+
+    /**
+     * The cosine of the rotation of the sprite.
+     */
     protected float cos;
+
+    /**
+     * The sine of the rotation of the sprite.
+     */
     protected float sin;
 
+    /**
+     * This is the default constructor of the Sprite class.
+     */
     protected Sprite() {
         this.pixels = null;
         this.width = 0;
@@ -60,6 +119,11 @@ public class Sprite {
         this.sin = 0;
     }
 
+    /**
+     * This is the copy constructor of the Sprite class.
+     *
+     * @param sprite The sprite to copy.
+     */
     public Sprite(Sprite sprite) {
         this.pixels = Arrays.copyOf(sprite.getPixels(), sprite.getPixels().length);
         this.width = sprite.width;
@@ -76,6 +140,12 @@ public class Sprite {
         this.sin = sprite.sin;
     }
 
+    /**
+     * This is a parameterized constructor of the Sprite class.
+     *
+     * @param width  The width of the sprite.
+     * @param height The height of the sprite.
+     */
     public Sprite(int width, int height) {
         this();
         this.width = width;
@@ -83,6 +153,11 @@ public class Sprite {
         this.pixels = new int[width * height];
     }
 
+    /**
+     * This is a parameterized constructor of the Sprite class.
+     *
+     * @param path The path of an image file to load as a Sprite.
+     */
     public Sprite(String path) {
         this();
 
@@ -109,6 +184,13 @@ public class Sprite {
         image.flush();
     }
 
+    /**
+     * This method renders the sprite to the screen.
+     *
+     * @param renderer The renderer to use.
+     * @param x        The x coordinate to render the sprite at.
+     * @param y        The y coordinate to render the sprite at.
+     */
     public void render(Renderer renderer, int x, int y) {
         if (renderer == null) {
             Debug.logError(getClass().getName() + " -> Renderer instance can not be null!");
@@ -135,6 +217,13 @@ public class Sprite {
         }
     }
 
+    /**
+     * This method renders the sprite to the screen with a specific rotation and scale.
+     *
+     * @param renderer The renderer to use.
+     * @param x        The x coordinate to render the sprite at.
+     * @param y        The y coordinate to render the sprite at.
+     */
     public void renderTransformed(Renderer renderer, int x, int y) {
         if (renderer == null) {
             Debug.logError(getClass().getName() + " -> Renderer instance can not be null!");
@@ -149,76 +238,10 @@ public class Sprite {
         }
     }
 
-    public Sprite getTransformed() {
-        applyTransform();
-        Sprite sprite = new Sprite(transformedEndX - transformedStartX, transformedEndY - transformedStartY);
-        sprite.originX = 0.5f;
-        sprite.originY = 0.5f;
-        for (int currY = transformedStartY; currY < transformedEndY; currY++) {
-            for (int currX = transformedStartX; currX < transformedEndX; currX++) {
-                int xVal = (int) (((currX * cos - currY * sin) / scaleX) + width * originX);
-                int yVal = (int) (((currX * sin + currY * cos) / scaleY) + height * originY);
-                sprite.setPixel(Math.abs(transformedStartX) + currX, Math.abs(transformedStartY) + currY, getPixel(xVal, yVal));
-            }
-        }
-        return sprite;
-    }
-
-    public void saveToFile(String path, String name) {
-        File outputFile = new File(path + "/" + name + ".png");
-        try {
-            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            image.setRGB(0, 0, width, height, pixels, 0, width);
-            ImageIO.write(image, "png", outputFile);
-        } catch (IOException e) {
-            Debug.logError(getClass().getName() + " -> Image saving failed!", e);
-        }
-    }
-
-    public void setPixel(int x, int y, int color) {
-        if (x < 0 || x >= width || y < 0 || y >= height)
-            return;
-        pixels[x + y * width] = color;
-    }
-
-    public int getPixel(int x, int y) {
-        if (x < 0 || x >= width || y < 0 || y >= height)
-            return 0;
-        return pixels[x + y * width];
-    }
-
-    public int[] getPixels() {
-        return pixels;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setOrigin(float oX, float oY) {
-        this.originX = oX;
-        this.originY = oY;
-    }
-
-    public void setScale(float scaleX, float scaleY) {
-        this.scaleX = Math.abs(scaleX);
-        this.scaleY = Math.abs(scaleY);
-    }
-
-    public void setAngleInRadians(float angleInRadians) {
-        angleInRadians = (float) Math.atan2(Math.sin(angleInRadians), Math.cos(angleInRadians));
-        cos = (float) Math.cos(angleInRadians);
-        sin = (float) Math.sin(angleInRadians);
-    }
-
-    public void setAngleInDegrees(float angleInDegrees) {
-        setAngleInRadians((float) Math.toRadians(angleInDegrees));
-    }
-
+    /**
+     * This method applies the current transformation to be reflected in transformed rendering.
+     * Call this method after changing the transform values like scale, rotation, and origin.
+     */
     public void applyTransform() {
         float width = this.width * scaleX;
         float height = this.height * scaleY;
@@ -244,5 +267,136 @@ public class Sprite {
             transformedStartY = (int) ((width * -originX) * -sin + (height * -originY) * cos);
             transformedEndY = (int) ((width * (1 - originX)) * -sin + (height * (1 - originY)) * cos);
         }
+    }
+
+    /**
+     * This method applies the current transformation to a copy of the sprite and returns it.
+     *
+     * @return The transformed sprite.
+     */
+    public Sprite getTransformed() {
+        applyTransform();
+        Sprite sprite = new Sprite(transformedEndX - transformedStartX, transformedEndY - transformedStartY);
+        sprite.originX = 0.5f;
+        sprite.originY = 0.5f;
+        for (int currY = transformedStartY; currY < transformedEndY; currY++) {
+            for (int currX = transformedStartX; currX < transformedEndX; currX++) {
+                int xVal = (int) (((currX * cos - currY * sin) / scaleX) + width * originX);
+                int yVal = (int) (((currX * sin + currY * cos) / scaleY) + height * originY);
+                sprite.setPixel(Math.abs(transformedStartX) + currX, Math.abs(transformedStartY) + currY, getPixel(xVal, yVal));
+            }
+        }
+        return sprite;
+    }
+
+    /**
+     * This method saves the Sprite to a file.
+     * @param path The path to save the Sprite to.
+     * @param name The name of the saved file.
+     */
+    public void saveToFile(String path, String name) {
+        File outputFile = new File(path + "/" + name + ".png");
+        try {
+            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            image.setRGB(0, 0, width, height, pixels, 0, width);
+            ImageIO.write(image, "png", outputFile);
+        } catch (IOException e) {
+            Debug.logError(getClass().getName() + " -> Image saving failed!", e);
+        }
+    }
+
+    /**
+     * This method sets a pixel on the sprite to the specified color.
+     *
+     * @param x     The x coordinate of the pixel.
+     * @param y     The y coordinate of the pixel.
+     * @param color The color to set the pixel to.
+     */
+    public void setPixel(int x, int y, int color) {
+        if (x < 0 || x >= width || y < 0 || y >= height)
+            return;
+        pixels[x + y * width] = color;
+    }
+
+    /**
+     * This method gets the color of a pixel on the sprite.
+     *
+     * @param x The x coordinate of the pixel.
+     * @param y The y coordinate of the pixel.
+     * @return The color of the pixel.
+     */
+    public int getPixel(int x, int y) {
+        if (x < 0 || x >= width || y < 0 || y >= height)
+            return 0;
+        return pixels[x + y * width];
+    }
+
+    /**
+     * This method gets the pixels of the sprite as an int[].
+     *
+     * @return The pixel array of the sprite.
+     */
+    public int[] getPixels() {
+        return pixels;
+    }
+
+    /**
+     * This method gets the width of the sprite.
+     *
+     * @return The width of the sprite.
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * This method gets the height of the sprite.
+     *
+     * @return The height of the sprite.
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * This method sets the origin offsets of the sprite.
+     *
+     * @param oX The normalized x offset of the origin.
+     * @param oY The normalized y offset of the origin.
+     */
+    public void setOrigin(float oX, float oY) {
+        this.originX = oX;
+        this.originY = oY;
+    }
+
+    /**
+     * This method sets the scale of the sprite for the transformed rendering.
+     *
+     * @param scaleX The x scale of the sprite.
+     * @param scaleY The y scale of the sprite.
+     */
+    public void setScale(float scaleX, float scaleY) {
+        this.scaleX = Math.abs(scaleX);
+        this.scaleY = Math.abs(scaleY);
+    }
+
+    /**
+     * This method sets the rotation of the sprite for the transformed rendering.
+     *
+     * @param angleInRadians The angle of the sprite in radians.
+     */
+    public void setAngleInRadians(float angleInRadians) {
+        angleInRadians = (float) Math.atan2(Math.sin(angleInRadians), Math.cos(angleInRadians));
+        cos = (float) Math.cos(angleInRadians);
+        sin = (float) Math.sin(angleInRadians);
+    }
+
+    /**
+     * This method sets the rotation of the sprite for the transformed rendering.
+     *
+     * @param angleInDegrees The angle of the sprite in degrees.
+     */
+    public void setAngleInDegrees(float angleInDegrees) {
+        setAngleInRadians((float) Math.toRadians(angleInDegrees));
     }
 }

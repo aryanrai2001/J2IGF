@@ -25,14 +25,50 @@ import com.j2igf.framework.event.Debug;
 import com.j2igf.framework.graphics.auxiliary.FontAtlas;
 import com.j2igf.framework.graphics.visual.Sprite;
 
+/**
+ * This class is used to render graphics on the target buffer.
+ *
+ * @author Aryan Rai
+ */
 public final class Renderer {
+
+    /**
+     * The target buffer to render on.
+     */
     private final int[] pixels;
+
+    /**
+     * The width of the target buffer.
+     */
     private final int width;
+
+    /**
+     * The height of the target buffer.
+     */
     private final int height;
+
+    /**
+     * The font atlas used to render text.
+     */
     private FontAtlas fontAtlas;
+
+    /**
+     * The global alpha value.
+     */
     private float globalAlpha;
+
+    /**
+     * The flag to check if alpha is enabled.
+     */
     private boolean isAlphaEnabled;
 
+
+    /**
+     * This is a constructor for the Renderer class.
+     * It sets the target buffer to the frame buffer of the window.
+     *
+     * @param window instance of the Window for the frame buffer and dimensions
+     */
     public Renderer(Window window) {
         if (window == null) {
             Debug.logError(getClass().getName() + " -> Window instance can not be null!");
@@ -46,6 +82,12 @@ public final class Renderer {
         this.height = window.getHeight();
     }
 
+    /**
+     * This is a constructor for the Renderer class.
+     * It sets the target buffer to the pixels of the Sprite.
+     *
+     * @param target instance of the Sprite which this renderer will target.
+     */
     public Renderer(Sprite target) {
         if (target == null) {
             Debug.logError(getClass().getName() + " -> Sprite instance can not be null!");
@@ -59,6 +101,11 @@ public final class Renderer {
         this.height = target.getHeight();
     }
 
+    /**
+     * This method is used to set the font atlas.
+     *
+     * @param fontAtlas instance of the FontAtlas
+     */
     public void setFont(FontAtlas fontAtlas) {
         if (fontAtlas == null) {
             Debug.logError(getClass().getName() + " -> FontAtlas instance can not be null!");
@@ -67,14 +114,26 @@ public final class Renderer {
         this.fontAtlas = fontAtlas;
     }
 
+    /**
+     * This method is used to enable alpha blending.
+     */
     public void enableAlphaBlending() {
         isAlphaEnabled = true;
     }
 
+    /**
+     * This method is used to disable alpha blending.
+     */
     public void disableAlphaBlending() {
         isAlphaEnabled = false;
     }
 
+    /**
+     * This method is used to set the global alpha value.
+     * And use global alpha instead of per-pixel alpha.
+     *
+     * @param alpha the global alpha value
+     */
     public void useGlobalAlpha(float alpha) {
         if (alpha < 0 || alpha > 1) {
             Debug.logError(getClass().getName() + " -> Illegal arguments for Renderer.useGlobalAlpha() method!");
@@ -83,10 +142,18 @@ public final class Renderer {
         globalAlpha = alpha;
     }
 
+    /**
+     * This method is used to use per-pixel alpha instead of global alpha.
+     */
     public void useLocalAlpha() {
         globalAlpha = -1;
     }
 
+    /**
+     * This method is used to clear the target buffer to a specific color.
+     *
+     * @param color the color to which the target buffer will be cleared
+     */
     public void clear(int color) {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -95,6 +162,13 @@ public final class Renderer {
         }
     }
 
+    /**
+     * This method is used to draw a pixel on the target buffer.
+     *
+     * @param x     the x coordinate of the pixel
+     * @param y     the y coordinate of the pixel
+     * @param color the color of the pixel
+     */
     public void setPixel(int x, int y, int color) {
         int alpha = (color >>> 24);
         if (alpha == 0 || x < 0 || x >= width || y < 0 || y >= height)
@@ -120,6 +194,15 @@ public final class Renderer {
             pixels[x + y * width] = color | 0xff000000;
     }
 
+    /**
+     * This method is used to draw a line on the target buffer.
+     *
+     * @param x0    the x coordinate of the first point
+     * @param y0    the y coordinate of the first point
+     * @param x1    the x coordinate of the second point
+     * @param y1    the y coordinate of the second point
+     * @param color the color of the line
+     */
     public void drawLine(int x0, int y0, int x1, int y1, int color) {
         int dx = Math.abs(x1 - x0);
         int sx = x0 < x1 ? 1 : -1;
@@ -147,6 +230,16 @@ public final class Renderer {
         }
     }
 
+    /**
+     * This method is used to draw a rectangle on the target buffer.
+     *
+     * @param x          the x coordinate of the rectangle
+     * @param y          the y coordinate of the rectangle
+     * @param width      the width of the rectangle
+     * @param height     the height of the rectangle
+     * @param strokeWidth the stroke width of the rectangle
+     * @param color      the color of the rectangle
+     */
     public void drawRect(int x, int y, int width, int height, int strokeWidth, int color) {
         if (width <= 0 || height <= 0)
             return;
@@ -168,6 +261,15 @@ public final class Renderer {
         }
     }
 
+    /**
+     * This method is used to fill a rectangle on the target buffer.
+     *
+     * @param x      the x coordinate of the rectangle
+     * @param y      the y coordinate of the rectangle
+     * @param width  the width of the rectangle
+     * @param height the height of the rectangle
+     * @param color  the color of the rectangle
+     */
     public void fillRect(int x, int y, int width, int height, int color) {
         if (width <= 0 || height <= 0)
             return;
@@ -178,6 +280,14 @@ public final class Renderer {
         }
     }
 
+    /**
+     * This method is used to draw a circle on the target buffer.
+     *
+     * @param x      the x coordinate of the circle
+     * @param y      the y coordinate of the circle
+     * @param radius the radius of the circle
+     * @param color  the color of the circle
+     */
     public void drawCircle(int x, int y, int radius, int color) {
         if (radius <= 0)
             return;
@@ -209,6 +319,14 @@ public final class Renderer {
         }
     }
 
+    /**
+     * This method is used to draw a circle on the target buffer.
+     *
+     * @param x      the x coordinate of the circle
+     * @param y      the y coordinate of the circle
+     * @param radius the radius of the circle
+     * @param color  the color of the circle
+     */
     public void fillCircle(int x, int y, int radius, int color) {
         if (radius <= 0)
             return;
@@ -234,12 +352,34 @@ public final class Renderer {
         }
     }
 
+    /**
+     * This method is used to draw a triangle on the target buffer.
+     *
+     * @param x0    the x coordinate of the first point of the triangle
+     * @param y0    the y coordinate of the first point of the triangle
+     * @param x1    the x coordinate of the second point of the triangle
+     * @param y1    the y coordinate of the second point of the triangle
+     * @param x2    the x coordinate of the third point of the triangle
+     * @param y2    the y coordinate of the third point of the triangle
+     * @param color the color of the triangle
+     */
     public void drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, int color) {
         drawLine(x0, y0, x1, y1, color);
         drawLine(x1, y1, x2, y2, color);
         drawLine(x0, y0, x2, y2, color);
     }
 
+    /**
+     * This method is used to fill the bottom part of a triangle on the target buffer.
+     *
+     * @param x0    the x coordinate of the first point of the triangle
+     * @param y0    the y coordinate of the first point of the triangle
+     * @param x1    the x coordinate of the second point of the triangle
+     * @param y1    the y coordinate of the second point of the triangle
+     * @param x2    the x coordinate of the third point of the triangle
+     * @param y2    the y coordinate of the third point of the triangle
+     * @param color the color of the triangle
+     */
     private void fillBottomFlatTriangle(int x0, int y0, int x1, int y1, int x2, int y2, int color) {
         float invslope1 = (float) (x1 - x0) / (float) (y1 - y0);
         float invslope2 = (float) (x2 - x0) / (float) (y2 - y0);
@@ -254,6 +394,17 @@ public final class Renderer {
         }
     }
 
+    /**
+     * This method is used to fill the top part of a triangle on the target buffer.
+     *
+     * @param x0    the x coordinate of the first point of the triangle
+     * @param y0    the y coordinate of the first point of the triangle
+     * @param x1    the x coordinate of the second point of the triangle
+     * @param y1    the y coordinate of the second point of the triangle
+     * @param x2    the x coordinate of the third point of the triangle
+     * @param y2    the y coordinate of the third point of the triangle
+     * @param color the color of the triangle
+     */
     private void fillTopFlatTriangle(int x0, int y0, int x1, int y1, int x2, int y2, int color) {
         float invslope1 = (float) (x2 - x0) / (float) (y2 - y0);
         float invslope2 = (float) (x2 - x1) / (float) (y2 - y1);
@@ -268,6 +419,17 @@ public final class Renderer {
         }
     }
 
+    /**
+     * This method is used to fill a triangle on the target buffer.
+     *
+     * @param x0    the x coordinate of the first point of the triangle
+     * @param y0    the y coordinate of the first point of the triangle
+     * @param x1    the x coordinate of the second point of the triangle
+     * @param y1    the y coordinate of the second point of the triangle
+     * @param x2    the x coordinate of the third point of the triangle
+     * @param y2    the y coordinate of the third point of the triangle
+     * @param color the color of the triangle
+     */
     public void fillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, int color) {
         if (y0 > y1) {
             y0 = y0 ^ y1 ^ (y1 = y0);
@@ -293,6 +455,14 @@ public final class Renderer {
         }
     }
 
+    /**
+     * This method is used to draw text on the target buffer.
+     *
+     * @param x     the x coordinate of the text
+     * @param y     the y coordinate of the text
+     * @param color the color of the text
+     * @param text  the text to draw
+     */
     public void drawText(int x, int y, int color, String text) {
         text = text == null ? "" : text;
         int xOffset = 0;
@@ -316,10 +486,20 @@ public final class Renderer {
         }
     }
 
+    /**
+     * This method is used to get the width of the target buffer.
+     *
+     * @return the width of the target buffer
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * This method is used to get the height of the target buffer.
+     *
+     * @return the height of the target buffer
+     */
     public int getHeight() {
         return height;
     }

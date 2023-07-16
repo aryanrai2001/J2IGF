@@ -31,18 +31,69 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Stack;
 
+/**
+ * This is the main class of the framework.
+ * It is responsible for managing the game loop and the game contexts.
+ * It also provides access to the window, renderer, input and time instances.
+ *
+ * @author Aryan Rai
+ */
 public final class Engine {
+    /**
+     * This stack is used to manage the game contexts.
+     */
     private final Stack<Context> contexts;
+    /**
+     * This is an object of the Window class.
+     */
     private final Window window;
+    /**
+     * This is an object of the Renderer class.
+     */
     private final Renderer renderer;
+    /**
+     * This is an object of the Input class.
+     */
     private final Input input;
+    /**
+     * This is an object of the Time class.
+     */
     private final Time time;
+    /**
+     * This is the thread that runs the game loop.
+     */
     private final Thread thread;
+    /**
+     * This is a constant integer that stores the target updates per second.
+     */
     private final int targetUPS;
+    /**
+     * This is a boolean that stores the running state of the game.
+     */
     private boolean running;
+    /**
+     * This is a short that stores the current frames per second.
+     */
     private short fps;
+    /**
+     * This is a short that stores the current fixed frames per second.
+     */
     private short ffps;
 
+    /**
+     * This is the constructor of the Engine class.
+     *
+     * @param window This is an object of the Window class.
+     *               It can not be null.
+     * @param renderer This is an object of the Renderer class.
+     *                 It can not be null.
+     * @param input This is an object of the Input class.
+     *              It can not be null.
+     * @param time This is an object of the Time class.
+     *             It can not be null.
+     * @param targetUPS It sets the target updates per second.
+     *                  It must be greater than 0.
+     */
     public Engine(Window window, Renderer renderer, Input input, Time time, int targetUPS) {
         Debug.init();
         if (window == null) {
@@ -56,6 +107,9 @@ public final class Engine {
             System.exit(-1);
         } else if (time == null) {
             Debug.logError(getClass().getName() + " -> Time instance can not be null!");
+            System.exit(-1);
+        } else if (targetUPS <= 0) {
+            Debug.logError(getClass().getName() + " -> Target updates per second must be greater than 0!");
             System.exit(-1);
         }
         this.contexts = new Stack<>();
@@ -71,6 +125,14 @@ public final class Engine {
         addContext(BaseContext.class);
     }
 
+    /**
+     * This method is used to add a new context to the stack.
+     *
+     * @param <T> This is the type of the context to be added.
+     * @param contextClass This is the class of the context to be added.
+     *                     It must extend the Context class.
+     * @see Context
+     */
     public <T extends Context> void addContext(Class<T> contextClass) {
         T context = null;
         try {
@@ -84,12 +146,18 @@ public final class Engine {
         contexts.push(context);
     }
 
+    /**
+     * This method is used to remove the current context from the stack.
+     */
     public void removeCurrentContext() {
         if (contexts.peek() instanceof BaseContext)
             return;
         contexts.pop();
     }
 
+    /**
+     * This method is used to start the game loop.
+     */
     public void start() {
         if (running)
             return;
@@ -105,6 +173,9 @@ public final class Engine {
         System.exit(0);
     }
 
+    /**
+     * This method is used to stop the game loop.
+     */
     public void stop() {
         if (!running) {
             window.dispose();
@@ -113,31 +184,82 @@ public final class Engine {
         running = false;
     }
 
+    /**
+     * This method is used to get the Window instance.
+     *
+     * @return Instance of the Window class.
+     * @see Window
+     */
     public Window getWindow() {
         return window;
     }
 
+    /**
+     * This method is used to get the Renderer instance.
+     *
+     * @return Instance of the Renderer class.
+     * @see Renderer
+     */
     public Renderer getRenderer() {
         return renderer;
     }
 
+    /**
+     * This method is used to get the Input instance.
+     *
+     * @return Instance of the Input class.
+     * @see Input
+     */
     public Input getInput() {
         return input;
     }
 
+    /**
+     * This method is used to get the Time instance.
+     *
+     * @return Instance of the Time class.
+     * @see Time
+     */
     public Time getTime() {
         return time;
     }
 
+    /**
+     * This method is used to get the current frames per second.
+     *
+     * @return Current frames per second.
+     */
     public short getFps() {
         return fps;
     }
 
+    /**
+     * This method is used to get the current fixed frames per second.
+     *
+     * @return Current fixed frames per second.
+     */
     public short getFfps() {
         return ffps;
     }
 
-    private class GameLoop implements Runnable {
+    /**
+     * This is an inner class that implements the Runnable interface.
+     * It is used to run the game loop.
+     *
+     * @author Aryan Rai
+     * @see Runnable
+     */
+    private final class GameLoop implements Runnable {
+        /**
+         * This is the default constructor of the GameLoop class.
+         */
+        private GameLoop() {
+        }
+
+        /**
+         * This is the run method of the GameLoop class.
+         * It contains the logic of the game loop.
+         */
         @Override
         public void run() {
             long lastTime = System.nanoTime();
@@ -187,7 +309,27 @@ public final class Engine {
         }
     }
 
-    private class CloseOperation extends WindowAdapter {
+    /**
+     * This is an inner class that extends the WindowAdapter class.
+     * It specifies the action to be performed when the window is closed.
+     *
+     * @author Aryan Rai
+     * @see WindowAdapter
+     */
+    private final class CloseOperation extends WindowAdapter {
+        /**
+         * This is the default constructor of the CloseOperation class.
+         */
+        private CloseOperation() {
+        }
+
+        /**
+         * This is the windowClosing method of the CloseOperation class.
+         * It is called when the window is closed.
+         *
+         * @param e WindowEvent object.
+         * @see WindowEvent
+         */
         @Override
         public void windowClosing(WindowEvent e) {
             stop();

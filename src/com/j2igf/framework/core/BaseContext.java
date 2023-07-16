@@ -25,13 +25,35 @@ import com.j2igf.framework.event.KeyCode;
 import com.j2igf.framework.graphics.auxiliary.FontAtlas;
 import com.j2igf.framework.graphics.visual.Sprite;
 
+/**
+ * This is the default context that is used when no other context is available.
+ * It displays a message on the screen and exits the game when the ESCAPE key is pressed.
+ *
+ * @author Aryan Rai
+ */
 public final class BaseContext extends Context {
+    /**
+     * This is the timer that is used to keep track of time to update the debug info every second.
+     */
     private float timer;
 
+    /**
+     * This is the constructor for the BaseContext class.
+     * It takes in an Engine object and passes it to the constructor of the base class Context.
+     *
+     * @param engine This is an instance of the Engine class.
+     *               It can not be null.
+     * @see Engine
+     */
     public BaseContext(Engine engine) {
         super(engine);
     }
 
+    /**
+     * This method overrides the init method of the base class Context.
+     *
+     * @see Context#init()
+     */
     @Override
     public void init() {
         Sprite label = new FontAtlas("Times New Roman", window.getHeight() / 10, true).textToSprite("No Context Available!", 0xFFFF0000);
@@ -50,18 +72,28 @@ public final class BaseContext extends Context {
         Debug.enableDebugMode();
     }
 
-    @Override
-    public void fixedUpdate() {
-        if (input.isKeyDown(KeyCode.ESCAPE))
-            engine.stop();
-        timer += time.getDeltaTime();
-    }
-
+    /**
+     * This method overrides the update method of the base class Context.
+     *
+     * @see Context#update()
+     */
     @Override
     public void update() {
         if (timer >= 1) {
             Debug.renderMessage(renderer, "Fixed Frames Per Second: " + engine.getFfps() + "\nFrames Per Second: " + engine.getFps());
             timer = 0;
         }
+    }
+
+    /**
+     * This method overrides the fixedUpdate method of the base class Context.
+     *
+     * @see Context#fixedUpdate()
+     */
+    @Override
+    public void fixedUpdate() {
+        if (input.isKeyDown(KeyCode.ESCAPE))
+            engine.stop();
+        timer += time.getDeltaTime();
     }
 }

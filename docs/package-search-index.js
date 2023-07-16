@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.j2igf.framework.core"},{"l":"com.j2igf.framework.event"},{"l":"com.j2igf.framework.graphics"},{"l":"com.j2igf.framework.graphics.auxiliary"},{"l":"com.j2igf.framework.graphics.visual"}];updateSearchResults();

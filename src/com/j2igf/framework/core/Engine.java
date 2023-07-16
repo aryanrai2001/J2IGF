@@ -83,14 +83,14 @@ public final class Engine {
     /**
      * This is the constructor of the Engine class.
      *
-     * @param window This is an object of the Window class.
-     *               It can not be null.
-     * @param renderer This is an object of the Renderer class.
-     *                 It can not be null.
-     * @param input This is an object of the Input class.
-     *              It can not be null.
-     * @param time This is an object of the Time class.
-     *             It can not be null.
+     * @param window    This is an object of the Window class.
+     *                  It can not be null.
+     * @param renderer  This is an object of the Renderer class.
+     *                  It can not be null.
+     * @param input     This is an object of the Input class.
+     *                  It can not be null.
+     * @param time      This is an object of the Time class.
+     *                  It can not be null.
      * @param targetUPS It sets the target updates per second.
      *                  It must be greater than 0.
      */
@@ -128,7 +128,7 @@ public final class Engine {
     /**
      * This method is used to add a new context to the stack.
      *
-     * @param <T> This is the type of the context to be added.
+     * @param <T>          This is the type of the context to be added.
      * @param contextClass This is the class of the context to be added.
      *                     It must extend the Context class.
      * @see Context
@@ -138,7 +138,8 @@ public final class Engine {
         try {
             Constructor<T> contextConstructor = contextClass.getConstructor(Engine.class);
             context = contextConstructor.newInstance(this);
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
             Debug.logError(getClass().getName() + " -> Could not instantiate a valid Context of type " + contextClass.getName() + "!");
             System.exit(-1);
         }

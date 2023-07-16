@@ -34,7 +34,7 @@ import java.awt.event.*;
  *     <li>{@link MouseWheelListener}</li>
  * </ul>
  *
-* @author Aryan Rai
+ * @author Aryan Rai
  */
 public final class Input implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
     /**

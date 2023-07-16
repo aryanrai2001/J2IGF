@@ -66,9 +66,9 @@ public class FontAtlas extends Sprite {
      * This is the constructor of the FontAtlas class.
      * It constructs a font atlas for the given font.
      *
-     * @param fontName     the name of the font
-     * @param fontSize     the size of the font
-     * @param antiAliased  whether the font should be anti-aliased or not
+     * @param fontName    the name of the font
+     * @param fontSize    the size of the font
+     * @param antiAliased whether the font should be anti-aliased or not
      */
     public FontAtlas(String fontName, int fontSize, boolean antiAliased) {
         super();
@@ -128,8 +128,8 @@ public class FontAtlas extends Sprite {
     /**
      * This method uses the current font atlas to create a sprite of any string in any color.
      *
-     * @param text the string to be converted to a sprite
-     *                  (the string must only contain characters that are in the font atlas)
+     * @param text  the string to be converted to a sprite
+     *              (the string must only contain characters that are in the font atlas)
      * @param color the color of the string
      * @return an object of the Sprite class that represents the sprite of the given string in the given color
      */

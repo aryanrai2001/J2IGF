@@ -49,18 +49,17 @@ public class Animation {
     /**
      * This is the constructor of the Animation class.
      *
-     * @param tileSet The TileSet object to use.
+     * @param tileSet      The TileSet object to use.
      * @param verticalScan Whether to scan the TileSet vertically or horizontally.
-     * @param offset The offset of the first frame.
-     * @param size The size of the animation.
-     * @param fps The frames per second of the animation.
+     * @param offset       The offset of the first frame.
+     * @param size         The size of the animation.
+     * @param fps          The frames per second of the animation.
      */
     public Animation(TileSet tileSet, boolean verticalScan, int offset, int size, float fps) {
         if (tileSet == null) {
             Debug.logError(getClass().getName() + " -> TileSet instance can not be null!");
             System.exit(-1);
-        }
-        else if (offset + size > tileSet.getNumberOfTilesHorizontally() * tileSet.getNumberOfTilesVertically()) {
+        } else if (offset + size > tileSet.getNumberOfTilesHorizontally() * tileSet.getNumberOfTilesVertically()) {
             Debug.logError(getClass().getName() + " -> Illegal arguments for Animation constructor!");
             System.exit(-1);
         }
@@ -87,8 +86,8 @@ public class Animation {
      * This method renders the animation.
      *
      * @param renderer The Renderer object to use.
-     * @param x The x coordinate of the animation.
-     * @param y The y coordinate of the animation.
+     * @param x        The x coordinate of the animation.
+     * @param y        The y coordinate of the animation.
      */
     public void render(Renderer renderer, int x, int y) {
         frames[(int) frameIndex].render(renderer, x, y);

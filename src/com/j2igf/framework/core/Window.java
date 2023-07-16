@@ -74,16 +74,16 @@ public final class Window {
      * This is the constructor of the Window class.
      * It creates a window with the specified title, width, height and pixelScale.
      *
-     * @param title The title of the window.
-     *              If null, the title will be set to "Untitled".
-     * @param width The width of the window.
-     *              If less than or equal to 0, the window will be fullscreen.
-     *              If greater than the maximum width of the screen,
-     *              the width will be set to the maximum width of the screen.
-     * @param height The height of the window.
-     *               If less than or equal to 0, the window will be fullscreen.
-     *               If greater than the maximum height of the screen,
-     *               the height will be set to the maximum height of the screen.
+     * @param title      The title of the window.
+     *                   If null, the title will be set to "Untitled".
+     * @param width      The width of the window.
+     *                   If less than or equal to 0, the window will be fullscreen.
+     *                   If greater than the maximum width of the screen,
+     *                   the width will be set to the maximum width of the screen.
+     * @param height     The height of the window.
+     *                   If less than or equal to 0, the window will be fullscreen.
+     *                   If greater than the maximum height of the screen,
+     *                   the height will be set to the maximum height of the screen.
      * @param pixelScale The scale of each pixel of the window.
      *                   Example: If pixelScale is 2, each pixel will be 2x2 pixels.
      *                   If less than or equal to 0, the pixelScale will be set to 1.

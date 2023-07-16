@@ -233,12 +233,12 @@ public final class Renderer {
     /**
      * This method is used to draw a rectangle on the target buffer.
      *
-     * @param x          the x coordinate of the rectangle
-     * @param y          the y coordinate of the rectangle
-     * @param width      the width of the rectangle
-     * @param height     the height of the rectangle
+     * @param x           the x coordinate of the rectangle
+     * @param y           the y coordinate of the rectangle
+     * @param width       the width of the rectangle
+     * @param height      the height of the rectangle
      * @param strokeWidth the stroke width of the rectangle
-     * @param color      the color of the rectangle
+     * @param color       the color of the rectangle
      */
     public void drawRect(int x, int y, int width, int height, int strokeWidth, int color) {
         if (width <= 0 || height <= 0)

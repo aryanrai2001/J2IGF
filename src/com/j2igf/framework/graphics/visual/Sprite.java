@@ -291,6 +291,7 @@ public class Sprite {
 
     /**
      * This method saves the Sprite to a file.
+     *
      * @param path The path to save the Sprite to.
      * @param name The name of the saved file.
      */

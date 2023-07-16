@@ -52,9 +52,9 @@ public class TileSet extends Sprite {
     /**
      * This is the constructor for the TileSet class.
      *
-     * @param src The source sprite.
+     * @param src                       The source sprite.
      * @param numberOfTilesHorizontally The number of tiles horizontally.
-     * @param numberOfTilesVertically The number of tiles vertically.
+     * @param numberOfTilesVertically   The number of tiles vertically.
      */
     public TileSet(Sprite src, int numberOfTilesHorizontally, int numberOfTilesVertically) {
         super();
@@ -63,7 +63,7 @@ public class TileSet extends Sprite {
             System.exit(-1);
         } else if ((numberOfTilesHorizontally <= 1 && numberOfTilesVertically <= 1)
                 || (numberOfTilesHorizontally <= 0)
-                || (numberOfTilesVertically <= 0)){
+                || (numberOfTilesVertically <= 0)) {
             Debug.logError(getClass().getName() + " -> Illegal arguments for TileSet constructor!");
             System.exit(-1);
         }
@@ -83,7 +83,7 @@ public class TileSet extends Sprite {
     /**
      * This method returns a tile from the tile set.
      *
-     * @param index The index of the tile.
+     * @param index        The index of the tile.
      * @param verticalScan If true, the tile will be returned by scanning vertically.
      * @return The tile at the specified index in the tile set.
      */
@@ -117,6 +117,15 @@ public class TileSet extends Sprite {
     }
 
     /**
+     * This method returns the number of tiles horizontally.
+     *
+     * @return The number of tiles horizontally.
+     */
+    public int getNumberOfTilesHorizontally() {
+        return numberOfTilesHorizontally;
+    }
+
+    /**
      * This method sets the number of tiles horizontally.
      *
      * @param numberOfTilesHorizontally The number of tiles horizontally.
@@ -124,7 +133,7 @@ public class TileSet extends Sprite {
     public void setNumberOfTilesHorizontally(int numberOfTilesHorizontally) {
         if ((numberOfTilesHorizontally <= 1 && numberOfTilesVertically <= 1)
                 || (numberOfTilesHorizontally <= 0)
-                || (numberOfTilesVertically <= 0)){
+                || (numberOfTilesVertically <= 0)) {
             Debug.logError(getClass().getName() +
                     " -> Illegal arguments for TileSet.setNumberOfTilesHorizontally() method!");
             System.exit(-1);
@@ -139,12 +148,12 @@ public class TileSet extends Sprite {
     }
 
     /**
-     * This method returns the number of tiles horizontally.
+     * This method returns the number of tiles vertically.
      *
-     * @return The number of tiles horizontally.
+     * @return The number of tiles vertically.
      */
-    public int getNumberOfTilesHorizontally() {
-        return numberOfTilesHorizontally;
+    public int getNumberOfTilesVertically() {
+        return numberOfTilesVertically;
     }
 
     /**
@@ -155,27 +164,18 @@ public class TileSet extends Sprite {
     public void setNumberOfTilesVertically(int numberOfTilesVertically) {
         if ((numberOfTilesHorizontally <= 1 && numberOfTilesVertically <= 1)
                 || (numberOfTilesHorizontally <= 0)
-                || (numberOfTilesVertically <= 0)){
+                || (numberOfTilesVertically <= 0)) {
             Debug.logError(getClass().getName() +
                     " -> Illegal arguments for TileSet.setNumberOfTilesVertically() method!");
             System.exit(-1);
         }
         this.numberOfTilesVertically = numberOfTilesVertically;
         this.tileHeight = height / numberOfTilesVertically;
-        if (height % numberOfTilesVertically != 0){
+        if (height % numberOfTilesVertically != 0) {
             Debug.logError(getClass().getName() +
                     " -> Illegal arguments for TileSet.setNumberOfTilesVertically() method!");
             System.exit(-1);
         }
-    }
-
-    /**
-     * This method returns the number of tiles vertically.
-     *
-     * @return The number of tiles vertically.
-     */
-    public int getNumberOfTilesVertically() {
-        return numberOfTilesVertically;
     }
 
     /**

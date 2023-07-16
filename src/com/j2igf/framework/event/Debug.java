@@ -115,7 +115,7 @@ public final class Debug {
     /**
      * This function logs a message to the console and throws an exception.
      *
-     * @param msg The message to be logged.
+     * @param msg    The message to be logged.
      * @param thrown The exception to be thrown.
      */
     public static void log(String msg, Throwable thrown) {
@@ -136,7 +136,7 @@ public final class Debug {
     /**
      * This function logs a warning to the console and throws an exception.
      *
-     * @param msg The warning to be logged.
+     * @param msg    The warning to be logged.
      * @param thrown The exception to be thrown.
      */
     public static void logWarning(String msg, Throwable thrown) {
@@ -157,7 +157,7 @@ public final class Debug {
     /**
      * This function logs an error to the console and throws an exception.
      *
-     * @param msg The error to be logged.
+     * @param msg    The error to be logged.
      * @param thrown The exception to be thrown.
      */
     public static void logError(String msg, Throwable thrown) {
@@ -170,8 +170,8 @@ public final class Debug {
      *
      * @param renderer The renderer to render the debug information with.
      *                 If this parameter is null, nothing will be rendered.
-     * @param message The message to be rendered.
-     *                If this parameter is null, nothing will be rendered.
+     * @param message  The message to be rendered.
+     *                 If this parameter is null, nothing will be rendered.
      */
     public static void renderMessage(Renderer renderer, String message) {
         if (message == null || renderer == null)
@@ -215,69 +215,23 @@ public final class Debug {
      */
     public static class LogFormatter extends Formatter {
         /**
-         * This is the default constructor for the LogFormatter class.
-         */
-        public LogFormatter() {
-            super();
-        }
-
-        /**
-         * This enum defines the color values supported by the logger.
-         */
-        public enum COLOR {
-            /**
-             * This enum value represents the color black.
-             */
-            BLACK,
-
-            /**
-             * This enum value represents the color red.
-             */
-            RED,
-
-            /**
-             * This enum value represents the color green.
-             */
-            GREEN,
-
-            /**
-             * This enum value represents the color yellow.
-             */
-            YELLOW,
-
-            /**
-             * This enum value represents the color blue.
-             */
-            BLUE,
-
-            /**
-             * This enum value represents the color purple.
-             */
-            PURPLE,
-
-            /**
-             * This enum value represents the color cyan.
-             */
-            CYAN,
-
-            /**
-             * This enum value represents the color white.
-             */
-            WHITE
-        }
-
-        /**
-         * This variable stores the color of the logger.
-         */
-        private COLOR color = COLOR.WHITE;
-
-        /**
          * This array stores the ANSI color codes for the logger.
          */
         private final String[] ansiColorCodes = {
                 "\u001B[30m", "\u001B[31m", "\u001B[32m", "\u001B[33m",
                 "\u001B[34m", "\u001B[35m", "\u001B[36m", "\u001B[37m"
         };
+        /**
+         * This variable stores the color of the logger.
+         */
+        private COLOR color = COLOR.WHITE;
+
+        /**
+         * This is the default constructor for the LogFormatter class.
+         */
+        public LogFormatter() {
+            super();
+        }
 
         /**
          * This function sets the color of the logger.
@@ -346,6 +300,51 @@ public final class Debug {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date resultdate = new Date(milliseconds);
             return dateFormat.format(resultdate);
+        }
+
+        /**
+         * This enum defines the color values supported by the logger.
+         */
+        public enum COLOR {
+            /**
+             * This enum value represents the color black.
+             */
+            BLACK,
+
+            /**
+             * This enum value represents the color red.
+             */
+            RED,
+
+            /**
+             * This enum value represents the color green.
+             */
+            GREEN,
+
+            /**
+             * This enum value represents the color yellow.
+             */
+            YELLOW,
+
+            /**
+             * This enum value represents the color blue.
+             */
+            BLUE,
+
+            /**
+             * This enum value represents the color purple.
+             */
+            PURPLE,
+
+            /**
+             * This enum value represents the color cyan.
+             */
+            CYAN,
+
+            /**
+             * This enum value represents the color white.
+             */
+            WHITE
         }
     }
 }

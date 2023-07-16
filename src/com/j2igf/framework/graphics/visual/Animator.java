@@ -66,8 +66,8 @@ public class Animator {
      * This method is responsible for rendering the animation.
      *
      * @param renderer The renderer to use.
-     * @param x The x coordinate to render the animation at.
-     * @param y The y coordinate to render the animation at.
+     * @param x        The x coordinate to render the animation at.
+     * @param y        The y coordinate to render the animation at.
      */
     public void render(Renderer renderer, int x, int y) {
         animations[currentAnimation].render(renderer, x, y);
@@ -101,7 +101,7 @@ public class Animator {
     /**
      * This method is responsible for setting or changing the animation state.
      *
-     * @param index The index of the animation state to set or change.
+     * @param index     The index of the animation state to set or change.
      * @param animation The animation to set or change the state to.
      */
     public void setState(int index, Animation animation) {

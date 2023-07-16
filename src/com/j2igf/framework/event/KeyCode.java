@@ -805,6 +805,6 @@ public final class KeyCode {
     /**
      * This is the private constructor for this class so that no instances may be created.
      */
-    private KeyCode(){
+    private KeyCode() {
     }
 }

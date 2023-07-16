@@ -28,8 +28,8 @@ import com.j2igf.framework.graphics.Renderer;
 /**
  * The Context class is the base class for all contexts.
  * <p>
- *     A context is a state of the game. For example, the main menu, the game, the pause menu, etc.
- *     Each context has its own init(), update() and fixedUpdate() methods.
+ * A context is a state of the game. For example, the main menu, the game, the pause menu, etc.
+ * Each context has its own init(), update() and fixedUpdate() methods.
  * </p>
  *
  * @author Aryan Rai

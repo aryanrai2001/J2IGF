@@ -85,28 +85,13 @@ public final class Engine {
      *
      * @param window    This is an object of the Window class.
      *                  It can not be null.
-     * @param renderer  This is an object of the Renderer class.
-     *                  It can not be null.
-     * @param input     This is an object of the Input class.
-     *                  It can not be null.
-     * @param time      This is an object of the Time class.
-     *                  It can not be null.
      * @param targetUPS It sets the target updates per second.
      *                  It must be greater than 0.
      */
-    public Engine(Window window, Renderer renderer, Input input, Time time, int targetUPS) {
+    public Engine(Window window, int targetUPS) {
         Debug.init();
         if (window == null) {
             Debug.logError(getClass().getName() + " -> Window instance can not be null!");
-            System.exit(-1);
-        } else if (renderer == null) {
-            Debug.logError(getClass().getName() + " -> Renderer instance can not be null!");
-            System.exit(-1);
-        } else if (input == null) {
-            Debug.logError(getClass().getName() + " -> Input instance can not be null!");
-            System.exit(-1);
-        } else if (time == null) {
-            Debug.logError(getClass().getName() + " -> Time instance can not be null!");
             System.exit(-1);
         } else if (targetUPS <= 0) {
             Debug.logError(getClass().getName() + " -> Target updates per second must be greater than 0!");
@@ -114,9 +99,9 @@ public final class Engine {
         }
         this.contexts = new Stack<>();
         this.window = window;
-        this.input = input;
-        this.time = time;
-        this.renderer = renderer;
+        this.renderer = new Renderer(window);
+        this.input = new Input(window);
+        this.time = new Time();
         this.thread = new Thread(new GameLoop());
         this.targetUPS = targetUPS;
         this.running = false;

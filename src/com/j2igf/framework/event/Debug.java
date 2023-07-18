@@ -40,7 +40,11 @@ public final class Debug {
     /**
      * These are some variables used by the class to determine the state of the logging system.
      */
-    private static boolean enabled, initialized;
+    private static boolean initialized, enabled;
+    /**
+     * This is the renderer used by the Debug class to render debug info.
+     */
+    private static Renderer renderer;
 
     static {
         init();
@@ -69,8 +73,8 @@ public final class Debug {
         LOGGER.addHandler(handler);
         LOGGER.setLevel(Level.ALL);
 
-        enabled = false;
         initialized = true;
+        enabled = true;
     }
 
     /**
@@ -85,6 +89,16 @@ public final class Debug {
         LogFormatter formatter = (LogFormatter) handler.getFormatter();
         formatter.setColor(color);
         handler.setFormatter(formatter);
+    }
+
+    /**
+     * This function sets the renderer for debug info.
+     *
+     * @param renderer The renderer using which the debug info will be rendered.
+     */
+    public static void setRenderer(Renderer renderer) {
+        assert (renderer != null);
+        Debug.renderer = renderer;
     }
 
     /**
@@ -179,13 +193,11 @@ public final class Debug {
     /**
      * This function renders debug information to the screen.
      *
-     * @param renderer The renderer to render the debug information with.
-     *                 If this parameter is null, nothing will be rendered.
      * @param message  The message to be rendered.
      *                 If this parameter is null, nothing will be rendered.
      */
-    public static void renderMessage(Renderer renderer, String message) {
-        if (!enabled || message == null || renderer == null)
+    public static void renderMessage(String message) {
+        if (!(enabled && initialized) || message == null || renderer == null)
             return;
         int xOffset = 0;
         int yOffset = 0;

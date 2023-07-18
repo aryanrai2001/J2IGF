@@ -87,9 +87,8 @@ public abstract class Context {
     }
 
     /**
-     * This method is called when the context is created.
+     * This method is called only once when the engine is started.
      * It is used to initialize the context.
-     * And it is called only once.
      */
     public abstract void init();
 

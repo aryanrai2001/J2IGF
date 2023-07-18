@@ -72,13 +72,13 @@ public final class Engine {
      */
     private boolean running;
     /**
-     * This is a short that stores the current frames per second.
+     * This is an integer that stores the current frames per second.
      */
-    private short fps;
+    private int fps;
     /**
-     * This is a short that stores the current fixed frames per second.
+     * This is an integer that stores the current fixed frames per second.
      */
-    private short ffps;
+    private int ffps;
 
     /**
      * This is the constructor of the Engine class.
@@ -89,7 +89,6 @@ public final class Engine {
      *                  It must be greater than 0.
      */
     public Engine(Window window, int targetUPS) {
-        Debug.init();
         if (window == null) {
             Debug.logError(getClass().getName() + " -> Window instance can not be null!");
             System.exit(-1);
@@ -105,6 +104,7 @@ public final class Engine {
         this.thread = new Thread(new GameLoop());
         this.targetUPS = targetUPS;
         this.running = false;
+        Debug.setRenderer(renderer);
         CloseOperation closeOperation = new CloseOperation();
         window.setCustomCloseOperation(closeOperation);
         addContext(BaseContext.class);
@@ -128,7 +128,6 @@ public final class Engine {
             Debug.logError(getClass().getName() + " -> Could not instantiate a valid Context of type " + contextClass.getName() + "!");
             System.exit(-1);
         }
-        context.init();
         contexts.push(context);
     }
 
@@ -149,6 +148,8 @@ public final class Engine {
             return;
         running = true;
         Debug.disableDebugMode();
+        for (Context context : contexts)
+            context.init();
         thread.start();
         try {
             thread.join();
@@ -215,7 +216,7 @@ public final class Engine {
      *
      * @return Current frames per second.
      */
-    public short getFps() {
+    public int getFps() {
         return fps;
     }
 
@@ -224,7 +225,7 @@ public final class Engine {
      *
      * @return Current fixed frames per second.
      */
-    public short getFfps() {
+    public int getFfps() {
         return ffps;
     }
 
@@ -253,8 +254,8 @@ public final class Engine {
             float timeSlice = nanosecondsInOneSecond / targetUPS;
             float timeAccumulated = 0;
             float timer = 0;
-            short fixedUpdates = 0;
-            short updates = 0;
+            int fixedUpdates = 0;
+            int updates = 0;
             while (running) {
                 long currentTime = System.nanoTime();
                 long frameTime = currentTime - lastTime;

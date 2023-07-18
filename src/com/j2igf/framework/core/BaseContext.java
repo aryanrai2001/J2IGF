@@ -85,8 +85,8 @@ public final class BaseContext extends Context {
     public void update() {
         if (timer >= 1) {
             Debug.enableDebugMode();
-            Debug.renderMessage(renderer,
-            "Fixed Frames Per Second: " + engine.getFfps() + "\nFrames Per Second: " + engine.getFps());
+            Debug.renderMessage("Fixed Frames Per Second: " + engine.getFfps() +
+                                "\nFrames Per Second: " + engine.getFps());
             timer = 0;
             Debug.disableDebugMode();
         }

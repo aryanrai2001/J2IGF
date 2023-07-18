@@ -56,20 +56,24 @@ public final class BaseContext extends Context {
      */
     @Override
     public void init() {
-        Sprite label = new FontAtlas("Times New Roman", window.getHeight() / 10, true).textToSprite("No Context Available!", 0xFFFF0000);
+        int background = 0xFF1E272C;
+        int foreground = 0xFFff5370;
+
+        Sprite label = new FontAtlas("Calibri", window.getHeight() / 10, true)
+                            .textToSprite("No Context Available!", foreground);
         int labelX = (window.getWidth() - label.getWidth()) / 2;
         int labelY = (window.getHeight() - label.getHeight()) / 2;
 
-        Sprite subLabel = new FontAtlas("Times New Roman", window.getHeight() / 25, true).textToSprite("Press ESCAPE to exit.", 0xFFaa0000);
+        Sprite subLabel = new FontAtlas("Calibri", window.getHeight() / 25, true)
+                            .textToSprite("Press ESCAPE to exit.", foreground);
         int subLabelX = (window.getWidth() - subLabel.getWidth()) / 2;
         int subLabelY = (window.getHeight() + label.getHeight()) / 2;
 
+        renderer.clear(background);
         renderer.enableAlphaBlending();
         label.render(renderer, labelX, labelY);
         subLabel.render(renderer, subLabelX, subLabelY);
         renderer.disableAlphaBlending();
-
-        Debug.enableDebugMode();
     }
 
     /**
@@ -80,8 +84,11 @@ public final class BaseContext extends Context {
     @Override
     public void update() {
         if (timer >= 1) {
-            Debug.renderMessage(renderer, "Fixed Frames Per Second: " + engine.getFfps() + "\nFrames Per Second: " + engine.getFps());
+            Debug.enableDebugMode();
+            Debug.renderMessage(renderer,
+            "Fixed Frames Per Second: " + engine.getFfps() + "\nFrames Per Second: " + engine.getFps());
             timer = 0;
+            Debug.disableDebugMode();
         }
     }
 

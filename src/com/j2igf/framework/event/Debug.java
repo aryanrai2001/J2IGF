@@ -40,7 +40,7 @@ public final class Debug {
     /**
      * These are some variables used by the class to determine the state of the logging system.
      */
-    private static boolean enabled = false, initialized = false;
+    private static boolean enabled, initialized;
 
     static {
         init();
@@ -67,8 +67,9 @@ public final class Debug {
         formatter.setColor(LogFormatter.COLOR.WHITE);
         handler.setFormatter(formatter);
         LOGGER.addHandler(handler);
-        enableDebugMode();
+        LOGGER.setLevel(Level.ALL);
 
+        enabled = false;
         initialized = true;
     }
 
@@ -91,7 +92,6 @@ public final class Debug {
      */
     public static void enableDebugMode() {
         enabled = true;
-        LOGGER.setLevel(Level.ALL);
     }
 
     /**
@@ -99,7 +99,6 @@ public final class Debug {
      */
     public static void disableDebugMode() {
         enabled = false;
-        LOGGER.setLevel(Level.OFF);
     }
 
     /**
@@ -108,6 +107,8 @@ public final class Debug {
      * @param msg The message to be logged.
      */
     public static void log(String msg) {
+        if (!enabled)
+            return;
         setColor(LogFormatter.COLOR.WHITE);
         LOGGER.log(Level.INFO, msg);
     }
@@ -119,6 +120,8 @@ public final class Debug {
      * @param thrown The exception to be thrown.
      */
     public static void log(String msg, Throwable thrown) {
+        if (!enabled)
+            return;
         setColor(LogFormatter.COLOR.WHITE);
         LOGGER.log(Level.INFO, msg, thrown);
     }
@@ -129,6 +132,8 @@ public final class Debug {
      * @param msg The warning to be logged.
      */
     public static void logWarning(String msg) {
+        if (!enabled)
+            return;
         setColor(LogFormatter.COLOR.YELLOW);
         LOGGER.log(Level.WARNING, msg);
     }
@@ -140,6 +145,8 @@ public final class Debug {
      * @param thrown The exception to be thrown.
      */
     public static void logWarning(String msg, Throwable thrown) {
+        if (!enabled)
+            return;
         setColor(LogFormatter.COLOR.YELLOW);
         LOGGER.log(Level.WARNING, msg, thrown);
     }
@@ -150,6 +157,8 @@ public final class Debug {
      * @param msg The error to be logged.
      */
     public static void logError(String msg) {
+        if (!enabled)
+            return;
         setColor(LogFormatter.COLOR.RED);
         LOGGER.log(Level.SEVERE, msg);
     }
@@ -161,6 +170,8 @@ public final class Debug {
      * @param thrown The exception to be thrown.
      */
     public static void logError(String msg, Throwable thrown) {
+        if (!enabled)
+            return;
         setColor(LogFormatter.COLOR.RED);
         LOGGER.log(Level.SEVERE, msg, thrown);
     }
@@ -174,7 +185,7 @@ public final class Debug {
      *                 If this parameter is null, nothing will be rendered.
      */
     public static void renderMessage(Renderer renderer, String message) {
-        if (message == null || renderer == null)
+        if (!enabled || message == null || renderer == null)
             return;
         int xOffset = 0;
         int yOffset = 0;

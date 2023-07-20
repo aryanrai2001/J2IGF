@@ -18,10 +18,11 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-package com.j2igf.framework.graphics.visual;
+package com.j2igf.framework.graphics.auxiliary;
 
 import com.j2igf.framework.event.Debug;
 import com.j2igf.framework.graphics.Renderer;
+import com.j2igf.framework.graphics.visual.Animation;
 
 /**
  * This class is responsible for handling animation states.

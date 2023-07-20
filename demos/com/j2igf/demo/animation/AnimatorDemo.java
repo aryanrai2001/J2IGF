@@ -27,7 +27,7 @@ import com.j2igf.framework.event.KeyCode;
 import com.j2igf.framework.graphics.Renderer;
 import com.j2igf.framework.graphics.auxiliary.SpriteSheet;
 import com.j2igf.framework.graphics.visual.Animation;
-import com.j2igf.framework.graphics.visual.Animator;
+import com.j2igf.framework.graphics.auxiliary.Animator;
 import com.j2igf.framework.graphics.visual.Sprite;
 
 public class AnimatorDemo extends Context {

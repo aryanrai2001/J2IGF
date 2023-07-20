@@ -27,10 +27,8 @@ import com.j2igf.framework.graphics.Renderer;
 
 /**
  * The Context class is the base class for all contexts.
- * <p>
  * A context is a state of the game. For example, the main menu, the game, the pause menu, etc.
  * Each context has its own init(), update() and fixedUpdate() methods.
- * </p>
  *
  * @author Aryan Rai
  */
@@ -72,7 +70,6 @@ public abstract class Context {
      *
      * @param engine This is an instance of the Engine class.
      *               It can not be null.
-     * @see Engine
      */
     public Context(Engine engine) {
         if (engine == null) {
@@ -87,7 +84,7 @@ public abstract class Context {
     }
 
     /**
-     * This method is called only once when the engine is started.
+     * This method is called only once at the start.
      * It is used to initialize the context.
      */
     public abstract void init();

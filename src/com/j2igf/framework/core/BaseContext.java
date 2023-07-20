@@ -43,7 +43,6 @@ public final class BaseContext extends Context {
      *
      * @param engine This is an instance of the Engine class.
      *               It can not be null.
-     * @see Engine
      */
     public BaseContext(Engine engine) {
         super(engine);
@@ -60,12 +59,12 @@ public final class BaseContext extends Context {
         int foreground = 0xFFff5370;
 
         Sprite label = new FontAtlas("Calibri", window.getHeight() / 10, true)
-                            .textToSprite("No Context Available!", foreground);
+                .textToSprite("No Context Available!", foreground);
         int labelX = (window.getWidth() - label.getWidth()) / 2;
         int labelY = (window.getHeight() - label.getHeight()) / 2;
 
         Sprite subLabel = new FontAtlas("Calibri", window.getHeight() / 25, true)
-                            .textToSprite("Press ESCAPE to exit.", foreground);
+                .textToSprite("Press ESCAPE to exit.", foreground);
         int subLabelX = (window.getWidth() - subLabel.getWidth()) / 2;
         int subLabelY = (window.getHeight() + label.getHeight()) / 2;
 
@@ -84,11 +83,9 @@ public final class BaseContext extends Context {
     @Override
     public void update() {
         if (timer >= 1) {
-            Debug.enableDebugMode();
             Debug.renderMessage("Fixed Frames Per Second: " + engine.getFfps() +
-                                "\nFrames Per Second: " + engine.getFps());
+                    "\nFrames Per Second: " + engine.getFps());
             timer = 0;
-            Debug.disableDebugMode();
         }
     }
 

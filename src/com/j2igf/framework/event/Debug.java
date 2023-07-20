@@ -193,8 +193,8 @@ public final class Debug {
     /**
      * This function renders debug information to the screen.
      *
-     * @param message  The message to be rendered.
-     *                 If this parameter is null, nothing will be rendered.
+     * @param message The message to be rendered.
+     *                If this parameter is null, nothing will be rendered.
      */
     public static void renderMessage(String message) {
         if (!(enabled && initialized) || message == null || renderer == null)
@@ -235,6 +235,7 @@ public final class Debug {
      * This is the inner class that defined the log formatter.
      *
      * @author Aryan Rai
+     * @see Formatter
      */
     public static class LogFormatter extends Formatter {
         /**

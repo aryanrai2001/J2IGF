@@ -116,7 +116,6 @@ public final class Engine {
      * @param <T>          This is the type of the context to be added.
      * @param contextClass This is the class of the context to be added.
      *                     It must extend the Context class.
-     * @see Context
      */
     public <T extends Context> void addContext(Class<T> contextClass) {
         T context = null;
@@ -128,6 +127,7 @@ public final class Engine {
             Debug.logError(getClass().getName() + " -> Could not instantiate a valid Context of type " + contextClass.getName() + "!");
             System.exit(-1);
         }
+        context.init();
         contexts.push(context);
     }
 
@@ -147,9 +147,6 @@ public final class Engine {
         if (running)
             return;
         running = true;
-        Debug.disableDebugMode();
-        for (Context context : contexts)
-            context.init();
         thread.start();
         try {
             thread.join();
@@ -315,7 +312,6 @@ public final class Engine {
          * It is called when the window is closed.
          *
          * @param e WindowEvent object.
-         * @see WindowEvent
          */
         @Override
         public void windowClosing(WindowEvent e) {

@@ -40,7 +40,7 @@ public class FontAtlas extends Sprite {
     /**
      * The default font atlas.
      */
-    public static final FontAtlas DEFAULT_FONT = new FontAtlas("Dialog.plain", 12, true);
+    public static final FontAtlas DEFAULT_FONT = new FontAtlas("Arial", 16, true);
 
     /**
      * The constant that specifies the number of characters that the font atlas will contain.

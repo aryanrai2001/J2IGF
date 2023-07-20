@@ -39,42 +39,52 @@ import java.util.Stack;
  * @author Aryan Rai
  */
 public final class Engine {
+
     /**
      * This stack is used to manage the game contexts.
      */
     private final Stack<Context> contexts;
+
     /**
      * This is an object of the Window class.
      */
     private final Window window;
+
     /**
      * This is an object of the Renderer class.
      */
     private final Renderer renderer;
+
     /**
      * This is an object of the Input class.
      */
     private final Input input;
+
     /**
      * This is an object of the Time class.
      */
     private final Time time;
+
     /**
      * This is the thread that runs the game loop.
      */
     private final Thread thread;
+
     /**
      * This is a constant integer that stores the target updates per second.
      */
     private final int targetUPS;
+
     /**
      * This is a boolean that stores the running state of the game.
      */
     private boolean running;
+
     /**
      * This is an integer that stores the current frames per second.
      */
     private int fps;
+
     /**
      * This is an integer that stores the current fixed frames per second.
      */
@@ -127,7 +137,6 @@ public final class Engine {
             Debug.logError(getClass().getName() + " -> Could not instantiate a valid Context of type " + contextClass.getName() + "!");
             System.exit(-1);
         }
-        context.init();
         contexts.push(context);
     }
 
@@ -138,6 +147,7 @@ public final class Engine {
         if (contexts.peek() instanceof BaseContext)
             return;
         contexts.pop();
+        contexts.peek().init();
     }
 
     /**
@@ -147,6 +157,7 @@ public final class Engine {
         if (running)
             return;
         running = true;
+        contexts.peek().init();
         thread.start();
         try {
             thread.join();

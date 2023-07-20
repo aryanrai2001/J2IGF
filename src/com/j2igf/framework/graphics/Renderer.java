@@ -48,6 +48,11 @@ public final class Renderer {
     private final int height;
 
     /**
+     * The flag to check if the target buffer is a Sprite.
+     */
+    private final boolean isSprite;
+
+    /**
      * The font atlas used to render text.
      */
     private FontAtlas fontAtlas;
@@ -61,7 +66,6 @@ public final class Renderer {
      * The flag to check if alpha is enabled.
      */
     private boolean isAlphaEnabled;
-
 
     /**
      * This is a constructor for the Renderer class.
@@ -80,6 +84,7 @@ public final class Renderer {
         this.pixels = window.getFrameBuffer();
         this.width = window.getWidth();
         this.height = window.getHeight();
+        this.isSprite = false;
     }
 
     /**
@@ -99,6 +104,7 @@ public final class Renderer {
         this.pixels = target.getPixels();
         this.width = target.getWidth();
         this.height = target.getHeight();
+        this.isSprite = true;
     }
 
     /**
@@ -157,7 +163,7 @@ public final class Renderer {
     public void clear(int color) {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                pixels[x + y * width] = color | 0xff000000;
+                pixels[x + y * width] = color | (isSprite ? 0 : 0xff000000);
             }
         }
     }

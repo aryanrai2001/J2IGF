@@ -21,8 +21,9 @@
 package com.j2igf.framework.graphics.visual;
 
 import com.j2igf.framework.event.Debug;
+import com.j2igf.framework.event.Time;
 import com.j2igf.framework.graphics.Renderer;
-import com.j2igf.framework.graphics.auxiliary.TileSet;
+import com.j2igf.framework.graphics.auxiliary.SpriteSheet;
 
 /**
  * This class is responsible for handling animations.
@@ -30,6 +31,11 @@ import com.j2igf.framework.graphics.auxiliary.TileSet;
  * @author Aryan Rai
  */
 public class Animation {
+
+    /**
+     * The Time object to get the deltaTime while updating animation frame.
+     */
+    private final Time time;
 
     /**
      * The frames of the animation as Sprite objects.
@@ -49,35 +55,38 @@ public class Animation {
     /**
      * This is the constructor of the Animation class.
      *
-     * @param tileSet      The TileSet object to use.
-     * @param verticalScan Whether to scan the TileSet vertically or horizontally.
+     * @param spriteSheet  The SpriteSet object to use.
+     * @param time         The Time object to get the deltaTime while updating animation frame.
+     * @param verticalScan Whether to scan the SpriteSet vertically or horizontally.
      * @param offset       The offset of the first frame.
      * @param size         The size of the animation.
      * @param fps          The frames per second of the animation.
      */
-    public Animation(TileSet tileSet, boolean verticalScan, int offset, int size, float fps) {
-        if (tileSet == null) {
-            Debug.logError(getClass().getName() + " -> TileSet instance can not be null!");
+    public Animation(SpriteSheet spriteSheet, Time time, boolean verticalScan, int offset, int size, float fps) {
+        if (spriteSheet == null) {
+            Debug.logError(getClass().getName() + " -> SpriteSet instance can not be null!");
             System.exit(-1);
-        } else if (offset + size > tileSet.getNumberOfTilesHorizontally() * tileSet.getNumberOfTilesVertically()) {
+        } else if (time == null) {
+            Debug.logError(getClass().getName() + " -> Time instance can not be null!");
+            System.exit(-1);
+        } else if (offset + size > spriteSheet.getNumberOfSpritesHorizontally() * spriteSheet.getNumberOfSpritesVertically()) {
             Debug.logError(getClass().getName() + " -> Illegal arguments for Animation constructor!");
             System.exit(-1);
         }
+        this.time = time;
         this.frameIndex = 0;
         this.fps = fps;
         this.frames = new Sprite[size];
         for (int i = 0; i < size; i++) {
-            frames[i] = tileSet.getTile(offset + i, verticalScan);
+            frames[i] = spriteSheet.getSprite(offset + i, verticalScan);
         }
     }
 
     /**
      * This method updates the animation.
-     *
-     * @param deltaTime The time passed since the last frame.
      */
-    public void update(float deltaTime) {
-        frameIndex += fps * deltaTime;
+    public void update() {
+        frameIndex += fps * time.getDeltaTime();
         if (frameIndex >= frames.length)
             frameIndex = 0;
     }

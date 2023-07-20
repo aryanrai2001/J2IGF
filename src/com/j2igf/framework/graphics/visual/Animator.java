@@ -55,11 +55,9 @@ public class Animator {
 
     /**
      * This method is responsible for updating the animation.
-     *
-     * @param deltaTime The time between the last frame and the current frame.
      */
-    public void update(float deltaTime) {
-        animations[currentAnimation].update(deltaTime);
+    public void update() {
+        animations[currentAnimation].update();
     }
 
     /**

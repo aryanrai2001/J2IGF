@@ -38,31 +38,31 @@ public abstract class Context {
      *
      * @see Window
      */
-    protected final Window window;
+    public final Window window;
     /**
      * This is the object of the Renderer class.
      *
      * @see Renderer
      */
-    protected final Renderer renderer;
+    public final Renderer renderer;
     /**
      * This is the object of the Input class.
      *
      * @see Input
      */
-    protected final Input input;
+    public final Input input;
     /**
      * This is the object of the Time class.
      *
      * @see Time
      */
-    protected final Time time;
+    public final Time time;
     /**
      * This is the object of the Engine class.
      *
      * @see Engine
      */
-    protected final Engine engine;
+    public final Engine engine;
 
     /**
      * This is the constructor for the Context class.

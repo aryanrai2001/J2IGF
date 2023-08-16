@@ -65,6 +65,7 @@ public class FirstContext extends Context {
 
         /*
          * This is how you add a context to the engine.
+         * The addContext() must only be called before starting the engine.
          * Notice that this class extends Context, which is provided by the framework.
          * The Context class is an abstract class, so you need to implement the abstract methods.
          * These methods are update() and fixedUpdate().
@@ -96,6 +97,10 @@ public class FirstContext extends Context {
      * You typically use this method to update things in our context that need to be updated at a fixed rate.
      * For example, you can use this method to update the physics of our context. Or you can use this method to update
      * the position of entities in our context.
+     *
+     * *** IMPORTANT ***
+     * Do not use this method to handle input events, as it won't work as expected.
+     * Use the update() method for that.
      */
     @Override
     public void fixedUpdate() {

@@ -237,7 +237,8 @@ public final class Engine {
     private Context createContext(Class<? extends Context> contextClass) {
         Context context = null;
         try {
-            Constructor<? extends Context> contextConstructor = contextClass.getConstructor(Engine.class);
+            Constructor<? extends Context> contextConstructor = contextClass.getDeclaredConstructor(Engine.class);
+            contextConstructor.setAccessible(true);
             context = contextConstructor.newInstance(this);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                  IllegalAccessException e) {

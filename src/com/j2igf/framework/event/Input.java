@@ -22,6 +22,7 @@ package com.j2igf.framework.event;
 
 import com.j2igf.framework.core.Window;
 
+import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -36,7 +37,7 @@ import java.awt.event.*;
  *
  * @author Aryan Rai
  */
-public final class Input implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public final class Input implements KeyListener, MouseListener, MouseWheelListener {
     /**
      * The number of keys supported by the framework.
      */
@@ -58,9 +59,9 @@ public final class Input implements KeyListener, MouseListener, MouseMotionListe
     private boolean[] keys;
 
     /**
-     * Array of booleans to store the state of the keys in the previous frame.
+     * Arrays of booleans to store the state of the keys in the previous update and fixed update frames.
      */
-    private boolean[] lastKeys;
+    private boolean[] lastUpdateKeys, lastFixedKeys;
 
     /**
      * Array of booleans to store the state of the mouse buttons.
@@ -68,14 +69,19 @@ public final class Input implements KeyListener, MouseListener, MouseMotionListe
     private boolean[] buttons;
 
     /**
-     * Array of booleans to store the state of the mouse buttons in the previous frame.
+     * Arrays of booleans to store the state of the mouse buttons in the previous update and fixed update frames.
      */
-    private boolean[] lastButtons;
+    private boolean[] lastUpdateButtons, lastFixedButtons;
+
+    /**
+     * Array variables that are dynamically assigned to the last update and fixed update arrays.
+     */
+    private boolean[] lastKeys, lastButtons;
 
     /**
      * Variables to store the coordinates and scroll state of the mouse.
      */
-    private int mouseX, mouseY, scroll;
+    private int mouseX, mouseY, scroll, scrollUpdate, scrollFixed;
 
     /**
      * This is the constructor of the Input class.
@@ -88,11 +94,8 @@ public final class Input implements KeyListener, MouseListener, MouseMotionListe
             System.exit(-1);
         }
         this.window = window;
-        this.mouseX = window.getWidth() / 2;
-        this.mouseY = window.getHeight() / 2;
         window.getCanvas().addKeyListener(this);
         window.getCanvas().addMouseListener(this);
-        window.getCanvas().addMouseMotionListener(this);
         window.getCanvas().addMouseWheelListener(this);
         this.reset();
     }
@@ -102,18 +105,60 @@ public final class Input implements KeyListener, MouseListener, MouseMotionListe
      */
     public void reset() {
         this.keys = new boolean[NUM_KEYS];
-        this.lastKeys = new boolean[NUM_KEYS];
+        this.lastUpdateKeys = new boolean[NUM_KEYS];
+        this.lastFixedKeys = new boolean[NUM_KEYS];
+        this.lastKeys = null;
         this.buttons = new boolean[NUM_BUTTONS];
-        this.lastButtons = new boolean[NUM_BUTTONS];
+        this.lastUpdateButtons = new boolean[NUM_BUTTONS];
+        this.lastFixedButtons = new boolean[NUM_BUTTONS];
+        this.lastButtons = null;
     }
 
     /**
-     * This method is used to update the states of input.
+     * This method is used to assign the last frame arrays.
+     *
+     * @param fixed Boolean that is true if the last frame arrays are to be assigned to the fixed update arrays.
+     */
+    public void assignLastFrame(boolean fixed) {
+        if (fixed) {
+            lastKeys = lastFixedKeys;
+            lastButtons = lastFixedButtons;
+            scroll = scrollFixed;
+        } else {
+            lastKeys = lastUpdateKeys;
+            lastButtons = lastUpdateButtons;
+            scroll = scrollUpdate;
+        }
+    }
+
+    /**
+     * This method is used to set the last frame arrays for the update method.
+     * It also updates the mouse position.
      */
     public void update() {
-        System.arraycopy(keys, 0, lastKeys, 0, NUM_KEYS);
-        System.arraycopy(buttons, 0, lastButtons, 0, NUM_BUTTONS);
-        scroll = 0;
+        Point windowLoc = window.getCanvas().getLocationOnScreen();
+        Point mousePos = MouseInfo.getPointerInfo().getLocation();
+        mouseX = (mousePos.x - windowLoc.x) / window.getPixelScale();
+        mouseY = (mousePos.y - windowLoc.y) / window.getPixelScale();
+
+        System.arraycopy(keys, 0, lastUpdateKeys, 0, NUM_KEYS);
+        System.arraycopy(buttons, 0, lastUpdateButtons, 0, NUM_BUTTONS);
+        scrollUpdate = 0;
+    }
+
+    /**
+     * This method is used to set the last frame arrays for the fixed update method.
+     * It also updates the mouse position.
+     */
+    public void fixedUpdate() {
+        Point windowLoc = window.getCanvas().getLocationOnScreen();
+        Point mousePos = MouseInfo.getPointerInfo().getLocation();
+        mouseX = (mousePos.x - windowLoc.x) / window.getPixelScale();
+        mouseY = (mousePos.y - windowLoc.y) / window.getPixelScale();
+
+        System.arraycopy(keys, 0, lastFixedKeys, 0, NUM_KEYS);
+        System.arraycopy(buttons, 0, lastFixedButtons, 0, NUM_BUTTONS);
+        scrollFixed = 0;
     }
 
     /**
@@ -252,27 +297,7 @@ public final class Input implements KeyListener, MouseListener, MouseMotionListe
      */
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        scroll = e.getWheelRotation();
-    }
-
-    /**
-     * This method is gets called when the mouse is dragged.
-     * It has been overridden to set the mouse's coordinates.
-     */
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        mouseX = e.getX() / window.getPixelScale();
-        mouseY = e.getY() / window.getPixelScale();
-    }
-
-    /**
-     * This method is gets called when the mouse is moved.
-     * It has been overridden to set the mouse's coordinates.
-     */
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        mouseX = e.getX() / window.getPixelScale();
-        mouseY = e.getY() / window.getPixelScale();
+        scrollUpdate = scrollFixed = e.getWheelRotation();
     }
 
     /**

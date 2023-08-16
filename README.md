@@ -64,15 +64,7 @@ screen. In J2IGF, you have maximum controle over the process of rendering. Addit
 interaction capabilities, allowing you to capture user input, such as mouse clicks and keyboard events, to create
 interactive experiences.
 
-## Conclusion
-
-In this section, we explored the fundamentals of computer graphics within the context of our Java 2D Interactive
-Graphics Framework. We discussed key concepts like coordinate systems, primitives, transformations, color and
-transparency, as well as rendering and interaction. By understanding these core topics, you are ready to dive into the
-world of 2D graphics and leverage our educational framework to create visually appealing and interactive experiences and
-learn more about the algorithms and architecture that powers the frameworks used for graphics.
-
 ---
 
-> ### *API Documentation is included with the source code. It was automatically generated using Javadoc.*
+> ### *Have a look at the [Demos](./demos/com/j2igf/demo) to understand the working of J2IGF*
 

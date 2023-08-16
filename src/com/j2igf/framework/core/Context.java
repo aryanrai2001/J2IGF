@@ -27,8 +27,8 @@ import com.j2igf.framework.graphics.Renderer;
 
 /**
  * The Context class is the base class for all contexts.
- * A context is a state of the game. For example, the main menu, the game, the pause menu, etc.
- * Each context has its own init(), update() and fixedUpdate() methods.
+ * A context is a state of the application. For example, the main menu, the game, the pause menu, etc.
+ * Each context has its own update() and fixedUpdate() methods.
  *
  * @author Aryan Rai
  */
@@ -38,35 +38,35 @@ public abstract class Context {
      *
      * @see Window
      */
-    public final Window window;
+    protected final Window window;
     /**
      * This is the object of the Renderer class.
      *
      * @see Renderer
      */
-    public final Renderer renderer;
+    protected final Renderer renderer;
     /**
      * This is the object of the Input class.
      *
      * @see Input
      */
-    public final Input input;
+    protected final Input input;
     /**
      * This is the object of the Time class.
      *
      * @see Time
      */
-    public final Time time;
+    protected final Time time;
     /**
      * This is the object of the Engine class.
      *
      * @see Engine
      */
-    public final Engine engine;
+    protected final Engine engine;
 
     /**
      * This is the constructor for the Context class.
-     * It takes in an Engine object and uses it to initialize all the fields of the class.
+     * It takes in an Engine object and uses it to initialize all the components of the context.
      *
      * @param engine This is an instance of the Engine class.
      *               It can not be null.
@@ -84,12 +84,6 @@ public abstract class Context {
     }
 
     /**
-     * This method is called only once at the start.
-     * It is used to initialize the context.
-     */
-    public abstract void init();
-
-    /**
      * This method is called every frame.
      * It is used to update the context.
      */
@@ -100,4 +94,49 @@ public abstract class Context {
      * It is used to update the context at a fixed rate.
      */
     public abstract void fixedUpdate();
+
+    /**
+     * This is a getter method for the window field.
+     *
+     * @return The active Window.
+     */
+    public final Window getWindow() {
+        return window;
+    }
+
+    /**
+     * This is a getter method for the renderer field.
+     *
+     * @return The active Renderer.
+     */
+    public final Renderer getRenderer() {
+        return renderer;
+    }
+
+    /**
+     * This is a getter method for the input field.
+     *
+     * @return The active Input.
+     */
+    public final Input getInput() {
+        return input;
+    }
+
+    /**
+     * This is a getter method for the time field.
+     *
+     * @return The active Time.
+     */
+    public final Time getTime() {
+        return time;
+    }
+
+    /**
+     * This is a getter method for the engine field.
+     *
+     * @return The active Engine.
+     */
+    public final Engine getEngine() {
+        return engine;
+    }
 }

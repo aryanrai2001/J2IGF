@@ -37,20 +37,16 @@ public class InputDemo extends Context {
 
     public InputDemo(Engine engine) {
         super(engine);
+        lineOffset = 0;
+        mouseX = mouseY = 0;
+        up = down = left = right = false;
+        mouseLeft = mouseRight = false;
     }
 
     public static void main(String[] args) {
         Engine engine = new Engine(new Window("Input Demo", 940, 720, 1), 60);
         engine.addContext(InputDemo.class);
         engine.start();
-    }
-
-    @Override
-    public void init() {
-        lineOffset = 0;
-        mouseX = mouseY = 0;
-        up = down = left = right = false;
-        mouseLeft = mouseRight = false;
     }
 
     @Override

@@ -23,6 +23,9 @@ package com.j2igf.demo.window;
 import com.j2igf.framework.core.Window;
 
 public class FullScreenWindow {
+    private FullScreenWindow() {
+    }
+
     public static void main(String[] args) {
         String title = "Title don't matter in Fullscreen";
         int pixelScale = 1;

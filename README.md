@@ -6,10 +6,10 @@
 
 ---
 
-### *This project is only meant for educational purposes, as it does not use hardware-accelerated rendering, and in the
+<b>This project is only meant for educational purposes, as it does not use hardware-accelerated rendering, and in the
 present day there is no practical application of software rendering. It may still be useful for creating quick
-visualisations as well as some low-fidelity interactive applications. Lastly, it can help develop an understanding of
-how graphics are rendered under the hood, as the fundamentals always remain the same.*
+visualisations as well as some low-fidelity interactive applications. Lastly, it can help develop an understanding
+of how graphics are rendered under the hood, as the fundamentals always remain the same.</b>
 
 ---
 

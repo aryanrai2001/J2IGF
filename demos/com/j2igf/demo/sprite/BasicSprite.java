@@ -33,7 +33,7 @@ public class BasicSprite extends Context {
      * Sprites can themselves be composed of other sprites or primitives,
      * as you can set a renderer to target a sprite and render to it.
      */
-    private Sprite sprite;
+    private final Sprite sprite;
 
     /*
      * Sprites can also be rendered in a transformed state, i.e. with a different scale, rotation or origin.
@@ -43,16 +43,6 @@ public class BasicSprite extends Context {
 
     public BasicSprite(Engine engine) {
         super(engine);
-    }
-
-    public static void main(String[] args) {
-        Engine engine = new Engine(new Window("Basic Sprite", 800, 600, 1), 60);
-        engine.addContext(BasicSprite.class);
-        engine.start();
-    }
-
-    @Override
-    public void init() {
         /*
          * The Sprite class provides many ways to initialize it into memory,
          * you can access them through its different constructors, those are as follows -
@@ -92,6 +82,12 @@ public class BasicSprite extends Context {
         sprite.setScale(2, 2);
     }
 
+    public static void main(String[] args) {
+        Engine engine = new Engine(new Window("Basic Sprite", 800, 600, 1), 60);
+        engine.addContext(BasicSprite.class);
+        engine.start();
+    }
+
     @Override
     public void update() {
         renderer.clear(0xff263238);
@@ -104,7 +100,7 @@ public class BasicSprite extends Context {
 
         /*
          * Here, I am setting the rotation angle of the sprite in update() method as it is dynamic.
-         * otherwise I could have set it in the init() method and avoided calling applyTransform() every frame.
+         * otherwise I could have set it in the constructor and avoided calling applyTransform() every frame.
          */
         sprite.setAngleInDegrees(angle);
         angle = (angle + 0.05f) % 360;

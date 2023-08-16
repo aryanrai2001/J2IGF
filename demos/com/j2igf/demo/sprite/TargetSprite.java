@@ -38,16 +38,6 @@ public class TargetSprite extends Context {
 
     public TargetSprite(Engine engine) {
         super(engine);
-    }
-
-    public static void main(String[] args) {
-        Engine engine = new Engine(new Window("Target Sprite", 800, 600, 1), 60);
-        engine.addContext(TargetSprite.class);
-        engine.start();
-    }
-
-    @Override
-    public void init() {
         /*
          * First you need an empty sprite to render on.
          * Here, I create a 200x200 sprite.
@@ -81,6 +71,12 @@ public class TargetSprite extends Context {
         targetSprite.setAngleInRadians((float) (3.14159265359));
         targetSprite.applyTransform();
         targetSprite = targetSprite.getTransformed();
+    }
+
+    public static void main(String[] args) {
+        Engine engine = new Engine(new Window("Target Sprite", 800, 600, 1), 60);
+        engine.addContext(TargetSprite.class);
+        engine.start();
     }
 
     @Override

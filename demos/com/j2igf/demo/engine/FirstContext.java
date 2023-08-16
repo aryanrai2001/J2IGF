@@ -26,11 +26,15 @@ import com.j2igf.framework.core.Window;
 
 public class FirstContext extends Context {
 
+    private final int radius;
     /*
      * I will use these variables for this simple demo that shows a circle bouncing around the screen.
      * This is all encapsulated within a context that you will add to the engine.
      */
-    private int x, y, xSpeed, ySpeed, radius;
+    private int x;
+    private int y;
+    private int xSpeed;
+    private int ySpeed;
 
     /*
      * You need to provide a constructor that takes in an Engine instance and passes it to the super class.
@@ -44,9 +48,16 @@ public class FirstContext extends Context {
      *            I will discuss Input in detail later.
      * 5. time - The Time instance that manages the timing of the engine.
      *           I will discuss Time in detail later.
+     *
+     * You can use the constructor to initialize any variables or resources that you might need.
      */
     public FirstContext(Engine engine) {
         super(engine);
+        xSpeed = 10;
+        ySpeed = 10;
+        radius = 100;
+        x = (int) (Math.random() * (window.getWidth() - radius * 2)) + radius;
+        y = (int) (Math.random() * (window.getHeight() - radius * 2)) + radius;
     }
 
     public static void main(String[] args) {
@@ -54,26 +65,13 @@ public class FirstContext extends Context {
 
         /*
          * This is how you add a context to the engine.
-         * Notice that this class extends Context, which is a class provided by the framework.
+         * Notice that this class extends Context, which is provided by the framework.
          * The Context class is an abstract class, so you need to implement the abstract methods.
-         * These methods are init(), update() and fixedUpdate().
+         * These methods are update() and fixedUpdate().
          */
         engine.addContext(FirstContext.class);
 
         engine.start();
-    }
-
-    /*
-     * This method is called only once at the start.
-     * You typically use this method to initialize any variables or resources that you might need.
-     */
-    @Override
-    public void init() {
-        xSpeed = 10;
-        ySpeed = 10;
-        radius = 100;
-        x = (int) (Math.random() * (window.getWidth() - radius * 2)) + radius;
-        y = (int) (Math.random() * (window.getHeight() - radius * 2)) + radius;
     }
 
     /*
@@ -94,7 +92,7 @@ public class FirstContext extends Context {
 
     /*
      * This method is called every frame at a fixed rate.
-     * So if the target UPS is set to 60, this method will be called 60 times per second.
+     * So if the target FPS is set to 60, this method will be called 60 times per second.
      * You typically use this method to update things in our context that need to be updated at a fixed rate.
      * For example, you can use this method to update the physics of our context. Or you can use this method to update
      * the position of entities in our context.

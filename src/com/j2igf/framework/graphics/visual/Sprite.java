@@ -196,8 +196,8 @@ public class Sprite {
             Debug.logError(getClass().getName() + " -> Renderer instance can not be null!");
             System.exit(-1);
         }
-        x -= originX * width;
-        y -= originY * height;
+        x -= (int) (originX * width);
+        y -= (int) (originY * height);
         int startX = 0, startY = 0;
         int endX = width, endY = height;
 

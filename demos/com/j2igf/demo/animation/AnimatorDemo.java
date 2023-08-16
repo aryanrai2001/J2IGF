@@ -31,11 +31,29 @@ import com.j2igf.framework.graphics.visual.Animation;
 import com.j2igf.framework.graphics.visual.Sprite;
 
 public class AnimatorDemo extends Context {
-    private Sprite frames;
-    private Animator animator;
+    private final Sprite frames;
+    private final Animator animator;
 
     public AnimatorDemo(Engine engine) {
         super(engine);
+        renderer.enableAlphaBlending();
+        frames = new Sprite(400, 400);
+        Renderer frameRenderer = new Renderer(frames);
+
+        /*
+         * Each draw call here specifies the leg positions for each frame of animation.
+         * I am creating a 4 frame waling animation.
+         */
+        drawPlayerSprite(frameRenderer, 50, 50, 50);
+        drawPlayerSprite(frameRenderer, 35, 60, 150);
+        drawPlayerSprite(frameRenderer, 50, 50, 250);
+        drawPlayerSprite(frameRenderer, 60, 35, 350);
+
+
+        SpriteSheet spriteSheet = new SpriteSheet(frames, 4, 4);
+        animator = new Animator(4);
+        for (int i = 0; i < 4; i++)
+            animator.setState(i, new Animation(spriteSheet, time, false, i * 4, 4, 7));
     }
 
     public static void main(String[] args) {
@@ -64,28 +82,6 @@ public class AnimatorDemo extends Context {
             sprite.applyTransform();
             sprite.getTransformed().render(frameRenderer, sequenceX, i * 100 + 50);
         }
-    }
-
-    @Override
-    public void init() {
-        renderer.enableAlphaBlending();
-        frames = new Sprite(400, 400);
-        Renderer frameRenderer = new Renderer(frames);
-
-        /*
-         * Each draw call here specifies the leg positions for each frame of animation.
-         * I am creating a 4 frame waling animation.
-         */
-        drawPlayerSprite(frameRenderer, 50, 50, 50);
-        drawPlayerSprite(frameRenderer, 35, 60, 150);
-        drawPlayerSprite(frameRenderer, 50, 50, 250);
-        drawPlayerSprite(frameRenderer, 60, 35, 350);
-
-
-        SpriteSheet spriteSheet = new SpriteSheet(frames, 4, 4);
-        animator = new Animator(4);
-        for (int i = 0; i < 4; i++)
-            animator.setState(i, new Animation(spriteSheet, time, false, i * 4, 4, 7));
     }
 
     @Override

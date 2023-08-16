@@ -27,7 +27,7 @@ import com.j2igf.framework.graphics.visual.Sprite;
 
 /**
  * This is the default context that is used when no other context is available.
- * It displays a message on the screen and exits the game when the ESCAPE key is pressed.
+ * It displays a message on the screen and exits the application when the ESCAPE key is pressed.
  *
  * @author Aryan Rai
  */
@@ -46,15 +46,6 @@ public final class BaseContext extends Context {
      */
     public BaseContext(Engine engine) {
         super(engine);
-    }
-
-    /**
-     * This method overrides the init method of the base class Context.
-     *
-     * @see Context#init()
-     */
-    @Override
-    public void init() {
         int background = 0xFF1E272C;
         int foreground = 0xFFff5370;
 

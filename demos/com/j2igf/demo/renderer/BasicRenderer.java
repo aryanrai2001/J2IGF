@@ -29,6 +29,12 @@ import java.awt.event.WindowEvent;
 public class BasicRenderer {
     private static boolean running = true;
 
+    /*
+     * This is a private constructor that prevents object creation from outside.
+     */
+    private BasicRenderer() {
+    }
+
     public static void main(String[] args) {
         Window window = new Window("Basic Renderer", 800, 600, 2);
         window.setCustomCloseOperation(new WindowAdapter() {

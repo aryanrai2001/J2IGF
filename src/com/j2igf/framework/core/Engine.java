@@ -29,11 +29,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the main class of the framework.
- * It is responsible for managing the game loop and the game contexts.
+ * It is responsible for managing the main loop and the application contexts.
  * It also provides access to the window, renderer, input and time instances.
  *
  * @author Aryan Rai
@@ -41,9 +42,19 @@ import java.util.Stack;
 public final class Engine {
 
     /**
-     * This stack is used to manage the game contexts.
+     * This is the bit position for Stop interrupt.
      */
-    private final Stack<Context> contexts;
+    private static final byte INTERRUPT_STOP = 0;
+
+    /**
+     * This is the bit position for Context Switch interrupt.
+     */
+    private static final byte INTERRUPT_CONTEXT_SWITCH = 1;
+
+    /**
+     * This array stores the context classes.
+     */
+    private final List<Class<? extends Context>> contexts;
 
     /**
      * This is an object of the Window class.
@@ -66,19 +77,35 @@ public final class Engine {
     private final Time time;
 
     /**
-     * This is the thread that runs the game loop.
+     * This is the thread that runs the main loop.
      */
     private final Thread thread;
 
     /**
      * This is a constant integer that stores the target updates per second.
      */
-    private final int targetUPS;
+    private final int targetFps;
 
     /**
-     * This is a boolean that stores the running state of the game.
+     * This the handle to the active context.
+     */
+    private Context currentContext;
+
+    /**
+     * This is a boolean that stores the running state of the application.
      */
     private boolean running;
+
+    /**
+     * This is a long that stores the interrupts that will be handled at the end of evey loop integration.
+     * Depending on which bit is set, the corresponding interrupt will be handled.
+     */
+    private long currentInterrupts;
+
+    /**
+     * This is an integer that stores the index of the next context.
+     */
+    private int nextContextIndex;
 
     /**
      * This is an integer that stores the current frames per second.
@@ -95,69 +122,58 @@ public final class Engine {
      *
      * @param window    This is an object of the Window class.
      *                  It can not be null.
-     * @param targetUPS It sets the target updates per second.
+     * @param targetFPS It sets the target frames per second.
      *                  It must be greater than 0.
      */
-    public Engine(Window window, int targetUPS) {
+    public Engine(Window window, int targetFPS) {
         if (window == null) {
             Debug.logError(getClass().getName() + " -> Window instance can not be null!");
             System.exit(-1);
-        } else if (targetUPS <= 0) {
+        } else if (targetFPS <= 0) {
             Debug.logError(getClass().getName() + " -> Target updates per second must be greater than 0!");
             System.exit(-1);
         }
-        this.contexts = new Stack<>();
+        this.currentInterrupts = 0;
         this.window = window;
         this.renderer = new Renderer(window);
         this.input = new Input(window);
         this.time = new Time();
-        this.thread = new Thread(new GameLoop());
-        this.targetUPS = targetUPS;
+        this.thread = new Thread(new MainLoop());
+        this.targetFps = targetFPS;
         this.running = false;
+        this.currentContext = null;
+        this.contexts = new ArrayList<>();
+        this.contexts.add(BaseContext.class);
         Debug.setRenderer(renderer);
         CloseOperation closeOperation = new CloseOperation();
         window.setCustomCloseOperation(closeOperation);
-        addContext(BaseContext.class);
     }
 
     /**
-     * This method is used to add a new context to the stack.
-     *
-     * @param <T>          This is the type of the context to be added.
-     * @param contextClass This is the class of the context to be added.
-     *                     It must extend the Context class.
+     * This method is used to handle the interrupts.
      */
-    public <T extends Context> void addContext(Class<T> contextClass) {
-        T context = null;
-        try {
-            Constructor<T> contextConstructor = contextClass.getConstructor(Engine.class);
-            context = contextConstructor.newInstance(this);
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
-                 IllegalAccessException e) {
-            Debug.logError(getClass().getName() + " -> Could not instantiate a valid Context of type " + contextClass.getName() + "!");
-            System.exit(-1);
+    private void handleInterrupt() {
+        if ((currentInterrupts & (1L << INTERRUPT_STOP)) != 0) {
+            if (!running) {
+                window.dispose();
+                System.exit(0);
+            }
+            running = false;
         }
-        contexts.push(context);
+        if ((currentInterrupts & (1L << INTERRUPT_CONTEXT_SWITCH)) != 0) {
+            currentContext = createContext(contexts.get(nextContextIndex));
+        }
+        currentInterrupts = 0;
     }
 
     /**
-     * This method is used to remove the current context from the stack.
-     */
-    public void removeCurrentContext() {
-        if (contexts.peek() instanceof BaseContext)
-            return;
-        contexts.pop();
-        contexts.peek().init();
-    }
-
-    /**
-     * This method is used to start the game loop.
+     * This method is used to start the main loop.
      */
     public void start() {
         if (running)
             return;
+        currentContext = createContext(contexts.size() == 1 ? contexts.get(0) : contexts.get(1));
         running = true;
-        contexts.peek().init();
         thread.start();
         try {
             thread.join();
@@ -169,14 +185,67 @@ public final class Engine {
     }
 
     /**
-     * This method is used to stop the game loop.
+     * This method is used to stop the main loop.
      */
     public void stop() {
-        if (!running) {
-            window.dispose();
-            System.exit(0);
+        currentInterrupts |= (1L << INTERRUPT_STOP);
+    }
+
+    /**
+     * This method is used to set the context class at the specified index.
+     * It shall only be called before starting the engine.
+     *
+     * @param contextClass Class of the context.
+     *                     It can not be null.
+     */
+    public void addContext(Class<? extends Context> contextClass) {
+        if (running) {
+            Debug.logError(getClass().getName() + " -> Can not set context while engine is running!");
+            System.exit(-1);
         }
-        running = false;
+        if (contextClass == null) {
+            Debug.logError(getClass().getName() + " -> Invalid Context class!");
+            System.exit(-1);
+        }
+        contexts.add(contextClass);
+    }
+
+    /**
+     * This method is used to switch the context.
+     * It shall only be called from within a context.
+     *
+     * @param index Index of the context.
+     *              It must be greater than or equal to 0 and less than the total number of contexts.
+     */
+    public void switchContext(int index) {
+        index++;
+        if (index < 1 || index >= contexts.size()) {
+            Debug.logError(getClass().getName() + " -> Context index out of bounds!");
+            System.exit(-1);
+        }
+        nextContextIndex = index;
+        currentInterrupts |= (1L << INTERRUPT_CONTEXT_SWITCH);
+    }
+
+    /**
+     * This method is used to create a context of the specified class.
+     *
+     * @param contextClass Class of the context.
+     *                     It can not be null.
+     * @return Instance of the context.
+     */
+    private Context createContext(Class<? extends Context> contextClass) {
+        Context context = null;
+        try {
+            Constructor<? extends Context> contextConstructor = contextClass.getConstructor(Engine.class);
+            context = contextConstructor.newInstance(this);
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
+            Debug.logError(getClass().getName() +
+                    " -> Could not instantiate a valid Context of type " + contextClass.getName() + "!");
+            System.exit(-1);
+        }
+        return context;
     }
 
     /**
@@ -239,27 +308,27 @@ public final class Engine {
 
     /**
      * This is an inner class that implements the Runnable interface.
-     * It is used to run the game loop.
+     * It is used to run the main loop.
      *
      * @author Aryan Rai
      * @see Runnable
      */
-    private final class GameLoop implements Runnable {
+    private final class MainLoop implements Runnable {
         /**
-         * This is the default constructor of the GameLoop class.
+         * This is the default constructor of the MainLoop class.
          */
-        private GameLoop() {
+        private MainLoop() {
         }
 
         /**
-         * This is the run method of the GameLoop class.
-         * It contains the logic of the game loop.
+         * This is the run method of the MainLoop class.
+         * It contains the logic of the main loop.
          */
         @Override
         public void run() {
             long lastTime = System.nanoTime();
             float nanosecondsInOneSecond = 1000000000.0f;
-            float timeSlice = nanosecondsInOneSecond / targetUPS;
+            float timeSlice = nanosecondsInOneSecond / targetFps;
             float timeAccumulated = 0;
             float timer = 0;
             int fixedUpdates = 0;
@@ -275,7 +344,7 @@ public final class Engine {
                         time.update();
 
                         if (!contexts.isEmpty())
-                            contexts.peek().fixedUpdate();
+                            currentContext.fixedUpdate();
 
                         if (input != null)
                             input.update();
@@ -287,7 +356,7 @@ public final class Engine {
                     time.setDeltaTime((time.getTimeScale() * frameTime) / nanosecondsInOneSecond);
 
                     if (!contexts.isEmpty())
-                        contexts.peek().update();
+                        currentContext.update();
                 }
                 updates++;
 
@@ -300,6 +369,7 @@ public final class Engine {
                 }
                 timer += time.getDeltaTime();
                 window.updateFrame();
+                handleInterrupt();
             }
         }
     }

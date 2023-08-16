@@ -27,20 +27,10 @@ import com.j2igf.framework.graphics.auxiliary.FontAtlas;
 import com.j2igf.framework.graphics.visual.Sprite;
 
 public class MoreSprite extends Context {
-    private Sprite fontSprite, transformedSprite;
+    private final Sprite fontSprite, transformedSprite;
 
     public MoreSprite(Engine engine) {
         super(engine);
-    }
-
-    public static void main(String[] args) {
-        Engine engine = new Engine(new Window("More Sprite", 800, 600, 1), 60);
-        engine.addContext(MoreSprite.class);
-        engine.start();
-    }
-
-    @Override
-    public void init() {
         renderer.enableAlphaBlending();
 
         /*
@@ -61,6 +51,12 @@ public class MoreSprite extends Context {
         fontSprite.setScale(0.5f, 0.5f);
         fontSprite.setAngleInDegrees(45);
         transformedSprite = fontSprite.getTransformed();
+    }
+
+    public static void main(String[] args) {
+        Engine engine = new Engine(new Window("More Sprite", 800, 600, 1), 60);
+        engine.addContext(MoreSprite.class);
+        engine.start();
     }
 
     @Override

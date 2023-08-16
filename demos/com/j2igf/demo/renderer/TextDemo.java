@@ -30,6 +30,12 @@ import java.awt.event.WindowEvent;
 public class TextDemo {
     private static boolean running = true;
 
+    /*
+     * This is a private constructor that prevents object creation from outside.
+     */
+    private TextDemo() {
+    }
+
     public static void main(String[] args) {
         Window window = new Window("Text Demo", 800, 600, 1);
         window.setCustomCloseOperation(new WindowAdapter() {

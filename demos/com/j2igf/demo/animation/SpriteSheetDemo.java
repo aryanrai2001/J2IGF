@@ -32,21 +32,11 @@ public class SpriteSheetDemo extends Context {
      * It can also be used to retrieve part of any regular sprite as long as it is of the desired dimensions.
      * You can use this to store related Sprites in a single Sprite and then extract them when needed.
      */
-    private Sprite sprite;
-    private SpriteSheet spriteSheet;
+    private final Sprite sprite;
+    private final SpriteSheet spriteSheet;
 
     public SpriteSheetDemo(Engine engine) {
         super(engine);
-    }
-
-    public static void main(String[] args) {
-        Engine engine = new Engine(new Window("SpriteSheet Demo", 800, 600, 1), 60);
-        engine.addContext(SpriteSheetDemo.class);
-        engine.start();
-    }
-
-    @Override
-    public void init() {
         renderer.enableAlphaBlending();
 
         /*
@@ -67,6 +57,12 @@ public class SpriteSheetDemo extends Context {
          * and the number of sprites in that sheet horizontally and vertically.
          */
         spriteSheet = new SpriteSheet(sprite, 4, 1);
+    }
+
+    public static void main(String[] args) {
+        Engine engine = new Engine(new Window("SpriteSheet Demo", 800, 600, 1), 60);
+        engine.addContext(SpriteSheetDemo.class);
+        engine.start();
     }
 
     @Override

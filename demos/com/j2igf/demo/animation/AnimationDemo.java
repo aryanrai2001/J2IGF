@@ -30,21 +30,11 @@ import com.j2igf.framework.graphics.visual.Animation;
 import com.j2igf.framework.graphics.visual.Sprite;
 
 public class AnimationDemo extends Context {
-    private SpriteSheet spriteSheet;
-    private Animation animation;
+    private final SpriteSheet spriteSheet;
+    private final Animation animation;
 
     public AnimationDemo(Engine engine) {
         super(engine);
-    }
-
-    public static void main(String[] args) {
-        Engine engine = new Engine(new Window("Animation Demo", 800, 600, 1), 60);
-        engine.addContext(AnimationDemo.class);
-        engine.start();
-    }
-
-    @Override
-    public void init() {
         renderer.enableAlphaBlending();
 
         /*
@@ -76,6 +66,12 @@ public class AnimationDemo extends Context {
          * 6. The speed of the animation in frames per second
          */
         animation = new Animation(spriteSheet, time, false, 0, 13, 10);
+    }
+
+    public static void main(String[] args) {
+        Engine engine = new Engine(new Window("Animation Demo", 800, 600, 1), 60);
+        engine.addContext(AnimationDemo.class);
+        engine.start();
     }
 
     @Override

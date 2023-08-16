@@ -23,6 +23,13 @@ package com.j2igf.demo.window;
 import com.j2igf.framework.core.Window;
 
 public class BasicWindow {
+
+    /*
+     * This is a private constructor that prevents object creation from outside.
+     */
+    private BasicWindow() {
+    }
+
     public static void main(String[] args) {
         /*
          * A Window is the most basic component of the framework.

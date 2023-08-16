@@ -27,7 +27,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class MorePrimitives {
+
     private static boolean running = true;
+
+    /*
+     * This is a private constructor that prevents object creation from outside.
+     */
+    private MorePrimitives() {
+    }
 
     public static void main(String[] args) {
         Window window = new Window("More Primitives", 800, 600, 2);

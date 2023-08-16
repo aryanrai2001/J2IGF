@@ -24,6 +24,13 @@ import com.j2igf.framework.core.Engine;
 import com.j2igf.framework.core.Window;
 
 public class BasicEngine {
+
+    /*
+     * This is a private constructor that prevents object creation from outside.
+     */
+    private BasicEngine() {
+    }
+
     public static void main(String[] args) {
         Window window = new Window("Basic Engine", 800, 600, 1);
 
@@ -31,17 +38,17 @@ public class BasicEngine {
          * The Engine manages the core loop of the program, and it manages a fixed update rate.
          * You have to specify the target updates per second for the fixed update rate of the engine.
          */
-        int targetUPS = 60;
+        int targetFPS = 60;
 
         /*
          * The Engine needs a Window instance to be hooked to.
          * It automatically initializes a renderer and other components that you might need.
-         * I am also providing a target UPS for the engine to run at.
+         * I am also providing a target FPS for the engine to run at.
          */
-        Engine engine = new Engine(window, targetUPS);
+        Engine engine = new Engine(window, targetFPS);
 
         /*
-         * You need to start the engine to enter the game loop.
+         * You need to start the engine to enter the main loop.
          * Note - The Engine works on a state based architecture, so in order to run anything on this engine,
          *        you need to provide a state to the engine. In J2IGF, these states are referred to as "Contexts".
          *        You can add these contexts to the engine at any time, and it will keep stacking. Only the topmost

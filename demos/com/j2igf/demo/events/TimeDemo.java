@@ -31,21 +31,13 @@ public class TimeDemo extends Context {
      * I will use these variables for this simple demo that shows an arrow following a circumference.
      * It is frame-rate independent, and it speeds up and slows down as I change the timescale.
      */
-    private int size, radius, seconds;
-    private float angle, speed, timeDilation;
+    private final int size, radius;
+    private final float speed;
+    private int seconds;
+    private float angle, timeDilation;
 
     public TimeDemo(Engine engine) {
         super(engine);
-    }
-
-    public static void main(String[] args) {
-        Engine engine = new Engine(new Window("Time Demo", 940, 720, 1), 60);
-        engine.addContext(TimeDemo.class);
-        engine.start();
-    }
-
-    @Override
-    public void init() {
         size = 20;
         radius = 250;
         seconds = 0;
@@ -54,6 +46,12 @@ public class TimeDemo extends Context {
         timeDilation = 0.01f;
         renderer.setFont(new FontAtlas("Impact", 32, true));
         renderer.enableAlphaBlending();
+    }
+
+    public static void main(String[] args) {
+        Engine engine = new Engine(new Window("Time Demo", 940, 720, 1), 60);
+        engine.addContext(TimeDemo.class);
+        engine.start();
     }
 
     @Override

@@ -29,16 +29,6 @@ public class DebugDemo extends Context {
 
     public DebugDemo(Engine engine) {
         super(engine);
-    }
-
-    public static void main(String[] args) {
-        Engine engine = new Engine(new Window("Debug Demo", 256, 128, 1), 60);
-        engine.addContext(DebugDemo.class);
-        engine.start();
-    }
-
-    @Override
-    public void init() {
         renderer.clear(0xff263238);
 
         /*
@@ -62,6 +52,12 @@ public class DebugDemo extends Context {
          * It might not be needed in a single context application, but it is useful in multi-context applications.
          */
         Debug.disableDebugMode();
+    }
+
+    public static void main(String[] args) {
+        Engine engine = new Engine(new Window("Debug Demo", 256, 128, 1), 60);
+        engine.addContext(DebugDemo.class);
+        engine.start();
     }
 
     @Override

@@ -33,6 +33,12 @@ public class AdvanceWindow {
      */
     private static boolean running = true;
 
+    /*
+     * This is a private constructor that prevents object creation from outside.
+     */
+    private AdvanceWindow() {
+    }
+
     public static void main(String[] args) {
         Window window = new Window("Advance Window", 940, 720, 4);
 

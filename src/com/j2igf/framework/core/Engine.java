@@ -339,27 +339,20 @@ public final class Engine {
                 long frameTime = currentTime - lastTime;
                 lastTime = currentTime;
                 timeAccumulated += frameTime;
+
                 while (timeAccumulated >= timeSlice) {
-                    {
-                        time.setDeltaTime((time.getTimeScale() * timeSlice) / nanosecondsInOneSecond);
-                        time.update();
-
-                        if (!contexts.isEmpty())
-                            currentContext.fixedUpdate();
-
-                        if (input != null)
-                            input.update();
-                    }
+                    time.setDeltaTime((time.getTimeScale() * timeSlice) / nanosecondsInOneSecond);
+                    currentContext.fixedUpdate();
                     fixedUpdates++;
                     timeAccumulated -= timeSlice;
                 }
-                {
-                    time.setDeltaTime((time.getTimeScale() * frameTime) / nanosecondsInOneSecond);
 
-                    if (!contexts.isEmpty())
-                        currentContext.update();
-                }
+                time.setDeltaTime((time.getTimeScale() * frameTime) / nanosecondsInOneSecond);
+                currentContext.update();
                 updates++;
+
+                input.update();
+                time.update();
 
                 if (timer > 1) {
                     ffps = fixedUpdates;

@@ -464,12 +464,13 @@ public final class Renderer {
     /**
      * This method is used to draw text on the target buffer.
      *
-     * @param x     the x coordinate of the text
-     * @param y     the y coordinate of the text
-     * @param color the color of the text
-     * @param text  the text to draw
+     * @param x         the x coordinate of the text
+     * @param y         the y coordinate of the text
+     * @param color     the color of the text
+     * @param text      the text to draw
+     * @param fontAtlas the font atlas to use
      */
-    public void drawText(int x, int y, int color, String text) {
+    public void drawText(int x, int y, int color, String text, FontAtlas fontAtlas) {
         text = text == null ? "" : text;
         int xOffset = 0;
         int yOffset = 0;
@@ -490,6 +491,19 @@ public final class Renderer {
             }
             xOffset += glyphWidth;
         }
+    }
+
+    /**
+     * This method is used to draw text on the target buffer.
+     * It uses the font atlas assigned to the renderer.
+     *
+     * @param x         the x coordinate of the text
+     * @param y         the y coordinate of the text
+     * @param color     the color of the text
+     * @param text      the text to draw
+     */
+    public void drawText(int x, int y, int color, String text) {
+        drawText(x, y, color, text, fontAtlas);
     }
 
     /**

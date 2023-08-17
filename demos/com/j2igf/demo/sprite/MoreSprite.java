@@ -60,13 +60,13 @@ public class MoreSprite extends Context {
     }
 
     @Override
+    public void fixedUpdate() {
+    }
+
+    @Override
     public void update() {
         renderer.clear(0xff263238);
         fontSprite.render(renderer, 250, 300);
         transformedSprite.render(renderer, 550, 300);
-    }
-
-    @Override
-    public void fixedUpdate() {
     }
 }

@@ -169,7 +169,7 @@ public final class Window {
      */
     public void setCustomCloseOperation(WindowAdapter closeOperation) {
         assert closeOperation != null;
-        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(closeOperation);
     }
 

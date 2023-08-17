@@ -84,16 +84,16 @@ public abstract class Context {
     }
 
     /**
-     * This method is called every frame.
-     * It is used to update the context.
-     */
-    public abstract void update();
-
-    /**
      * This method is called every frame at a fixed time step.
      * It is used to update the context at a fixed rate.
      */
     public abstract void fixedUpdate();
+
+    /**
+     * This method is called every frame.
+     * It is used to update the context.
+     */
+    public abstract void update();
 
     /**
      * This is a getter method for the window field.

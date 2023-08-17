@@ -84,7 +84,7 @@ public final class Engine {
     /**
      * This is a constant integer that stores the target updates per second.
      */
-    private final int targetFps;
+    private final int targetFixedFPS;
 
     /**
      * This the handle to the active context.
@@ -110,27 +110,27 @@ public final class Engine {
     /**
      * This is an integer that stores the current frames per second.
      */
-    private int fps;
+    private float fps;
 
     /**
      * This is an integer that stores the current fixed frames per second.
      */
-    private int ffps;
+    private float ffps;
 
     /**
      * This is the constructor of the Engine class.
      *
-     * @param window    This is an object of the Window class.
-     *                  It can not be null.
-     * @param targetFPS It sets the target frames per second.
-     *                  It must be greater than 0.
+     * @param window         This is an object of the Window class.
+     *                       It can not be null.
+     * @param targetFixedFPS It sets the target frames per second.
+     *                       It must be between 15 and 120 inclusive.
      */
-    public Engine(Window window, int targetFPS) {
+    public Engine(Window window, int targetFixedFPS) {
         if (window == null) {
             Debug.logError(getClass().getName() + " -> Window instance can not be null!");
             System.exit(-1);
-        } else if (targetFPS <= 0) {
-            Debug.logError(getClass().getName() + " -> Target updates per second must be greater than 0!");
+        } else if (targetFixedFPS < 5 || targetFixedFPS > 120) {
+            Debug.logError(getClass().getName() + " -> Target fixed FPS must be between 5 and 120 inclusive!");
             System.exit(-1);
         }
         this.currentInterrupts = 0;
@@ -139,7 +139,7 @@ public final class Engine {
         this.input = new Input(window);
         this.time = new Time();
         this.thread = new Thread(new MainLoop());
-        this.targetFps = targetFPS;
+        this.targetFixedFPS = targetFixedFPS;
         this.running = false;
         this.currentContext = null;
         this.contexts = new ArrayList<>();
@@ -294,7 +294,7 @@ public final class Engine {
      *
      * @return Current frames per second.
      */
-    public int getFps() {
+    public float getFps() {
         return fps;
     }
 
@@ -303,7 +303,7 @@ public final class Engine {
      *
      * @return Current fixed frames per second.
      */
-    public int getFfps() {
+    public float getFfps() {
         return ffps;
     }
 
@@ -327,24 +327,22 @@ public final class Engine {
          */
         @Override
         public void run() {
-            long lastTime = System.nanoTime();
-            float nanosecondsInOneSecond = 1000000000.0f;
-            float timeSlice = nanosecondsInOneSecond / targetFps;
-            float timeAccumulated = 0;
+            long lastTime = System.nanoTime(), currentTime;
+            float timeAccumulated = 0, adjustedFrameTime;
+            float timeSlice = 1.0f / targetFixedFPS;
             float timer = 0;
             int fixedUpdates = 0;
             int updates = 0;
 
-            time.update();
-
             while (running) {
-                long currentTime = System.nanoTime();
-                long frameTime = currentTime - lastTime;
+                currentTime = System.nanoTime();
+                adjustedFrameTime = ((currentTime - lastTime) * time.getTimeScale()) / 1000000000.0f;
                 lastTime = currentTime;
-                timeAccumulated += frameTime;
+                timeAccumulated += adjustedFrameTime;
 
                 while (timeAccumulated >= timeSlice) {
-                    time.setDeltaTime((time.getTimeScale() * timeSlice) / nanosecondsInOneSecond);
+                    time.setDeltaTime(timeSlice);
+                    time.update();
                     input.assignLastFrame(true);
                     currentContext.fixedUpdate();
                     input.fixedUpdate();
@@ -352,7 +350,7 @@ public final class Engine {
                     timeAccumulated -= timeSlice;
                 }
 
-                time.setDeltaTime((time.getTimeScale() * frameTime) / nanosecondsInOneSecond);
+                time.setDeltaTime(adjustedFrameTime);
                 input.assignLastFrame(false);
                 currentContext.update();
                 input.update();

@@ -50,6 +50,42 @@ public class InputDemo extends Context {
     }
 
     @Override
+    public void fixedUpdate() {
+        /*
+         * Here, I am setting all the variables using the Input class object.
+         * I am using the isKey() method to check if the key is being pressed.
+         * This method also has a isKeyDown() variant that checks if the key just pressed.
+         * And a isKeyUp() variant that checks if the key just released.
+         */
+        up = input.isKey(KeyCode.UP);
+        down = input.isKey(KeyCode.DOWN);
+        left = input.isKey(KeyCode.LEFT);
+        right = input.isKey(KeyCode.RIGHT);
+
+        /*
+         * I am doing the same for the mouse buttons by calling the isButton() method.
+         * This method also has a isButtonDown() variant that checks if the button just pressed.
+         * And a isButtonUp() variant that checks if the button just released.
+         */
+        mouseLeft = input.isButton(1);
+        mouseRight = input.isButton(3);
+
+        /*
+         * I am getting the mouse position using the getMouseX() and getMouseY() methods.
+         * These return the mouse position in pixel coordinates relative to the window.
+         */
+        mouseX = input.getMouseX();
+        mouseY = input.getMouseY();
+
+        /*
+         * I am getting the mouse scroll using the getScroll() method.
+         * This returns -1 if the mouse wheel is scrolled up, and 1 if the mouse wheel is scrolled down.
+         * Otherwise, if mouse wheel is not scrolled, it returns 0.
+         */
+        lineOffset = (lineOffset + input.getScroll() * 5) % 20;
+    }
+
+    @Override
     public void update() {
         renderer.clear(0xff263238);
 
@@ -93,41 +129,5 @@ public class InputDemo extends Context {
          */
         renderer.fillRect(mouseX - 10, mouseY - 10, 20, 20, 0xff96ee00);
         renderer.drawText(mouseX - 40, mouseY + 20, 0xff96ee00, "Mouse Position");
-    }
-
-    @Override
-    public void fixedUpdate() {
-        /*
-         * Here, I am setting all the variables using the Input class object.
-         * I am using the isKey() method to check if the key is being pressed.
-         * This method also has a isKeyDown() variant that checks if the key just pressed.
-         * And a isKeyUp() variant that checks if the key just released.
-         */
-        up = input.isKey(KeyCode.UP);
-        down = input.isKey(KeyCode.DOWN);
-        left = input.isKey(KeyCode.LEFT);
-        right = input.isKey(KeyCode.RIGHT);
-
-        /*
-         * I am doing the same for the mouse buttons by calling the isButton() method.
-         * This method also has a isButtonDown() variant that checks if the button just pressed.
-         * And a isButtonUp() variant that checks if the button just released.
-         */
-        mouseLeft = input.isButton(1);
-        mouseRight = input.isButton(3);
-
-        /*
-         * I am getting the mouse position using the getMouseX() and getMouseY() methods.
-         * These return the mouse position in pixel coordinates relative to the window.
-         */
-        mouseX = input.getMouseX();
-        mouseY = input.getMouseY();
-
-        /*
-         * I am getting the mouse scroll using the getScroll() method.
-         * This returns -1 if the mouse wheel is scrolled up, and 1 if the mouse wheel is scrolled down.
-         * Otherwise, if mouse wheel is not scrolled, it returns 0.
-         */
-        lineOffset = (lineOffset + input.getScroll() * 5) % 20;
     }
 }

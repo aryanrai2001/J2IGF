@@ -55,23 +55,6 @@ public class TimeDemo extends Context {
     }
 
     @Override
-    public void update() {
-        renderer.clear(0xff263238);
-        renderer.drawCircle(window.getWidth() / 2, window.getHeight() / 2, radius, 0xff96ee00);
-
-        int x0 = (int) (Math.cos(angle) * (radius - size)) + window.getWidth() / 2;
-        int y0 = (int) (Math.sin(angle) * (radius - size)) + window.getHeight() / 2;
-        int x1 = (int) (Math.cos(angle + (size / 1000f)) * (radius + size)) + window.getWidth() / 2;
-        int y1 = (int) (Math.sin(angle + (size / 1000f)) * (radius + size)) + window.getHeight() / 2;
-        int x2 = (int) (Math.cos(angle + (size / 100f)) * (radius)) + window.getWidth() / 2;
-        int y2 = (int) (Math.sin(angle + (size / 100f)) * (radius)) + window.getHeight() / 2;
-
-        renderer.fillTriangle(x0, y0, x1, y1, x2, y2, 0xff962121);
-        renderer.drawText(window.getWidth() / 2 - 50, window.getHeight() / 2 - 20, 0xff2155b6, "Time: ");
-        renderer.drawText(window.getWidth() / 2 + 30, window.getHeight() / 2 - 20, 0xff2155b6, Integer.toString(seconds));
-    }
-
-    @Override
     public void fixedUpdate() {
         /*
          * Notice I am using the time object to get the delta time, which is the time between frames.
@@ -103,5 +86,22 @@ public class TimeDemo extends Context {
          * The getTimeStamp() method returns the time since the start of the program in seconds.
          */
         seconds = (int) time.getTimeStamp();
+    }
+
+    @Override
+    public void update() {
+        renderer.clear(0xff263238);
+        renderer.drawCircle(window.getWidth() / 2, window.getHeight() / 2, radius, 0xff96ee00);
+
+        int x0 = (int) (Math.cos(angle) * (radius - size)) + window.getWidth() / 2;
+        int y0 = (int) (Math.sin(angle) * (radius - size)) + window.getHeight() / 2;
+        int x1 = (int) (Math.cos(angle + (size / 1000f)) * (radius + size)) + window.getWidth() / 2;
+        int y1 = (int) (Math.sin(angle + (size / 1000f)) * (radius + size)) + window.getHeight() / 2;
+        int x2 = (int) (Math.cos(angle + (size / 100f)) * (radius)) + window.getWidth() / 2;
+        int y2 = (int) (Math.sin(angle + (size / 100f)) * (radius)) + window.getHeight() / 2;
+
+        renderer.fillTriangle(x0, y0, x1, y1, x2, y2, 0xff962121);
+        renderer.drawText(window.getWidth() / 2 - 50, window.getHeight() / 2 - 20, 0xff2155b6, "Time: ");
+        renderer.drawText(window.getWidth() / 2 + 30, window.getHeight() / 2 - 20, 0xff2155b6, Integer.toString(seconds));
     }
 }

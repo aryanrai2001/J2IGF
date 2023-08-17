@@ -67,6 +67,18 @@ public final class BaseContext extends Context {
     }
 
     /**
+     * This method overrides the fixedUpdate method of the base class Context.
+     *
+     * @see Context#fixedUpdate()
+     */
+    @Override
+    public void fixedUpdate() {
+        if (input.isKeyDown(KeyCode.ESCAPE))
+            engine.stop();
+        timer += time.getDeltaTime();
+    }
+
+    /**
      * This method overrides the update method of the base class Context.
      *
      * @see Context#update()
@@ -78,17 +90,5 @@ public final class BaseContext extends Context {
                     "\nFrames Per Second: " + engine.getFps());
             timer = 0;
         }
-    }
-
-    /**
-     * This method overrides the fixedUpdate method of the base class Context.
-     *
-     * @see Context#fixedUpdate()
-     */
-    @Override
-    public void fixedUpdate() {
-        if (input.isKeyDown(KeyCode.ESCAPE))
-            engine.stop();
-        timer += time.getDeltaTime();
     }
 }

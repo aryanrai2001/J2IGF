@@ -75,6 +75,15 @@ public class AnimationDemo extends Context {
     }
 
     @Override
+    public void fixedUpdate() {
+        /*
+         * You must update the animation every frame to make it work.
+         * It can be done in either update() or fixedUpdate().
+         */
+        animation.update();
+    }
+
+    @Override
     public void update() {
         renderer.clear(0xff263238);
 
@@ -89,14 +98,5 @@ public class AnimationDemo extends Context {
          * But it won't update automatically.
          */
         animation.render(renderer, 550, 275);
-    }
-
-    @Override
-    public void fixedUpdate() {
-        /*
-         * You must update the animation every frame to make it work.
-         * It can be done in either update() or fixedUpdate().
-         */
-        animation.update();
     }
 }

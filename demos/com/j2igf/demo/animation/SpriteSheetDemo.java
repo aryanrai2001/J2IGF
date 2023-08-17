@@ -66,6 +66,10 @@ public class SpriteSheetDemo extends Context {
     }
 
     @Override
+    public void fixedUpdate() {
+    }
+
+    @Override
     public void update() {
         renderer.clear(0xff263238);
         sprite.render(renderer, 100, 250);
@@ -82,9 +86,5 @@ public class SpriteSheetDemo extends Context {
         spriteSheet.getSprite(2, false).render(renderer, 650, 350);
         spriteSheet.getSprite(3, false).render(renderer, 650, 475);
         renderer.drawText(520, 535, 0xffffffff, "Individual Sprites from the sprite sheet.");
-    }
-
-    @Override
-    public void fixedUpdate() {
     }
 }

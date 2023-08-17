@@ -38,14 +38,14 @@ public class BasicEngine {
          * The Engine manages the core loop of the program, and it manages a fixed update rate.
          * You have to specify the target updates per second for the fixed update rate of the engine.
          */
-        int targetFPS = 60;
+        int targetFixedFPS = 60;
 
         /*
          * The Engine needs a Window instance to be hooked to.
          * It automatically initializes a renderer and other components that you might need.
-         * I am also providing a target FPS for the engine to run at.
+         * I am also providing a target fixed FPS for the engine to run at.
          */
-        Engine engine = new Engine(window, targetFPS);
+        Engine engine = new Engine(window, targetFixedFPS);
 
         /*
          * You need to start the engine to enter the main loop.

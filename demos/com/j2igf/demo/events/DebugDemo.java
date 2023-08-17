@@ -61,10 +61,10 @@ public class DebugDemo extends Context {
     }
 
     @Override
-    public void update() {
+    public void fixedUpdate() {
     }
 
     @Override
-    public void fixedUpdate() {
+    public void update() {
     }
 }

@@ -89,6 +89,10 @@ public class BasicSprite extends Context {
     }
 
     @Override
+    public void fixedUpdate() {
+    }
+
+    @Override
     public void update() {
         renderer.clear(0xff263238);
 
@@ -117,9 +121,5 @@ public class BasicSprite extends Context {
          * I will discuss the reasons for this design choice in a later demo.
          */
         sprite.renderTransformed(renderer, 550, 300);
-    }
-
-    @Override
-    public void fixedUpdate() {
     }
 }

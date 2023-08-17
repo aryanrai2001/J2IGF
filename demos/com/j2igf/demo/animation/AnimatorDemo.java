@@ -85,24 +85,6 @@ public class AnimatorDemo extends Context {
     }
 
     @Override
-    public void update() {
-        renderer.clear(0xff46a248);
-
-        /*
-         * Here, I am just rendering the entire sprite sheet I created with drawPlayerSprite() method.
-         * It stores all the animation frames horizontally, and the animation states vertically.
-         */
-        frames.render(renderer, 300, 100);
-        renderer.drawText(335, 530, 0xffffffff, "The sprite sheet we made with drawPlayerSprite()");
-
-        /*
-         * Rendering the animator is similar to rendering an animation or a sprite.
-         */
-        animator.render(renderer, 150, 300);
-        renderer.drawText(105, 360, 0xffffffff, "The Animator");
-    }
-
-    @Override
     public void fixedUpdate() {
 
         /*
@@ -127,5 +109,23 @@ public class AnimatorDemo extends Context {
          * It is required to update the animator every frame to make it work.
          */
         animator.update();
+    }
+
+    @Override
+    public void update() {
+        renderer.clear(0xff46a248);
+
+        /*
+         * Here, I am just rendering the entire sprite sheet I created with drawPlayerSprite() method.
+         * It stores all the animation frames horizontally, and the animation states vertically.
+         */
+        frames.render(renderer, 300, 100);
+        renderer.drawText(335, 530, 0xffffffff, "The sprite sheet we made with drawPlayerSprite()");
+
+        /*
+         * Rendering the animator is similar to rendering an animation or a sprite.
+         */
+        animator.render(renderer, 150, 300);
+        renderer.drawText(105, 360, 0xffffffff, "The Animator");
     }
 }

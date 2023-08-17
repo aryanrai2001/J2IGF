@@ -80,6 +80,10 @@ public class TargetSprite extends Context {
     }
 
     @Override
+    public void fixedUpdate() {
+    }
+
+    @Override
     public void update() {
         renderer.clear(0xff263238);
 
@@ -90,9 +94,5 @@ public class TargetSprite extends Context {
          * But for this demo I will avoid any file I/O.
          */
         targetSprite.render(renderer, input.getMouseX(), input.getMouseY());
-    }
-
-    @Override
-    public void fixedUpdate() {
     }
 }

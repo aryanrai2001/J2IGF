@@ -122,6 +122,10 @@ public class MultipleContexts {
         }
 
         @Override
+        public void fixedUpdate() {
+        }
+
+        @Override
         public void update() {
             if (input.isKeyDown(KeyCode.KEY1)) {
                 /*
@@ -130,10 +134,6 @@ public class MultipleContexts {
                  */
                 engine.switchContext(0);
             }
-        }
-
-        @Override
-        public void fixedUpdate() {
         }
     }
 }

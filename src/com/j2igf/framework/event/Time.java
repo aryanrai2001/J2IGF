@@ -74,8 +74,11 @@ public final class Time {
      *
      * @param timeScale The timescale as a float value.
      *                  The default value is 1.
+     *                  Negative values are ignored.
      */
     public void setTimeScale(float timeScale) {
+        if (timeScale < 0)
+            return;
         this.timeScale = timeScale;
     }
 

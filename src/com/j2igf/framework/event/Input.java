@@ -249,7 +249,7 @@ public final class Input implements KeyListener, MouseListener, MouseWheelListen
     }
 
     /**
-     * This method is gets called when a key is pressed.
+     * This method gets called when a key is pressed.
      * It has been overridden to set the key's state to true.
      */
     @Override
@@ -258,7 +258,7 @@ public final class Input implements KeyListener, MouseListener, MouseWheelListen
     }
 
     /**
-     * This method is gets called when a key is released.
+     * This method gets called when a key is released.
      * It has been overridden to set the key's state to false.
      */
     @Override
@@ -267,14 +267,14 @@ public final class Input implements KeyListener, MouseListener, MouseWheelListen
     }
 
     /**
-     * This method is gets called when a key is typed.
+     * This method gets called when a key is typed.
      */
     @Override
     public void keyTyped(KeyEvent e) {
     }
 
     /**
-     * This method is gets called when a mouse button is pressed.
+     * This method gets called when a mouse button is pressed.
      * It has been overridden to set the mouse button's state to true.
      */
     @Override
@@ -283,7 +283,7 @@ public final class Input implements KeyListener, MouseListener, MouseWheelListen
     }
 
     /**
-     * This method is gets called when a mouse button is released.
+     * This method gets called when a mouse button is released.
      * It has been overridden to set the mouse button's state to false.
      */
     @Override
@@ -292,7 +292,7 @@ public final class Input implements KeyListener, MouseListener, MouseWheelListen
     }
 
     /**
-     * This method is gets called when the mouse wheel is moved.
+     * This method gets called when the mouse wheel is moved.
      * It has been overridden to set the scroll state of the mouse.
      */
     @Override
@@ -301,21 +301,21 @@ public final class Input implements KeyListener, MouseListener, MouseWheelListen
     }
 
     /**
-     * This method is gets called when the mouse is clicked.
+     * This method gets called when the mouse is clicked.
      */
     @Override
     public void mouseClicked(MouseEvent e) {
     }
 
     /**
-     * This method is gets called when the mouse enters the window.
+     * This method gets called when the mouse enters the window.
      */
     @Override
     public void mouseEntered(MouseEvent e) {
     }
 
     /**
-     * This method is gets called when the mouse exits the window.
+     * This method gets called when the mouse exits the window.
      */
     @Override
     public void mouseExited(MouseEvent e) {

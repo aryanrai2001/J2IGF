@@ -76,24 +76,8 @@ public class FirstContext extends Context {
     }
 
     /*
-     * This method is called every frame.
-     * You typically use this method to update things in are context that don't need to be updated at a fixed rate.
-     * For example, you can use this method to listen for input events, or we can use this for rendering to the window.
-     */
-    @Override
-    public void update() {
-        /*
-         * Each context needs to clear the frame buffer before rendering.
-         * Otherwise, you might see interesting but undesirable artifacts.
-         */
-        renderer.clear(0xff263238);
-
-        renderer.fillCircle(x, y, radius, 0xff96ee00);
-    }
-
-    /*
      * This method is called every frame at a fixed rate.
-     * So if the target FPS is set to 60, this method will be called 60 times per second.
+     * So if the target fixed FPS is set to 60, this method will be called 60 times per second.
      * You typically use this method to update things in our context that need to be updated at a fixed rate.
      * For example, you can use this method to update the physics of our context. Or you can use this method to update
      * the position of entities in our context.
@@ -108,5 +92,21 @@ public class FirstContext extends Context {
         }
         x += xSpeed;
         y += ySpeed;
+    }
+
+    /*
+     * This method is called every frame.
+     * You typically use this method to update things in are context that don't need to be updated at a fixed rate.
+     * For example, you can use this method to listen for input events, or we can use this for rendering to the window.
+     */
+    @Override
+    public void update() {
+        /*
+         * Each context needs to clear the frame buffer before rendering.
+         * Otherwise, you might see interesting but undesirable artifacts.
+         */
+        renderer.clear(0xff263238);
+
+        renderer.fillCircle(x, y, radius, 0xff96ee00);
     }
 }

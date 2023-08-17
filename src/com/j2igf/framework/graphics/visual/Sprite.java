@@ -28,6 +28,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * This class is responsible for handling sprites.
@@ -168,9 +169,16 @@ public class Sprite {
 
         BufferedImage image = null;
         try {
-            image = ImageIO.read(new File(path));
-        } catch (IOException e) {
-            Debug.logError(getClass().getName() + " -> Image loading failed!", e);
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)));
+            Debug.log(getClass().getName() + " -> Loaded image from resource: " + path);
+        } catch (IOException | NullPointerException e1) {
+            Debug.log(getClass().getName() + " -> Could not load image from resource: " + path);
+            try {
+                image = ImageIO.read(new File(path));
+                Debug.log(getClass().getName() + " -> Loaded image from location: " + path);
+            } catch (IOException e2) {
+                Debug.log(getClass().getName() + " -> Could not load image from location: " + path);
+            }
         }
 
         if (image == null) {

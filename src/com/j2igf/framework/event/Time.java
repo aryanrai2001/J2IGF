@@ -56,7 +56,7 @@ public final class Time {
      * This method is used to update the time stamp.
      */
     public void update() {
-        timeStamp += deltaTime;
+        timeStamp += deltaTime / timeScale;
     }
 
     /**

@@ -66,5 +66,5 @@ interactive experiences.
 
 ---
 
-> ### *Have a look at the [Demos](./demos/com/j2igf/demo) to understand the working of J2IGF*
+> ### *Have a look at the [Demos](./src/demo/j2igf) to understand the working of J2IGF*
 

@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.j2igf.framework.core"},{"l":"com.j2igf.framework.event"},{"l":"com.j2igf.framework.graphics"},{"l":"com.j2igf.framework.graphics.auxiliary"},{"l":"com.j2igf.framework.graphics.visual"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.j2igf.core"},{"l":"com.j2igf.event"},{"l":"com.j2igf.graphics"},{"l":"com.j2igf.graphics.auxiliary"},{"l":"com.j2igf.graphics.visual"}];updateSearchResults();

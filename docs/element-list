@@ -1,5 +1,5 @@
-com.j2igf.framework.core
-com.j2igf.framework.event
-com.j2igf.framework.graphics
-com.j2igf.framework.graphics.auxiliary
-com.j2igf.framework.graphics.visual
+com.j2igf.core
+com.j2igf.event
+com.j2igf.graphics
+com.j2igf.graphics.auxiliary
+com.j2igf.graphics.visual

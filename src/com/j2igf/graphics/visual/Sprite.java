@@ -124,8 +124,13 @@ public class Sprite {
      * This is the copy constructor of the Sprite class.
      *
      * @param sprite The sprite to copy.
+     *               It can not be null.
      */
     public Sprite(Sprite sprite) {
+        if (sprite == null) {
+            Debug.logError(getClass().getSimpleName() + " -> Sprite instance can not be null!");
+            System.exit(-1);
+        }
         this.pixels = Arrays.copyOf(sprite.getPixels(), sprite.getPixels().length);
         this.width = sprite.width;
         this.height = sprite.height;
@@ -163,7 +168,7 @@ public class Sprite {
         this();
 
         if (path == null) {
-            Debug.logError(getClass().getName() + " -> Invalid Path!");
+            Debug.logError(getClass().getSimpleName() + " -> Invalid Path!");
             System.exit(-1);
         }
 
@@ -173,20 +178,20 @@ public class Sprite {
             image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)));
             source = "resource";
         } catch (IOException e1) {
-            Debug.log(getClass().getName() + " -> Could not load image from resource: " + path);
+            Debug.logInfo(getClass().getSimpleName() + " -> Could not load image from resource: " + path);
             try {
                 image = ImageIO.read(new File(path));
                 source = "file";
             } catch (IOException e2) {
-                Debug.log(getClass().getName() + " -> Could not load image from file: " + path);
+                Debug.logInfo(getClass().getSimpleName() + " -> Could not load image from file: " + path);
             }
         }
 
         if (image == null) {
-            Debug.logError(getClass().getName() + " -> Failed loading image!");
+            Debug.logError(getClass().getSimpleName() + " -> Failed loading image!");
             System.exit(-1);
         } else {
-            Debug.log(getClass().getName() + " -> Loaded image from " + source + ": " + path);
+            Debug.logInfo(getClass().getSimpleName() + " -> Loaded image from " + source + ": " + path);
         }
 
         this.width = image.getWidth();
@@ -204,7 +209,7 @@ public class Sprite {
      */
     public void render(Renderer renderer, int x, int y) {
         if (renderer == null) {
-            Debug.logError(getClass().getName() + " -> Renderer instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> Renderer instance can not be null!");
             System.exit(-1);
         }
         x -= (int) (originX * width);
@@ -237,7 +242,7 @@ public class Sprite {
      */
     public void renderTransformed(Renderer renderer, int x, int y) {
         if (renderer == null) {
-            Debug.logError(getClass().getName() + " -> Renderer instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> Renderer instance can not be null!");
             System.exit(-1);
         }
         for (int currY = transformedStartY; currY < transformedEndY; currY++) {
@@ -312,8 +317,9 @@ public class Sprite {
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             image.setRGB(0, 0, width, height, pixels, 0, width);
             ImageIO.write(image, "png", outputFile);
+            Debug.logInfo(getClass().getSimpleName() + " -> Image saved to: " + outputFile.getAbsolutePath());
         } catch (IOException e) {
-            Debug.logError(getClass().getName() + " -> Image saving failed!", e);
+            Debug.logError(getClass().getSimpleName() + " -> Image saving failed!", e);
         }
     }
 

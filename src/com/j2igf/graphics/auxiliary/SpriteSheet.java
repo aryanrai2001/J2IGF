@@ -62,14 +62,13 @@ public class SpriteSheet {
      * @param numberOfSpritesVertically   The number of sprites vertically.
      */
     public SpriteSheet(Sprite src, int numberOfSpritesHorizontally, int numberOfSpritesVertically) {
-        super();
         if (src == null) {
-            Debug.logError(getClass().getName() + " -> Sprite instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> Sprite instance can not be null!");
             System.exit(-1);
         } else if (numberOfSpritesHorizontally * numberOfSpritesVertically <= 0
                 || src.getWidth() % numberOfSpritesHorizontally != 0
                 || src.getHeight() % numberOfSpritesVertically != 0) {
-            Debug.logError(getClass().getName() + " -> Illegal arguments for SpriteSheet constructor!");
+            Debug.logError(getClass().getSimpleName() + " -> Illegal arguments for SpriteSheet constructor!");
             System.exit(-1);
         }
         this.numberOfSpritesHorizontally = numberOfSpritesHorizontally;

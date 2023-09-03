@@ -64,13 +64,13 @@ public class Animation {
      */
     public Animation(SpriteSheet spriteSheet, Time time, boolean verticalScan, int offset, int size, float fps) {
         if (spriteSheet == null) {
-            Debug.logError(getClass().getName() + " -> SpriteSet instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> SpriteSet instance can not be null!");
             System.exit(-1);
         } else if (time == null) {
-            Debug.logError(getClass().getName() + " -> Time instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> Time instance can not be null!");
             System.exit(-1);
         } else if (offset + size > spriteSheet.getNumberOfSpritesHorizontally() * spriteSheet.getNumberOfSpritesVertically()) {
-            Debug.logError(getClass().getName() + " -> Illegal arguments for Animation constructor!");
+            Debug.logError(getClass().getSimpleName() + " -> Illegal arguments for Animation constructor!");
             System.exit(-1);
         }
         this.time = time;

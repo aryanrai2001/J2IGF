@@ -27,7 +27,7 @@ public final class FullScreenWindow {
     }
 
     public static void main(String[] args) {
-        String title = "Title don't matter in Fullscreen";
+        String title = "Title doesn't matter in Fullscreen";
         int pixelScale = 1;
 
         /*

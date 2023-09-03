@@ -47,7 +47,7 @@ public class Animator {
      */
     public Animator(int states) {
         if (states <= 1) {
-            Debug.logError(getClass().getName() + " -> Illegal argument for Animator constructor!");
+            Debug.logError(getClass().getSimpleName() + " -> Illegal argument for Animator constructor!");
             System.exit(-1);
         }
         animations = new Animation[states];
@@ -89,7 +89,7 @@ public class Animator {
         if (currentAnimation == index)
             return;
         if (index >= animations.length || index < 0) {
-            Debug.logError(getClass().getName() + " -> Illegal arguments for Animation.changeState() method!");
+            Debug.logError(getClass().getSimpleName() + " -> Illegal arguments for Animation.changeState() method!");
             System.exit(-1);
         }
         currentAnimation = index;
@@ -105,7 +105,7 @@ public class Animator {
      */
     public void setState(int index, Animation animation) {
         if (index >= animations.length || index < 0) {
-            Debug.logError(getClass().getName() + " -> Illegal arguments for Animation.setState() method!");
+            Debug.logError(getClass().getSimpleName() + " -> Illegal arguments for Animation.setState() method!");
             System.exit(-1);
         }
         animations[index] = animation;

@@ -127,10 +127,10 @@ public final class Engine {
      */
     public Engine(Window window, int targetFixedFPS) {
         if (window == null) {
-            Debug.logError(getClass().getName() + " -> Window instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> Window instance can not be null!");
             System.exit(-1);
         } else if (targetFixedFPS < 5 || targetFixedFPS > 120) {
-            Debug.logError(getClass().getName() + " -> Target fixed FPS must be between 5 and 120 inclusive!");
+            Debug.logError(getClass().getSimpleName() + " -> Target fixed FPS must be between 5 and 120 inclusive!");
             System.exit(-1);
         }
         this.currentInterrupts = 0;
@@ -144,9 +144,10 @@ public final class Engine {
         this.currentContext = null;
         this.contexts = new ArrayList<>();
         this.contexts.add(BaseContext.class);
-        Debug.setRenderer(renderer);
         CloseOperation closeOperation = new CloseOperation();
         window.setCustomCloseOperation(closeOperation);
+        Debug.initRaster(renderer);
+        Debug.logInfo("Engine initialized!");
     }
 
     /**
@@ -156,6 +157,7 @@ public final class Engine {
         if ((currentInterrupts & (1L << INTERRUPT_STOP)) != 0) {
             if (!running) {
                 window.dispose();
+                Debug.logInfo("Application closed!");
                 System.exit(0);
             }
             running = false;
@@ -172,15 +174,17 @@ public final class Engine {
     public void start() {
         if (running)
             return;
+        Debug.logInfo("Starting Engine...");
         currentContext = createContext(contexts.size() == 1 ? contexts.get(0) : contexts.get(1));
         running = true;
         thread.start();
         try {
             thread.join();
         } catch (InterruptedException e) {
-            Debug.logError(getClass().getName() + " -> Starting Thread failed!", e);
+            Debug.logError(getClass().getSimpleName() + " -> Starting Thread failed!", e);
         }
         window.dispose();
+        Debug.logInfo("Application closed!");
         System.exit(0);
     }
 
@@ -189,6 +193,7 @@ public final class Engine {
      */
     public void stop() {
         currentInterrupts |= (1L << INTERRUPT_STOP);
+        Debug.logInfo("Stopping Engine...");
     }
 
     /**
@@ -200,14 +205,15 @@ public final class Engine {
      */
     public void addContext(Class<? extends Context> contextClass) {
         if (running) {
-            Debug.logError(getClass().getName() + " -> Can not set context while engine is running!");
+            Debug.logError(getClass().getSimpleName() + " -> Can not set context while engine is running!");
             System.exit(-1);
         }
         if (contextClass == null) {
-            Debug.logError(getClass().getName() + " -> Invalid Context class!");
+            Debug.logError(getClass().getSimpleName() + " -> Invalid Context class!");
             System.exit(-1);
         }
         contexts.add(contextClass);
+        Debug.logInfo(contextClass.getSimpleName() + " -> Context added!");
     }
 
     /**
@@ -220,11 +226,12 @@ public final class Engine {
     public void switchContext(int index) {
         index++;
         if (index < 1 || index >= contexts.size()) {
-            Debug.logError(getClass().getName() + " -> Context index out of bounds!");
+            Debug.logError(getClass().getSimpleName() + " -> Context index out of bounds!");
             System.exit(-1);
         }
         nextContextIndex = index;
         currentInterrupts |= (1L << INTERRUPT_CONTEXT_SWITCH);
+        Debug.logInfo("Context switched to -> " + contexts.get(index).getSimpleName() + "!");
     }
 
     /**
@@ -242,8 +249,8 @@ public final class Engine {
             context = contextConstructor.newInstance(this);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                  IllegalAccessException e) {
-            Debug.logError(getClass().getName() +
-                    " -> Could not instantiate a valid Context of type " + contextClass.getName() + "!");
+            Debug.logError(getClass().getSimpleName() +
+                    " -> Could not instantiate a valid Context of type " + contextClass.getSimpleName() + "!");
             System.exit(-1);
         }
         return context;
@@ -364,6 +371,7 @@ public final class Engine {
                     updates = 0;
                 }
                 timer += time.getDeltaTime();
+                Debug.updateFrame();
                 window.updateFrame();
                 handleInterrupt();
             }

@@ -20,6 +20,8 @@
 
 package com.j2igf.core;
 
+import com.j2igf.event.Debug;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -107,6 +109,10 @@ public final class Window {
             canvas.setSize(rect.width, rect.height);
             frame.add(canvas);
             frame.pack();
+            if (width > rect.width)
+                Debug.logWarning("Window width was greater than screen width! It is clamped.");
+            if (height > rect.height)
+                Debug.logWarning("Window height was greater than screen height! It is clamped.");
             screenWidth = Math.min(width, rect.width);
             screenHeight = Math.min(height, rect.height - frame.getInsets().top);
         }
@@ -114,7 +120,10 @@ public final class Window {
         this.width = (screenWidth / pixelScale);
         this.height = (screenHeight / pixelScale);
 
-        if (pixelScale <= 0) pixelScale = 1;
+        if (pixelScale <= 0) {
+            Debug.logWarning("Pixel scale was less than or equal to 0! It is set to 1.");
+            pixelScale = 1;
+        }
         this.pixelScale = pixelScale;
 
         image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
@@ -131,10 +140,12 @@ public final class Window {
         if (fullscreen) {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             frame.setUndecorated(true);
+            Debug.logInfo("Fullscreen Window initialized!");
         } else {
             frame.pack();
             frame.setResizable(false);
             frame.setLocation((rect.width - frame.getWidth()) / 2, Math.max(0, (rect.height - frame.getHeight()) / 2));
+            Debug.logInfo("Window of width " + screenWidth + " and height " + screenHeight + " initialized!");
         }
 
         frame.setVisible(true);
@@ -152,6 +163,7 @@ public final class Window {
         graphics.dispose();
         strategy.dispose();
         frame.dispose();
+        Debug.logInfo("Window Disposed!");
     }
 
     /**

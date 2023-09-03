@@ -90,7 +90,7 @@ public final class Input implements KeyListener, MouseListener, MouseWheelListen
      */
     public Input(Window window) {
         if (window == null) {
-            Debug.logError(getClass().getName() + " -> Window instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> Window instance can not be null!");
             System.exit(-1);
         }
         this.window = window;
@@ -98,6 +98,7 @@ public final class Input implements KeyListener, MouseListener, MouseWheelListen
         window.getCanvas().addMouseListener(this);
         window.getCanvas().addMouseWheelListener(this);
         this.reset();
+        Debug.logInfo("Input system initialized!");
     }
 
     /**

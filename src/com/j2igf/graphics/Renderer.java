@@ -75,7 +75,7 @@ public final class Renderer {
      */
     public Renderer(Window window) {
         if (window == null) {
-            Debug.logError(getClass().getName() + " -> Window instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> Window instance can not be null!");
             System.exit(-1);
         }
         this.fontAtlas = FontAtlas.DEFAULT_FONT;
@@ -85,6 +85,7 @@ public final class Renderer {
         this.width = window.getWidth();
         this.height = window.getHeight();
         this.isSprite = false;
+        Debug.logInfo("Renderer of width " + width + " and height " + height + " initialized!");
     }
 
     /**
@@ -95,7 +96,7 @@ public final class Renderer {
      */
     public Renderer(Sprite target) {
         if (target == null) {
-            Debug.logError(getClass().getName() + " -> Sprite instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> Sprite instance can not be null!");
             System.exit(-1);
         }
         this.fontAtlas = FontAtlas.DEFAULT_FONT;
@@ -105,6 +106,7 @@ public final class Renderer {
         this.width = target.getWidth();
         this.height = target.getHeight();
         this.isSprite = true;
+        Debug.logInfo("Sprite Renderer of width " + width + " and height " + height + " initialized!");
     }
 
     /**
@@ -114,7 +116,7 @@ public final class Renderer {
      */
     public void setFont(FontAtlas fontAtlas) {
         if (fontAtlas == null) {
-            Debug.logError(getClass().getName() + " -> FontAtlas instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> FontAtlas instance can not be null!");
             System.exit(-1);
         }
         this.fontAtlas = fontAtlas;
@@ -142,7 +144,7 @@ public final class Renderer {
      */
     public void useGlobalAlpha(float alpha) {
         if (alpha < 0 || alpha > 1) {
-            Debug.logError(getClass().getName() + " -> Illegal arguments for Renderer.useGlobalAlpha() method!");
+            Debug.logError(getClass().getSimpleName() + " -> Illegal arguments for Renderer.useGlobalAlpha() method!");
             System.exit(-1);
         }
         globalAlpha = alpha;

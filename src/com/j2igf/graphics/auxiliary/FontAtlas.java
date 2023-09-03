@@ -73,7 +73,7 @@ public class FontAtlas extends Sprite {
     public FontAtlas(String fontName, int fontSize, boolean antiAliased) {
         super();
         if (fontName == null || fontSize < 5) {
-            Debug.logError(getClass().getName() + " -> Illegal arguments for FontAtlas constructor!");
+            Debug.logError(getClass().getSimpleName() + " -> Illegal arguments for FontAtlas constructor!");
             System.exit(-1);
         }
 

@@ -33,86 +33,65 @@ import java.util.logging.*;
  * @author Aryan Rai
  */
 public final class Debug {
+
     /**
      * This is the logger used by the framework.
      */
-    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private static final Logger LOGGER;
+
     /**
-     * These are some variables used by the class to determine the state of the logging system.
+     * This is the formatter used by the logger.
      */
-    private static boolean initialized, enabled;
+    private static final LogFormatter LOG_FORMATTER;
+
     /**
-     * This is the renderer used by the Debug class to render debug info.
+     * This is the renderer used to render the debugRaster.
      */
     private static Renderer renderer;
 
+    /**
+     * This is the raster used to render the debug information.
+     */
+    private static int[] debugRaster;
+
+    /**
+     * This is the width of the debugRaster.
+     */
+    private static int rasterWidth;
+
+    /**
+     * This is the height of the debugRaster.
+     */
+    private static int rasterHeight;
+
     static {
-        init();
+        LogManager.getLogManager().reset();
+        LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+        LOG_FORMATTER = new LogFormatter();
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setFormatter(LOG_FORMATTER);
+
+        LOGGER.setUseParentHandlers(false);
+        LOGGER.addHandler(consoleHandler);
+        LOGGER.setLevel(Level.ALL);
     }
 
     /**
-     * This is the constructor for the Debug class.
+     * Private constructor for the Debug class to prevent instantiation.
      */
     private Debug() {
     }
 
     /**
-     * This function initializes the logging system.
-     */
-    public static void init() {
-        if (initialized)
-            return;
-
-        LogManager.getLogManager().reset();
-        LOGGER.setUseParentHandlers(false);
-
-        ConsoleHandler handler = new ConsoleHandler();
-        LogFormatter formatter = new LogFormatter();
-        formatter.setColor(LogFormatter.COLOR.WHITE);
-        handler.setFormatter(formatter);
-        LOGGER.addHandler(handler);
-        LOGGER.setLevel(Level.ALL);
-
-        initialized = true;
-        enabled = true;
-    }
-
-    /**
-     * This function sets the color of the logging system.
+     * This function initializes the debugRaster.
      *
-     * @param color The color to set the logging system to.
+     * @param renderer The Renderer to be used to render the debugRaster.
      */
-    private static void setColor(LogFormatter.COLOR color) {
-        if (!enabled)
+    public static void initRaster(Renderer renderer) {
+        if (renderer == null || debugRaster != null)
             return;
-        ConsoleHandler handler = (ConsoleHandler) LOGGER.getHandlers()[0];
-        LogFormatter formatter = (LogFormatter) handler.getFormatter();
-        formatter.setColor(color);
-        handler.setFormatter(formatter);
-    }
-
-    /**
-     * This function sets the renderer for debug info.
-     *
-     * @param renderer The renderer using which the debug info will be rendered.
-     */
-    public static void setRenderer(Renderer renderer) {
-        assert (renderer != null);
         Debug.renderer = renderer;
-    }
-
-    /**
-     * This function enables the logging system.
-     */
-    public static void enableDebugMode() {
-        enabled = true;
-    }
-
-    /**
-     * This function disables the logging system.
-     */
-    public static void disableDebugMode() {
-        enabled = false;
+        Debug.debugRaster = new int[renderer.getWidth() * renderer.getHeight()];
     }
 
     /**
@@ -121,23 +100,18 @@ public final class Debug {
      * @param msg The message to be logged.
      */
     public static void log(String msg) {
-        if (!enabled)
-            return;
-        setColor(LogFormatter.COLOR.WHITE);
+        LOG_FORMATTER.setColor(LogFormatter.ANSI_WHITE);
         LOGGER.log(Level.INFO, msg);
     }
 
     /**
-     * This function logs a message to the console and throws an exception.
+     * This function logs information to the console.
      *
-     * @param msg    The message to be logged.
-     * @param thrown The exception to be thrown.
+     * @param msg The info to be logged.
      */
-    public static void log(String msg, Throwable thrown) {
-        if (!enabled)
-            return;
-        setColor(LogFormatter.COLOR.WHITE);
-        LOGGER.log(Level.INFO, msg, thrown);
+    public static void logInfo(String msg) {
+        LOG_FORMATTER.setColor(LogFormatter.ANSI_GREEN);
+        LOGGER.log(Level.INFO, msg);
     }
 
     /**
@@ -146,23 +120,8 @@ public final class Debug {
      * @param msg The warning to be logged.
      */
     public static void logWarning(String msg) {
-        if (!enabled)
-            return;
-        setColor(LogFormatter.COLOR.YELLOW);
+        LOG_FORMATTER.setColor(LogFormatter.ANSI_YELLOW);
         LOGGER.log(Level.WARNING, msg);
-    }
-
-    /**
-     * This function logs a warning to the console and throws an exception.
-     *
-     * @param msg    The warning to be logged.
-     * @param thrown The exception to be thrown.
-     */
-    public static void logWarning(String msg, Throwable thrown) {
-        if (!enabled)
-            return;
-        setColor(LogFormatter.COLOR.YELLOW);
-        LOGGER.log(Level.WARNING, msg, thrown);
     }
 
     /**
@@ -171,36 +130,48 @@ public final class Debug {
      * @param msg The error to be logged.
      */
     public static void logError(String msg) {
-        if (!enabled)
-            return;
-        setColor(LogFormatter.COLOR.RED);
+        LOG_FORMATTER.setColor(LogFormatter.ANSI_RED);
         LOGGER.log(Level.SEVERE, msg);
     }
 
     /**
-     * This function logs an error to the console and throws an exception.
+     * This function logs an error to the console along with stack-trace.
      *
      * @param msg    The error to be logged.
-     * @param thrown The exception to be thrown.
+     * @param thrown The exception to print stack-trace from.
      */
     public static void logError(String msg, Throwable thrown) {
-        if (!enabled)
-            return;
-        setColor(LogFormatter.COLOR.RED);
+        LOG_FORMATTER.setColor(LogFormatter.ANSI_RED);
         LOGGER.log(Level.SEVERE, msg, thrown);
     }
 
     /**
-     * This function renders debug information to the screen.
+     * This function renders the debugRaster using the assigned Renderer.
+     */
+    public static void updateFrame() {
+        if (debugRaster == null)
+            return;
+        for (int y = 0; y < rasterHeight; y++) {
+            for (int x = 0; x < rasterWidth; x++) {
+                renderer.setPixel(x, y, debugRaster[x + y * renderer.getWidth()]);
+            }
+        }
+    }
+
+    /**
+     * This function renders debug information to the debugRaster.
      *
      * @param message The message to be rendered.
      *                If this parameter is null, nothing will be rendered.
      */
     public static void renderMessage(String message) {
-        if (!(enabled && initialized) || message == null || renderer == null)
+        if (debugRaster == null || message == null)
             return;
-        int xOffset = 0;
-        int yOffset = 0;
+        for (int y = 0; y < rasterHeight; y++)
+            for (int x = 0; x < rasterWidth; x++)
+                debugRaster[x + y * renderer.getWidth()] = 0;
+        int xOffset = 0, yOffset = 0;
+        rasterWidth = rasterHeight = 0;
         for (int i = 0; i < message.length(); i++) {
             int ch = message.charAt(i);
             if (ch == '\n') {
@@ -213,18 +184,16 @@ public final class Debug {
                 for (int x = 0; x < glyphWidth; x++) {
                     int fontAlpha = (FontAtlas.DEFAULT_FONT.getPixel(x + offset, y) >>> 24);
                     if (fontAlpha == 0) {
-                        renderer.setPixel(x + xOffset, y + yOffset, 0xff000000);
+                        debugRaster[(x + xOffset) + (y + yOffset) * renderer.getWidth()] = 0xff000000;
                     } else {
                         float alphaF = (float) fontAlpha / 0xff;
-                        renderer.setPixel(
-                                x + xOffset,
-                                y + yOffset,
-                                0xff000000 |
-                                        (int) (alphaF * 0xff) << 16 |
-                                        (int) (alphaF * 0xff) << 8 |
-                                        (int) (alphaF * 0xff)
-                        );
+                        debugRaster[(x + xOffset) + (y + yOffset) * renderer.getWidth()] = 0xff000000 |
+                                (int) (alphaF * 0xff) << 16 |
+                                (int) (alphaF * 0xff) << 8 |
+                                (int) (alphaF * 0xff);
                     }
+                    rasterWidth = Math.max(rasterWidth, x + xOffset);
+                    rasterHeight = Math.max(rasterHeight, y + yOffset);
                 }
             }
             xOffset += glyphWidth;
@@ -239,30 +208,50 @@ public final class Debug {
      */
     public static class LogFormatter extends Formatter {
         /**
-         * This array stores the ANSI color codes for the logger.
+         * This constant defines the ANSI color code for red.
          */
-        private final String[] ansiColorCodes = {
-                "\u001B[30m", "\u001B[31m", "\u001B[32m", "\u001B[33m",
-                "\u001B[34m", "\u001B[35m", "\u001B[36m", "\u001B[37m"
-        };
+        public static final String ANSI_RED = "\u001B[91m";
         /**
-         * This variable stores the color of the logger.
+         * This constant defines the ANSI color code for green.
          */
-        private COLOR color = COLOR.WHITE;
+        public static final String ANSI_GREEN = "\u001B[92m";
+        /**
+         * This constant defines the ANSI color code for yellow.
+         */
+        public static final String ANSI_YELLOW = "\u001B[93m";
+        /**
+         * This constant defines the ANSI color code for white.
+         */
+        public static final String ANSI_WHITE = "\u001B[97m";
+        /**
+         * This is the date format used by the formatter.
+         */
+        private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss");
+        /**
+         * This variable stores the color code of the log.
+         */
+        private String color;
 
         /**
          * This is the default constructor for the LogFormatter class.
          */
         public LogFormatter() {
             super();
+            color = "\u001B[0m";
         }
 
         /**
-         * This function sets the color of the logger.
+         * This method sets the color of the log.
          *
-         * @param color The color to be set.
+         * @param color The color of to be set.
          */
-        public void setColor(COLOR color) {
+        public void setColor(String color) {
+            assert (
+                    color.equals(ANSI_RED) ||
+                            color.equals(ANSI_GREEN) ||
+                            color.equals(ANSI_YELLOW) ||
+                            color.equals(ANSI_WHITE)
+            );
             this.color = color;
         }
 
@@ -274,30 +263,18 @@ public final class Debug {
          */
         @Override
         public String format(LogRecord record) {
-
             StringBuilder builder = new StringBuilder();
-            builder.append(ansiColorCodes[color.ordinal()]);
-
+            builder.append(color);
             builder.append('[');
-            builder.append(calcDate(record.getMillis()));
+            builder.append(DATE_FORMAT.format(new Date(record.getMillis())));
             builder.append(']');
             builder.append(' ');
-            builder.append('[');
-            builder.append(record.getSourceClassName());
-            builder.append(']');
-            builder.append(' ');
-            builder.append('[');
             builder.append(record.getLevel().getName());
-            builder.append(']');
-
-            builder.append(ansiColorCodes[color.ordinal()]);
             builder.append(':');
             builder.append(' ');
-            builder.append('\n');
             builder.append(record.getMessage());
 
             Object[] params = record.getParameters();
-
             if (params != null) {
                 builder.append('\t');
                 for (int i = 0; i < params.length; i++) {
@@ -309,66 +286,30 @@ public final class Debug {
                 }
             }
 
-            builder.append(ansiColorCodes[color.ordinal()]);
+            Throwable thrown = record.getThrown();
+            if (thrown != null) {
+                StringBuilder stackTraceBuilder = new StringBuilder();
+                int stackTraceWidth = thrown.toString().length();
+
+                stackTraceBuilder.append('\n');
+                stackTraceBuilder.append(thrown);
+                stackTraceBuilder.append('\n');
+                StackTraceElement[] stackTrace = thrown.getStackTrace();
+                for (StackTraceElement element : stackTrace) {
+                    stackTraceBuilder.append('\t');
+                    String elementString = element.toString();
+                    stackTraceWidth = Math.max(stackTraceWidth, elementString.length() + 4);
+                    stackTraceBuilder.append(elementString);
+                    stackTraceBuilder.append('\n');
+                }
+
+                builder.append('\n');
+                builder.append("-".repeat(stackTraceWidth));
+                builder.append(stackTraceBuilder);
+                builder.append("-".repeat(stackTraceWidth));
+            }
             builder.append('\n');
             return builder.toString();
-        }
-
-        /**
-         * This function calculates the date from the milliseconds.
-         *
-         * @param milliseconds The milliseconds to be converted.
-         * @return The date as String.
-         */
-        private String calcDate(long milliseconds) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date resultdate = new Date(milliseconds);
-            return dateFormat.format(resultdate);
-        }
-
-        /**
-         * This enum defines the color values supported by the logger.
-         */
-        public enum COLOR {
-            /**
-             * This enum value represents the color black.
-             */
-            BLACK,
-
-            /**
-             * This enum value represents the color red.
-             */
-            RED,
-
-            /**
-             * This enum value represents the color green.
-             */
-            GREEN,
-
-            /**
-             * This enum value represents the color yellow.
-             */
-            YELLOW,
-
-            /**
-             * This enum value represents the color blue.
-             */
-            BLUE,
-
-            /**
-             * This enum value represents the color purple.
-             */
-            PURPLE,
-
-            /**
-             * This enum value represents the color cyan.
-             */
-            CYAN,
-
-            /**
-             * This enum value represents the color white.
-             */
-            WHITE
         }
     }
 }

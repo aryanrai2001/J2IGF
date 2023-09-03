@@ -73,7 +73,7 @@ public abstract class Context {
      */
     public Context(Engine engine) {
         if (engine == null) {
-            Debug.logError(getClass().getName() + " -> Engine instance can not be null!");
+            Debug.logError(getClass().getSimpleName() + " -> Engine instance can not be null!");
             System.exit(-1);
         }
         this.window = engine.getWindow();
@@ -81,6 +81,7 @@ public abstract class Context {
         this.input = engine.getInput();
         this.time = engine.getTime();
         this.engine = engine;
+        Debug.logInfo(getClass().getSimpleName() + " -> Context initialized!");
     }
 
     /**

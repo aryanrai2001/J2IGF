@@ -26,18 +26,46 @@ import com.j2igf.core.Window;
 import com.j2igf.event.Debug;
 
 public final class DebugDemo extends Context {
+
+    /*
+     * There are four log methods in the Debug class that can be used to log messages to the console.
+     * Depending on the type of log, the message will be displayed appropriately.
+     * The different types of log methods are discussed below.
+     */
     public DebugDemo(Engine engine) {
         super(engine);
         renderer.clear(0xff263238);
 
         /*
-         * You can log messages to the console using the following methods.
-         * There are three types of logs: info, warning and error.
-         * Depending on the type of log, the message will be displayed in a different color.
+         * The log() method simply prints the message to the console in white text.
+         * This is intended to be used by the client that's using the framework for purposes like debugging, etc.
          */
-        Debug.log("This is a info log.");
+        Debug.log("This is a debug log.");
+
+        /*
+         * The logInfo() method prints the message to the console in green text.
+         * This is intended to be used by the framework to print information about the framework.
+         */
+        Debug.logInfo("This is an info log.");
+
+        /*
+         * The logWarning() method prints the message to the console in yellow text.
+         * This is intended to be used by the framework to print warnings about the framework.
+         */
         Debug.logWarning("This is a warning log.");
-        Debug.logError("This is a error log.");
+
+        /*
+         * The logError() method prints the message to the console in red text.
+         * This is intended to be used both by the framework and the client to print errors.
+         * The errors will show-up in red.
+         */
+        Debug.logError("This is an error log.");
+
+        /*
+         * The logError() method has a variation that also prints the stack-trace information if provided.
+         */
+        Debug.logError("This is an error log with trace.", new Exception("Example!"));
+        Debug.logError("This is an error log with null trace.", null);
 
         /*
          * You can also render debug info to the Window by using the renderMessage() method.
@@ -50,7 +78,6 @@ public final class DebugDemo extends Context {
          * You can also enable it back by using the Debug.enableDebugMode().
          * It might not be needed in a single context application, but it is useful in multi-context applications.
          */
-        Debug.disableDebugMode();
     }
 
     public static void main(String[] args) {

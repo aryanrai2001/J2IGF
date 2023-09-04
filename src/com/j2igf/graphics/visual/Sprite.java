@@ -201,60 +201,6 @@ public class Sprite {
     }
 
     /**
-     * This method renders the sprite to the screen.
-     *
-     * @param renderer The renderer to use.
-     * @param x        The x coordinate to render the sprite at.
-     * @param y        The y coordinate to render the sprite at.
-     */
-    public void render(Renderer renderer, int x, int y) {
-        if (renderer == null) {
-            Debug.logError(getClass().getSimpleName() + " -> Renderer instance can not be null!");
-            System.exit(-1);
-        }
-        x -= (int) (originX * width);
-        y -= (int) (originY * height);
-        int startX = 0, startY = 0;
-        int endX = width, endY = height;
-
-        if (x < 0)
-            startX -= x;
-        if (y < 0)
-            startY -= y;
-        if (x + endX > renderer.getWidth())
-            endX = renderer.getWidth() - x;
-        if (y + endY > renderer.getHeight())
-            endY = renderer.getHeight() - y;
-
-        for (int currY = startY; currY < endY; currY++) {
-            for (int currX = startX; currX < endX; currX++) {
-                renderer.setPixel(x + currX, y + currY, getPixel(currX, currY));
-            }
-        }
-    }
-
-    /**
-     * This method renders the sprite to the screen with a specific rotation and scale.
-     *
-     * @param renderer The renderer to use.
-     * @param x        The x coordinate to render the sprite at.
-     * @param y        The y coordinate to render the sprite at.
-     */
-    public void renderTransformed(Renderer renderer, int x, int y) {
-        if (renderer == null) {
-            Debug.logError(getClass().getSimpleName() + " -> Renderer instance can not be null!");
-            System.exit(-1);
-        }
-        for (int currY = transformedStartY; currY < transformedEndY; currY++) {
-            for (int currX = transformedStartX; currX < transformedEndX; currX++) {
-                int xVal = (int) (((currX * cos - currY * sin) / scaleX) + width * originX);
-                int yVal = (int) (((currX * sin + currY * cos) / scaleY) + height * originY);
-                renderer.setPixel(x + currX, y + currY, getPixel(xVal, yVal));
-            }
-        }
-    }
-
-    /**
      * This method applies the current transformation to be reflected in transformed rendering.
      * Call this method after changing the transform values like scale, rotation, and origin.
      */
@@ -303,6 +249,60 @@ public class Sprite {
             }
         }
         return sprite;
+    }
+
+    /**
+     * This method renders the sprite to the screen with a specific rotation and scale.
+     *
+     * @param renderer The renderer to use.
+     * @param x        The x coordinate to render the sprite at.
+     * @param y        The y coordinate to render the sprite at.
+     */
+    public void renderTransformed(Renderer renderer, int x, int y) {
+        if (renderer == null) {
+            Debug.logError(getClass().getSimpleName() + " -> Renderer instance can not be null!");
+            System.exit(-1);
+        }
+        for (int currY = transformedStartY; currY < transformedEndY; currY++) {
+            for (int currX = transformedStartX; currX < transformedEndX; currX++) {
+                int xVal = (int) (((currX * cos - currY * sin) / scaleX) + width * originX);
+                int yVal = (int) (((currX * sin + currY * cos) / scaleY) + height * originY);
+                renderer.setPixel(x + currX, y + currY, getPixel(xVal, yVal));
+            }
+        }
+    }
+
+    /**
+     * This method renders the sprite to the screen.
+     *
+     * @param renderer The renderer to use.
+     * @param x        The x coordinate to render the sprite at.
+     * @param y        The y coordinate to render the sprite at.
+     */
+    public void render(Renderer renderer, int x, int y) {
+        if (renderer == null) {
+            Debug.logError(getClass().getSimpleName() + " -> Renderer instance can not be null!");
+            System.exit(-1);
+        }
+        x -= (int) (originX * width);
+        y -= (int) (originY * height);
+        int startX = 0, startY = 0;
+        int endX = width, endY = height;
+
+        if (x < 0)
+            startX -= x;
+        if (y < 0)
+            startY -= y;
+        if (x + endX > renderer.getWidth())
+            endX = renderer.getWidth() - x;
+        if (y + endY > renderer.getHeight())
+            endY = renderer.getHeight() - y;
+
+        for (int currY = startY; currY < endY; currY++) {
+            for (int currX = startX; currX < endX; currX++) {
+                renderer.setPixel(x + currX, y + currY, getPixel(currX, currY));
+            }
+        }
     }
 
     /**

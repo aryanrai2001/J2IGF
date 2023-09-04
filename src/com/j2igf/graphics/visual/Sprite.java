@@ -177,12 +177,12 @@ public class Sprite {
         try {
             image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)));
             source = "resource";
-        } catch (IOException e1) {
+        } catch (Exception e1) {
             Debug.logInfo(getClass().getSimpleName() + " -> Could not load image from resource: " + path);
             try {
                 image = ImageIO.read(new File(path));
                 source = "file";
-            } catch (IOException e2) {
+            } catch (Exception e2) {
                 Debug.logInfo(getClass().getSimpleName() + " -> Could not load image from file: " + path);
             }
         }

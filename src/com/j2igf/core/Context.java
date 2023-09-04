@@ -81,7 +81,6 @@ public abstract class Context {
         this.input = engine.getInput();
         this.time = engine.getTime();
         this.engine = engine;
-        Debug.logInfo(getClass().getSimpleName() + " -> Context initialized!");
     }
 
     /**

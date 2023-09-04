@@ -253,6 +253,7 @@ public final class Engine {
                     " -> Could not instantiate a valid Context of type " + contextClass.getSimpleName() + "!");
             System.exit(-1);
         }
+        Debug.logInfo(getClass().getSimpleName() + " -> Context initialized!");
         return context;
     }
 

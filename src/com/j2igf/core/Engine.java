@@ -181,7 +181,7 @@ public final class Engine {
         try {
             thread.join();
         } catch (InterruptedException e) {
-            Debug.logError(getClass().getSimpleName() + " -> Starting Thread failed!", e);
+            Debug.logError(getClass().getSimpleName() + " -> Starting Thread failed!");
         }
         window.dispose();
         Debug.logInfo("Application closed!");
@@ -253,7 +253,7 @@ public final class Engine {
                     " -> Could not instantiate a valid Context of type " + contextClass.getSimpleName() + "!");
             System.exit(-1);
         }
-        Debug.logInfo(getClass().getSimpleName() + " -> Context initialized!");
+        Debug.logInfo(contextClass.getSimpleName() + " -> Context initialized!");
         return context;
     }
 

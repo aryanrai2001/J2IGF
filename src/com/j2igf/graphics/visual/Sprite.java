@@ -26,7 +26,6 @@ import com.j2igf.graphics.Renderer;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -175,7 +174,7 @@ public class Sprite {
         BufferedImage image = null;
         String source = null;
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(path)));
             source = "resource";
         } catch (Exception e1) {
             Debug.logInfo(getClass().getSimpleName() + " -> Could not load image from resource: " + path);
@@ -318,8 +317,8 @@ public class Sprite {
             image.setRGB(0, 0, width, height, pixels, 0, width);
             ImageIO.write(image, "png", outputFile);
             Debug.logInfo(getClass().getSimpleName() + " -> Image saved to: " + outputFile.getAbsolutePath());
-        } catch (IOException e) {
-            Debug.logError(getClass().getSimpleName() + " -> Image saving failed!", e);
+        } catch (Exception e) {
+            Debug.logError(getClass().getSimpleName() + " -> Failed to save image!");
         }
     }
 

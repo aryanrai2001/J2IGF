@@ -18,7 +18,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-package demo.j2igf.window;
+package com.j2igf.window;
 
 import com.j2igf.core.Window;
 

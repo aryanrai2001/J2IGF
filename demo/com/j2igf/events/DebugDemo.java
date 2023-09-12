@@ -18,7 +18,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-package demo.j2igf.events;
+package com.j2igf.events;
 
 import com.j2igf.core.Context;
 import com.j2igf.core.Engine;
@@ -63,6 +63,7 @@ public final class DebugDemo extends Context {
 
         /*
          * The logError() method has a variation that also prints the stack-trace information if provided.
+         * If the stack-trace is null, it will simply use the default logError() method.
          */
         Debug.logError("This is an error log with trace.", new Exception("Example!"));
         Debug.logError("This is an error log with null trace.", null);

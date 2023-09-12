@@ -18,26 +18,26 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-package demo.j2igf.renderer;
+package com.j2igf.renderer;
 
 import com.j2igf.core.Window;
 import com.j2igf.graphics.Renderer;
+import com.j2igf.graphics.auxiliary.FontAtlas;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public final class MorePrimitives {
-
+public final class RenderText {
     private static boolean running = true;
 
     /*
      * This is a private constructor that prevents object creation from outside.
      */
-    private MorePrimitives() {
+    private RenderText() {
     }
 
     public static void main(String[] args) {
-        Window window = new Window("More Primitives", 800, 600, 2);
+        Window window = new Window("Render Text", 800, 600, 1);
         window.setCustomCloseOperation(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -46,40 +46,34 @@ public final class MorePrimitives {
         });
         Renderer renderer = new Renderer(window);
 
-        int width = window.getWidth();
-        int height = window.getHeight();
+        /*
+         * You can use any font in this framework by creating a font atlas.
+         * A font atlas needs a font style, font size, and  a flag that toggles antialiasing.
+         * The font style can be any font that is installed on your system.
+         *
+         * Note - Antialiasing can only be used if Alpha is enabled.
+         */
+        FontAtlas fontAtlas1 = new FontAtlas("Calibri", 128, true);
+        FontAtlas fontAtlas2 = new FontAtlas("Impact", 72, false);
+
+        /*
+         * Notice that without alpha blending, the text will look jagged.
+         * So you must enable it when drawing text to allow antialiasing.
+         */
+        renderer.enableAlphaBlending();
 
         while (running) {
             renderer.clear(0xff263238);
 
             /*
-             * By default, the renderer will not draw transparent pixels.
-             * You will have to enable alpha blending to draw transparent pixels.
-             * You can do that by calling enableAlphaBlending().
+             * You can set the font atlas of the renderer by calling setFont().
+             * If you don't set the font atlas, the renderer will use the default font atlas.
+             * You can access it using FontAtlas.DEFAULT_FONT.
              */
-            renderer.enableAlphaBlending();
-
-            /*
-             * There are more primitives to use.
-             * You can even set individual pixels.
-             * This demo will show the flexibility of the renderer.
-             */
-            renderer.drawTriangle(10, 10, width - 10, height - 10, 10, height - 10, 0xffc3e88d);
-            renderer.drawLine(width / 2 - 70, height / 2 + 70, width / 2 + 70, height / 2 - 70, 0xfff07178);
-            renderer.drawCircle(width / 2, height / 2, 100, 0xffc3e88d);
-
-            /*
-             * Here, I have passed the color value of 0x7f4d7aff.
-             * Notice it starts with 0x7f, which means the alpha value is not 1 or 0.
-             * It's somewhere in between, and so this circle will be transparent.
-             */
-            renderer.fillCircle(width / 2, height / 2, 80, 0x7f4d7aff);
-
-            for (int i = 0; i < 500; i++) {
-                int x = (int) (Math.random() * width);
-                int y = (int) (Math.random() * height);
-                renderer.setPixel(x, y, 0xffeeffff);
-            }
+            renderer.setFont(fontAtlas1);
+            renderer.drawText(70, 150, 0xff009688, "Hello World!");
+            renderer.setFont(fontAtlas2);
+            renderer.drawText(220, 300, 0xffff5370, "Bye World ;)");
 
             window.updateFrame();
         }

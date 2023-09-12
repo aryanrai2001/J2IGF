@@ -18,7 +18,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-package demo.j2igf.events;
+package com.j2igf.events;
 
 import com.j2igf.core.Context;
 import com.j2igf.core.Engine;
@@ -101,7 +101,7 @@ public final class InputDemo extends Context {
         if (down) renderer.fillRect(210, 170, 30, 30, 0xff96ee00);
         renderer.drawRect(260, 160, 50, 50, 5, 0xff96ee00);
         if (right) renderer.fillRect(270, 170, 30, 30, 0xff96ee00);
-        renderer.drawText(195, 220, 0xff96ee00, "Arrow Keys");
+        renderer.drawText(185, 220, 0xff96ee00, "Arrow Keys");
 
         /*
          * Here,I am doing the same for left and right mouse buttons.
@@ -112,7 +112,7 @@ public final class InputDemo extends Context {
         if (mouseLeft) renderer.fillRect(185, 410, 30, 30, 0xff96ee00);
         renderer.drawRect(225, 400, 50, 50, 5, 0xff96ee00);
         if (mouseRight) renderer.fillRect(235, 410, 30, 30, 0xff96ee00);
-        renderer.drawText(185, 570, 0xff96ee00, "Mouse Buttons");
+        renderer.drawText(175, 570, 0xff96ee00, "Mouse Buttons");
 
         /*
          * Here, I am rendering a Page like graphics that you can scroll using mouse wheel.
@@ -121,13 +121,13 @@ public final class InputDemo extends Context {
         renderer.drawRect(400, 100, 400, 460, 5, 0xff96ee00);
         for (int y = 120 + lineOffset; y < 550 + lineOffset; y += 20)
             renderer.drawLine(400, y, 800, y, 0xff96ee00);
-        renderer.drawText(570, 570, 0xff96ee00, "Scroll Wheel");
+        renderer.drawText(560, 570, 0xff96ee00, "Scroll Wheel");
 
         /*
          * Here, I am rendering a small square at the mouse position.
          * This is being controlled by the mouseX and mouseY variables.
          */
         renderer.fillRect(mouseX - 10, mouseY - 10, 20, 20, 0xff96ee00);
-        renderer.drawText(mouseX - 40, mouseY + 20, 0xff96ee00, "Mouse Position");
+        renderer.drawText(mouseX - 50, mouseY + 20, 0xff96ee00, "Mouse Position");
     }
 }

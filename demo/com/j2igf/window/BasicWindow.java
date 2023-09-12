@@ -18,30 +18,34 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-package demo.j2igf.window;
+package com.j2igf.window;
 
 import com.j2igf.core.Window;
 
-public final class FullScreenWindow {
-    private FullScreenWindow() {
+public final class BasicWindow {
+
+    /*
+     * This is a private constructor that prevents object creation from outside.
+     */
+    private BasicWindow() {
     }
 
     public static void main(String[] args) {
-        String title = "Title doesn't matter in Fullscreen";
+        /*
+         * A Window is the most basic component of the framework.
+         * You need a window to render anything on to the screen.
+         * Initially you can set the title, width, height, and pixel scale of the window.
+         */
+        String title = "Basic Window";
+        int width = 800;
+        int height = 600;
         int pixelScale = 1;
 
         /*
-         * A Window can be either bordered or fullscreen.
-         * If you want to create a fullscreen window, you can set either width or height to 0.
-         */
-        int width = 0;
-        int height = 0;
-
-        /*
-         * *** IMPORTANT ***
-         * Remember to allow users to exit the program when creating a fullscreen window.
-         * Some people might get confused and panic if they can't exit the program through the cross button.
-         * Alternatively, you can press Alt + F4 to terminate.
+         * This is how you make a window.
+         * You must always dispose a window when you are done with it.
+         * But for this simple demo, I will avoid that to keep it simple.
+         * In later demos, you will learn more about this.
          */
         new Window(title, width, height, pixelScale);
     }

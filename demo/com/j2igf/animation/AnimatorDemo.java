@@ -18,7 +18,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-package demo.j2igf.animation;
+package com.j2igf.animation;
 
 import com.j2igf.core.Context;
 import com.j2igf.core.Engine;
